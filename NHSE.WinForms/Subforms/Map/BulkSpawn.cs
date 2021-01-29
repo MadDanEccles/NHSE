@@ -98,7 +98,7 @@ namespace NHSE.WinForms
         private static int SpawnItems(ItemLayer layer, IReadOnlyList<Item> items, int x, int y, SpawnArrangement arrange, int sizeX, int sizeY, bool noOverwrite)
         {
             int x0 = x;
-            var newline = arrange == SpawnArrangement.Square ? (int)Math.Sqrt(items.Count * sizeX * sizeY) : items.Count;
+            var newline = arrange == SpawnArrangement.Square ? (int)Math.Sqrt(items.Count * sizeX * sizeY) : items.Count * sizeX;
 
             int ctr = 0;
             for (var i = 0; i < items.Count; i++)

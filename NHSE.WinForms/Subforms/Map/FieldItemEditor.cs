@@ -24,6 +24,7 @@ namespace NHSE.WinForms
         private int DragX = -1;
         private int DragY = -1;
         private bool Dragging;
+        private Point lastClickCoodindates;
 
         public ItemEditor ItemProvider => ItemEdit;
         public ItemLayer SpawnLayer => Map.CurrentLayer;
@@ -238,7 +239,13 @@ namespace NHSE.WinForms
             y = e.Y / View.AcreScale;
         }
 
-        private void PB_Acre_MouseDown(object sender, MouseEventArgs e) => ResetDrag();
+        private void PB_Acre_MouseDown(object sender, MouseEventArgs e)
+        {
+            var l = Map.CurrentLayer;
+            var tile = GetTile(l, e, out var x, out var y);
+            this.lastClickCoodindates = new Point(x, y);
+            ResetDrag();
+        }
 
         private void PB_Acre_MouseMove(object sender, MouseEventArgs e)
         {
@@ -949,6 +956,11 @@ namespace NHSE.WinForms
         }
 
         private void Menu_Spawn_Click(object sender, EventArgs e) => new BulkSpawn(this, View.X, View.Y).ShowDialog();
+        
+        private void Menu_SpawnCtx_Click(object sender, EventArgs e)
+        {
+            new BulkSpawn(this, lastClickCoodindates.X, lastClickCoodindates.Y).ShowDialog();
+        }
     }
 
     public interface IItemLayerEditor

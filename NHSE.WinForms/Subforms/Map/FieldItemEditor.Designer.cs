@@ -38,6 +38,7 @@
             this.Menu_View = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_Set = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_Reset = new System.Windows.Forms.ToolStripMenuItem();
+            this.Menu_SpawnCtx = new System.Windows.Forms.ToolStripMenuItem();
             this.B_Up = new System.Windows.Forms.Button();
             this.B_Left = new System.Windows.Forms.Button();
             this.B_Right = new System.Windows.Forms.Button();
@@ -140,13 +141,13 @@
             this.B_SetAllTerrain = new System.Windows.Forms.ToolStripMenuItem();
             this.B_SetAllRoadTiles = new System.Windows.Forms.ToolStripMenuItem();
             this.B_ClearPlacedDesigns = new System.Windows.Forms.ToolStripMenuItem();
+            this.B_ImportPlacedDesigns = new System.Windows.Forms.ToolStripMenuItem();
+            this.B_ExportPlacedDesigns = new System.Windows.Forms.ToolStripMenuItem();
             this.RB_Item = new System.Windows.Forms.RadioButton();
             this.RB_Terrain = new System.Windows.Forms.RadioButton();
             this.L_TileMode = new System.Windows.Forms.Label();
             this.CHK_RedirectExtensionLoad = new System.Windows.Forms.CheckBox();
             this.CHK_FieldItemSnap = new System.Windows.Forms.CheckBox();
-            this.B_ImportPlacedDesigns = new System.Windows.Forms.ToolStripMenuItem();
-            this.B_ExportPlacedDesigns = new System.Windows.Forms.ToolStripMenuItem();
             this.CM_Click.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PB_Map)).BeginInit();
             this.CM_Picture.SuspendLayout();
@@ -226,30 +227,38 @@
             this.CM_Click.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Menu_View,
             this.Menu_Set,
-            this.Menu_Reset});
+            this.Menu_Reset,
+            this.Menu_SpawnCtx});
             this.CM_Click.Name = "CM_Click";
-            this.CM_Click.Size = new System.Drawing.Size(103, 70);
+            this.CM_Click.Size = new System.Drawing.Size(119, 92);
             // 
             // Menu_View
             // 
             this.Menu_View.Name = "Menu_View";
-            this.Menu_View.Size = new System.Drawing.Size(102, 22);
+            this.Menu_View.Size = new System.Drawing.Size(118, 22);
             this.Menu_View.Text = "View";
             this.Menu_View.Click += new System.EventHandler(this.Menu_View_Click);
             // 
             // Menu_Set
             // 
             this.Menu_Set.Name = "Menu_Set";
-            this.Menu_Set.Size = new System.Drawing.Size(102, 22);
+            this.Menu_Set.Size = new System.Drawing.Size(118, 22);
             this.Menu_Set.Text = "Set";
             this.Menu_Set.Click += new System.EventHandler(this.Menu_Set_Click);
             // 
             // Menu_Reset
             // 
             this.Menu_Reset.Name = "Menu_Reset";
-            this.Menu_Reset.Size = new System.Drawing.Size(102, 22);
+            this.Menu_Reset.Size = new System.Drawing.Size(118, 22);
             this.Menu_Reset.Text = "Reset";
             this.Menu_Reset.Click += new System.EventHandler(this.Menu_Reset_Click);
+            // 
+            // Menu_SpawnCtx
+            // 
+            this.Menu_SpawnCtx.Name = "Menu_SpawnCtx";
+            this.Menu_SpawnCtx.Size = new System.Drawing.Size(118, 22);
+            this.Menu_SpawnCtx.Text = "Spawn...";
+            this.Menu_SpawnCtx.Click += new System.EventHandler(this.Menu_SpawnCtx_Click);
             // 
             // B_Up
             // 
@@ -1262,7 +1271,7 @@
             this.B_ExportPlacedDesigns});
             this.CM_Terrain.Name = "CM_Picture";
             this.CM_Terrain.ShowImageMargin = false;
-            this.CM_Terrain.Size = new System.Drawing.Size(225, 158);
+            this.CM_Terrain.Size = new System.Drawing.Size(225, 136);
             // 
             // B_ZeroElevation
             // 
@@ -1291,6 +1300,20 @@
             this.B_ClearPlacedDesigns.Size = new System.Drawing.Size(224, 22);
             this.B_ClearPlacedDesigns.Text = "Clear all Placed Designs";
             this.B_ClearPlacedDesigns.Click += new System.EventHandler(this.B_ClearPlacedDesigns_Click);
+            // 
+            // B_ImportPlacedDesigns
+            // 
+            this.B_ImportPlacedDesigns.Name = "B_ImportPlacedDesigns";
+            this.B_ImportPlacedDesigns.Size = new System.Drawing.Size(224, 22);
+            this.B_ImportPlacedDesigns.Text = "Import all Placed Design Choices";
+            this.B_ImportPlacedDesigns.Click += new System.EventHandler(this.B_ImportPlacedDesigns_Click);
+            // 
+            // B_ExportPlacedDesigns
+            // 
+            this.B_ExportPlacedDesigns.Name = "B_ExportPlacedDesigns";
+            this.B_ExportPlacedDesigns.Size = new System.Drawing.Size(224, 22);
+            this.B_ExportPlacedDesigns.Text = "Export all Placed Design Choices";
+            this.B_ExportPlacedDesigns.Click += new System.EventHandler(this.B_ExportPlacedDesigns_Click);
             // 
             // RB_Item
             // 
@@ -1348,20 +1371,6 @@
             this.CHK_FieldItemSnap.TabIndex = 47;
             this.CHK_FieldItemSnap.Text = "Snap Field Items to Grid on Set";
             this.CHK_FieldItemSnap.UseVisualStyleBackColor = true;
-            // 
-            // B_ImportPlacedDesigns
-            // 
-            this.B_ImportPlacedDesigns.Name = "B_ImportPlacedDesigns";
-            this.B_ImportPlacedDesigns.Size = new System.Drawing.Size(224, 22);
-            this.B_ImportPlacedDesigns.Text = "Import all Placed Design Choices";
-            this.B_ImportPlacedDesigns.Click += new System.EventHandler(this.B_ImportPlacedDesigns_Click);
-            // 
-            // B_ExportPlacedDesigns
-            // 
-            this.B_ExportPlacedDesigns.Name = "B_ExportPlacedDesigns";
-            this.B_ExportPlacedDesigns.Size = new System.Drawing.Size(224, 22);
-            this.B_ExportPlacedDesigns.Text = "Export all Placed Design Choices";
-            this.B_ExportPlacedDesigns.Click += new System.EventHandler(this.B_ExportPlacedDesigns_Click);
             // 
             // FieldItemEditor
             // 
@@ -1554,5 +1563,6 @@
         private System.Windows.Forms.ToolStripMenuItem B_RemoveAllTrees;
         private System.Windows.Forms.ToolStripMenuItem B_ImportPlacedDesigns;
         private System.Windows.Forms.ToolStripMenuItem B_ExportPlacedDesigns;
+        private System.Windows.Forms.ToolStripMenuItem Menu_SpawnCtx;
     }
 }

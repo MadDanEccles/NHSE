@@ -9,6 +9,7 @@ using NHSE.Core;
 using NHSE.Injection;
 using NHSE.Sprites;
 using NHSE.WinForms.Properties;
+using NHSE.WinForms.Zebra;
 
 namespace NHSE.WinForms
 {
@@ -506,5 +507,12 @@ namespace NHSE.WinForms
 
         private void NUD_PocketCount_ValueChanged(object sender, EventArgs e) => ((NumericUpDown) sender).BackColor = (uint) ((NumericUpDown) sender).Value > 20 ? Color.Red : NUD_BankBells.BackColor;
         private void NUD_Wallet_ValueChanged(object sender, EventArgs e) => NUD_Wallet.BackColor = (ulong) NUD_Wallet.Value > 99_999 ? Color.Red : NUD_BankBells.BackColor;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using var editor = new MapEditorForm(SAV.Main);
+            editor.ShowDialog();
+
+        }
     }
 }

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Windows.Forms;
 using NHSE.Core;
 using NHSE.Sprites;
+using NHSE.WinForms.Zebra;
+using NHSE.WinForms.Zebra.Tools;
 
 namespace NHSE.WinForms
 {
@@ -38,6 +40,8 @@ namespace NHSE.WinForms
             SAV = sav;
             Map = new MapManager(sav);
             View = new MapViewer(Map, scale);
+
+            mapView1.Map = Map;
 
             Loading = true;
 
@@ -960,6 +964,17 @@ namespace NHSE.WinForms
         private void Menu_SpawnCtx_Click(object sender, EventArgs e)
         {
             new BulkSpawn(this, lastClickCoodindates.X, lastClickCoodindates.Y).ShowDialog();
+        }
+
+        private void tsb_PanTool_Click(object sender, EventArgs e)
+        {
+            mapView1.CurrentTool = new PanTool();
+        }
+
+        private void tsb_Zoom_Click(object sender, EventArgs e)
+        {
+            mapView1.CurrentTool = new ZoomTool();
+
         }
     }
 

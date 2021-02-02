@@ -38,6 +38,7 @@
             this.Menu_VerifyHashes = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_LoadDecrypted = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_RAMEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.Menu_ItemImages = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_Options = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_Language = new System.Windows.Forms.ToolStripComboBox();
             this.Menu_Settings = new System.Windows.Forms.ToolStripMenuItem();
@@ -98,7 +99,7 @@
             this.CB_Players = new System.Windows.Forms.ComboBox();
             this.PB_Player = new System.Windows.Forms.PictureBox();
             this.TC_Editors = new System.Windows.Forms.TabControl();
-            this.Menu_ItemImages = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
             this.Menu_Editor.SuspendLayout();
             this.CM_Picture.SuspendLayout();
             this.Tab_Map.SuspendLayout();
@@ -191,6 +192,14 @@
             this.Menu_RAMEdit.Text = "RAM Edit";
             this.Menu_RAMEdit.Click += new System.EventHandler(this.Menu_RAMEdit_Click);
             // 
+            // Menu_ItemImages
+            // 
+            this.Menu_ItemImages.Name = "Menu_ItemImages";
+            this.Menu_ItemImages.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
+            this.Menu_ItemImages.Size = new System.Drawing.Size(206, 22);
+            this.Menu_ItemImages.Text = "Item Images";
+            this.Menu_ItemImages.Click += new System.EventHandler(this.Menu_ItemImages_Click);
+            // 
             // Menu_Options
             // 
             this.Menu_Options.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -243,6 +252,7 @@
             // 
             // Tab_Map
             // 
+            this.Tab_Map.Controls.Add(this.button1);
             this.Tab_Map.Controls.Add(this.NUD_WeatherSeed);
             this.Tab_Map.Controls.Add(this.L_WeatherSeed);
             this.Tab_Map.Controls.Add(this.B_EditDesignsTailor);
@@ -259,8 +269,8 @@
             this.Tab_Map.Controls.Add(this.B_RecycleBin);
             this.Tab_Map.Location = new System.Drawing.Point(4, 22);
             this.Tab_Map.Name = "Tab_Map";
-            this.Tab_Map.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.Tab_Map.Size = new System.Drawing.Size(396, 212);
+            this.Tab_Map.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Map.Size = new System.Drawing.Size(396, 211);
             this.Tab_Map.TabIndex = 2;
             this.Tab_Map.Text = "Map";
             this.Tab_Map.UseVisualStyleBackColor = true;
@@ -469,8 +479,8 @@
             // 
             this.Tab_Villagers.Location = new System.Drawing.Point(4, 22);
             this.Tab_Villagers.Name = "Tab_Villagers";
-            this.Tab_Villagers.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.Tab_Villagers.Size = new System.Drawing.Size(396, 212);
+            this.Tab_Villagers.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Villagers.Size = new System.Drawing.Size(396, 211);
             this.Tab_Villagers.TabIndex = 0;
             this.Tab_Villagers.Text = "Villagers";
             this.Tab_Villagers.UseVisualStyleBackColor = true;
@@ -501,7 +511,7 @@
             this.Tab_Players.Controls.Add(this.PB_Player);
             this.Tab_Players.Location = new System.Drawing.Point(4, 22);
             this.Tab_Players.Name = "Tab_Players";
-            this.Tab_Players.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.Tab_Players.Padding = new System.Windows.Forms.Padding(3);
             this.Tab_Players.Size = new System.Drawing.Size(396, 211);
             this.Tab_Players.TabIndex = 1;
             this.Tab_Players.Text = "Players";
@@ -824,13 +834,15 @@
             this.TC_Editors.Size = new System.Drawing.Size(404, 237);
             this.TC_Editors.TabIndex = 1;
             // 
-            // Menu_ItemImages
+            // button1
             // 
-            this.Menu_ItemImages.Name = "Menu_ItemImages";
-            this.Menu_ItemImages.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.Menu_ItemImages.Size = new System.Drawing.Size(206, 22);
-            this.Menu_ItemImages.Text = "Item Images";
-            this.Menu_ItemImages.Click += new System.EventHandler(this.Menu_ItemImages_Click);
+            this.button1.Location = new System.Drawing.Point(155, 168);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(86, 39);
+            this.button1.TabIndex = 66;
+            this.button1.Text = "New Editor";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Editor
             // 
@@ -940,6 +952,7 @@
         private System.Windows.Forms.Label L_WeatherSeed;
         private System.Windows.Forms.NumericUpDown NUD_WeatherSeed;
         private System.Windows.Forms.ToolStripMenuItem Menu_ItemImages;
+        private System.Windows.Forms.Button button1;
     }
 }
 

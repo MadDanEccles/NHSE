@@ -199,6 +199,7 @@ namespace NHSE.WinForms
                 L_RemakeFabric.Text = fabric;
                 L_RemakeFabric.Visible = fabric.Length != 0;
             }
+            MakeMaxCount();
         }
 
         private void LoadItemTypeValues(ItemKind k, ushort index)
@@ -280,11 +281,16 @@ namespace NHSE.WinForms
 
         private void L_Count_DoubleClick(object sender, EventArgs e)
         {
+            MakeMaxCount();
+        }
+
+        private void MakeMaxCount()
+        {
             Item currentItem = SetItem(new Item());
             var result = ItemInfo.TryGetMaxStackCount(currentItem, out var max);
             if (!result)
                 return;
-            currentItem.Count = (ushort)(max - 1);
+            currentItem.Count = (ushort) (max - 1);
             LoadItem(currentItem);
         }
 

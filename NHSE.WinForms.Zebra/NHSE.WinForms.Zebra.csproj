@@ -1,19 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFrameworks>net46;net5.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>NHSE</AssemblyName>
     <PackageId>NHSE</PackageId>
     <Product>NHSE</Product>
     <Description>Animal Crossing - New Horizons Save Editor</Description>
-    <StartupObject>NHSE.WinForms.Program</StartupObject>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Zebra\**" />
+    <EmbeddedResource Remove="Zebra\**" />
+    <None Remove="Zebra\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NHSE.Core\NHSE.Core.csproj" />
@@ -108,11 +112,6 @@
     <Compile Update="Subforms\Villager\VillagerFlagEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Zebra\ZebraResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ZebraResources.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net4')) AND '$(Configuration)' == 'Release'">
@@ -124,10 +123,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Zebra\ZebraResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ZebraResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -135,32 +130,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Update="Zebra\Music\Animal Crossing_ New Horizons - 5PM %28Remix%29 %28192 kbps%29.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Zebra\Music\Animal Crossing_ New Horizons Main Theme %28Remix%29 %28192 kbps%29.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Resources\network\" />
-    <Folder Include="Zebra\Music\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="DevExpress.Data.v16.1">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\DevExpress 16.1\Components\Bin\Framework\DevExpress.Data.v16.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Utils.v16.1">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\DevExpress 16.1\Components\Bin\Framework\DevExpress.Utils.v16.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraBars.v16.1">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\DevExpress 16.1\Components\Bin\Framework\DevExpress.XtraBars.v16.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraEditors.v16.1">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\DevExpress 16.1\Components\Bin\Framework\DevExpress.XtraEditors.v16.1.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

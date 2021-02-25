@@ -57,7 +57,7 @@
             this.B_Apply.Location = new System.Drawing.Point(12, 200);
             this.B_Apply.Name = "B_Apply";
             this.B_Apply.Size = new System.Drawing.Size(112, 23);
-            this.B_Apply.TabIndex = 6;
+            this.B_Apply.TabIndex = 7;
             this.B_Apply.Text = "Spawn";
             this.B_Apply.UseVisualStyleBackColor = true;
             this.B_Apply.Click += new System.EventHandler(this.B_Apply_Click);
@@ -72,7 +72,7 @@
             0});
             this.NUD_SpawnX.Name = "NUD_SpawnX";
             this.NUD_SpawnX.Size = new System.Drawing.Size(45, 20);
-            this.NUD_SpawnX.TabIndex = 12;
+            this.NUD_SpawnX.TabIndex = 2;
             // 
             // NUD_SpawnY
             // 
@@ -84,7 +84,7 @@
             0});
             this.NUD_SpawnY.Name = "NUD_SpawnY";
             this.NUD_SpawnY.Size = new System.Drawing.Size(45, 20);
-            this.NUD_SpawnY.TabIndex = 13;
+            this.NUD_SpawnY.TabIndex = 3;
             // 
             // L_X
             // 
@@ -111,7 +111,7 @@
             this.CB_SpawnType.Location = new System.Drawing.Point(15, 9);
             this.CB_SpawnType.Name = "CB_SpawnType";
             this.CB_SpawnType.Size = new System.Drawing.Size(108, 21);
-            this.CB_SpawnType.TabIndex = 16;
+            this.CB_SpawnType.TabIndex = 0;
             this.CB_SpawnType.SelectedIndexChanged += new System.EventHandler(this.CB_SpawnType_SelectedIndexChanged);
             // 
             // L_SpawnCount
@@ -138,7 +138,7 @@
             0});
             this.NUD_SpawnCount.Name = "NUD_SpawnCount";
             this.NUD_SpawnCount.Size = new System.Drawing.Size(45, 20);
-            this.NUD_SpawnCount.TabIndex = 17;
+            this.NUD_SpawnCount.TabIndex = 4;
             this.NUD_SpawnCount.Value = new decimal(new int[] {
             10,
             0,
@@ -164,7 +164,7 @@
             0});
             this.NUD_DIYStart.Name = "NUD_DIYStart";
             this.NUD_DIYStart.Size = new System.Drawing.Size(45, 20);
-            this.NUD_DIYStart.TabIndex = 19;
+            this.NUD_DIYStart.TabIndex = 5;
             // 
             // L_DIYStop
             // 
@@ -185,24 +185,24 @@
             0});
             this.NUD_DIYStop.Name = "NUD_DIYStop";
             this.NUD_DIYStop.Size = new System.Drawing.Size(45, 20);
-            this.NUD_DIYStop.TabIndex = 21;
+            this.NUD_DIYStop.TabIndex = 6;
             this.NUD_DIYStop.Value = new decimal(new int[] {
             9999,
             0,
             0,
             0});
-            //
+            // 
             // L_NHI
-            //
+            // 
             this.L_NHI.Location = new System.Drawing.Point(14, 141);
             this.L_NHI.Name = "L_NHI";
             this.L_NHI.Size = new System.Drawing.Size(108, 20);
             this.L_NHI.TabIndex = 24;
             this.L_NHI.Text = "NHI:";
             this.L_NHI.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // L_NHIFileName
-            //
+            // 
             this.L_NHIFileName.Location = new System.Drawing.Point(14, 161);
             this.L_NHIFileName.Name = "L_NHIFileName";
             this.L_NHIFileName.Size = new System.Drawing.Size(108, 20);
@@ -218,10 +218,11 @@
             this.CB_SpawnArrange.Location = new System.Drawing.Point(16, 36);
             this.CB_SpawnArrange.Name = "CB_SpawnArrange";
             this.CB_SpawnArrange.Size = new System.Drawing.Size(108, 21);
-            this.CB_SpawnArrange.TabIndex = 23;
+            this.CB_SpawnArrange.TabIndex = 1;
             // 
             // BulkSpawn
             // 
+            this.AcceptButton = this.B_Apply;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(136, 235);

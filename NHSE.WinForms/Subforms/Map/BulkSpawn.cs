@@ -93,6 +93,7 @@ namespace NHSE.WinForms
             }
             Editor.ReloadItems();
             WinFormsUtil.Alert(string.Format(MessageStrings.MsgFieldItemModifyCount, count));
+            Close();
         }
 
         private static int SpawnItems(ItemLayer layer, IReadOnlyList<Item> items, int x, int y, SpawnArrangement arrange, int sizeX, int sizeY, bool noOverwrite)
@@ -145,7 +146,7 @@ namespace NHSE.WinForms
             {
                 SpawnType.SequentialDIY => 1,
                 SpawnType.ItemsFromNHI => 1,
-                _ => 8,
+                _ => 100,
             };
 
             if (index == SpawnType.ItemsFromNHI)

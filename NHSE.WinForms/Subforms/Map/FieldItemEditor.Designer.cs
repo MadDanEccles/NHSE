@@ -1,4 +1,4 @@
-﻿using NHSE.WinForms.Zebra.Tools;
+﻿
 
 namespace NHSE.WinForms
 {
@@ -32,8 +32,6 @@ namespace NHSE.WinForms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            PanTool panTool2 = new PanTool();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FieldItemEditor));
             this.B_Cancel = new System.Windows.Forms.Button();
             this.B_Save = new System.Windows.Forms.Button();
             this.CB_Acre = new System.Windows.Forms.ComboBox();
@@ -152,10 +150,6 @@ namespace NHSE.WinForms
             this.L_TileMode = new System.Windows.Forms.Label();
             this.CHK_RedirectExtensionLoad = new System.Windows.Forms.CheckBox();
             this.CHK_FieldItemSnap = new System.Windows.Forms.CheckBox();
-            this.mapView1 = new NHSE.WinForms.Zebra.MapView();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tsb_PanTool = new System.Windows.Forms.ToolStripButton();
-            this.tsb_Zoom = new System.Windows.Forms.ToolStripButton();
             this.CM_Click.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PB_Map)).BeginInit();
             this.CM_Picture.SuspendLayout();
@@ -187,13 +181,12 @@ namespace NHSE.WinForms
             this.CM_DLMapAcres.SuspendLayout();
             this.CM_DLTerrain.SuspendLayout();
             this.CM_Terrain.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // B_Cancel
             // 
             this.B_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.B_Cancel.Location = new System.Drawing.Point(1291, 502);
+            this.B_Cancel.Location = new System.Drawing.Point(864, 502);
             this.B_Cancel.Name = "B_Cancel";
             this.B_Cancel.Size = new System.Drawing.Size(72, 23);
             this.B_Cancel.TabIndex = 7;
@@ -204,7 +197,7 @@ namespace NHSE.WinForms
             // B_Save
             // 
             this.B_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.B_Save.Location = new System.Drawing.Point(1369, 502);
+            this.B_Save.Location = new System.Drawing.Point(942, 502);
             this.B_Save.Name = "B_Save";
             this.B_Save.Size = new System.Drawing.Size(72, 23);
             this.B_Save.TabIndex = 6;
@@ -1381,54 +1374,11 @@ namespace NHSE.WinForms
             this.CHK_FieldItemSnap.Text = "Snap Field Items to Grid on Set";
             this.CHK_FieldItemSnap.UseVisualStyleBackColor = true;
             // 
-            // mapView1
-            // 
-            this.mapView1.CurrentTool = panTool2;
-            this.mapView1.Location = new System.Drawing.Point(1043, 37);
-            this.mapView1.Map = null;
-            this.mapView1.Name = "mapView1";
-            this.mapView1.Size = new System.Drawing.Size(397, 363);
-            this.mapView1.TabIndex = 48;
-            this.mapView1.Text = "mapView1";
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsb_PanTool,
-            this.tsb_Zoom});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1452, 25);
-            this.toolStrip1.TabIndex = 49;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // tsb_PanTool
-            // 
-            this.tsb_PanTool.CheckOnClick = true;
-            this.tsb_PanTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsb_PanTool.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsb_PanTool.Name = "tsb_PanTool";
-            this.tsb_PanTool.Size = new System.Drawing.Size(23, 22);
-            this.tsb_PanTool.Text = "toolStripButton1";
-            this.tsb_PanTool.Click += new System.EventHandler(this.tsb_PanTool_Click);
-            // 
-            // tsb_Zoom
-            // 
-            this.tsb_Zoom.CheckOnClick = true;
-            this.tsb_Zoom.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsb_Zoom.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsb_Zoom.Name = "tsb_Zoom";
-            this.tsb_Zoom.Size = new System.Drawing.Size(23, 22);
-            this.tsb_Zoom.Text = "toolStripButton2";
-            this.tsb_Zoom.Click += new System.EventHandler(this.tsb_Zoom_Click);
-            // 
             // FieldItemEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1452, 537);
-            this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.mapView1);
+            this.ClientSize = new System.Drawing.Size(1025, 537);
             this.Controls.Add(this.CHK_FieldItemSnap);
             this.Controls.Add(this.CHK_RedirectExtensionLoad);
             this.Controls.Add(this.L_TileMode);
@@ -1491,8 +1441,6 @@ namespace NHSE.WinForms
             this.CM_DLMapAcres.ResumeLayout(false);
             this.CM_DLTerrain.ResumeLayout(false);
             this.CM_Terrain.ResumeLayout(false);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1618,9 +1566,5 @@ namespace NHSE.WinForms
         private System.Windows.Forms.ToolStripMenuItem B_ImportPlacedDesigns;
         private System.Windows.Forms.ToolStripMenuItem B_ExportPlacedDesigns;
         private System.Windows.Forms.ToolStripMenuItem Menu_SpawnCtx;
-        private Zebra.MapView mapView1;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton tsb_PanTool;
-        private System.Windows.Forms.ToolStripButton tsb_Zoom;
     }
 }

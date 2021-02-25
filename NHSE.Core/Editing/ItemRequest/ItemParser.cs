@@ -17,7 +17,8 @@ namespace NHSE.Core
             RecipeList.Recipes.ToDictionary(z => z.Value, z => z.Key);
 
         // Users can put spaces between item codes, or newlines. Recognize both!
-        private static readonly string[] Splitters = {" ", "\n", "\r\n"};
+        private static readonly string[] SplittersHex = {" ", "\n", "\r\n"};
+        private static readonly string[] SplittersName = {",", "\n", "\r\n"};
 
         /// <summary>
         /// Gets a list of items from the requested hex string(s).
@@ -27,19 +28,21 @@ namespace NHSE.Core
         /// </remarks>
         /// <param name="requestHex">8 byte hex item values (u64 format)</param>
         /// <param name="cfg">Options for packaging items</param>
-        public static IReadOnlyCollection<Item> GetItemsFromUserInput(string requestHex, IConfigItem cfg)
+        /// <param name="type">End destination of the item</param>
+        public static IReadOnlyCollection<Item> GetItemsFromUserInput(string requestHex, IConfigItem cfg, ItemDestination type = ItemDestination.PlayerDropped)
         {
-            var split = requestHex.Split(Splitters, StringSplitOptions.RemoveEmptyEntries);
             try
             {
                 // having a language 2char code will cause an exception in parsing; this is fine and is handled by our catch statement.
-                return GetItemsHexCode(split, cfg);
+                var split = requestHex.Split(SplittersHex, StringSplitOptions.RemoveEmptyEntries);
+                return GetItemsHexCode(split, cfg, type);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch
 #pragma warning restore CA1031 // Do not catch general exception types
             {
-                return GetItemsLanguage(split, cfg, GameLanguage.DefaultLanguage);
+                var split = requestHex.Split(SplittersName, StringSplitOptions.RemoveEmptyEntries);
+                return GetItemsLanguage(split, cfg, type, GameLanguage.DefaultLanguage);
             }
         }
 
@@ -52,16 +55,17 @@ namespace NHSE.Core
         /// <param name="requestHex">8 byte hex item values (u64 format)</param>
         public static IReadOnlyCollection<Item> GetDIYsFromUserInput(string requestHex)
         {
-            var split = requestHex.Split(Splitters, StringSplitOptions.RemoveEmptyEntries);
             try
             {
                 // having a language 2char code will cause an exception in parsing; this is fine and is handled by our catch statement.
+                var split = requestHex.Split(SplittersHex, StringSplitOptions.RemoveEmptyEntries);
                 return GetDIYItemsHexCode(split);
             }
 #pragma warning disable CA1031 // Do not catch general exception types
             catch
 #pragma warning restore CA1031 // Do not catch general exception types
             {
+                var split = requestHex.Split(SplittersName, StringSplitOptions.RemoveEmptyEntries);
                 return GetDIYItemsLanguage(split);
             }
         }
@@ -129,8 +133,9 @@ namespace NHSE.Core
         /// </remarks>
         /// <param name="split">List of item names</param>
         /// <param name="config">Item packaging options</param>
+        /// <param name="type">Destination where the item will end up at</param>
         /// <param name="lang">Language code to parse with. If the first entry in <see cref="split"/> is a language code, it will be used instead of <see cref="lang"/>.</param>
-        public static IReadOnlyCollection<Item> GetItemsLanguage(IReadOnlyList<string> split, IConfigItem config, string lang = GameLanguage.DefaultLanguage)
+        public static IReadOnlyCollection<Item> GetItemsLanguage(IReadOnlyList<string> split, IConfigItem config, ItemDestination type = ItemDestination.PlayerDropped, string lang = GameLanguage.DefaultLanguage)
         {
             if (split.Count > 1 && split[0].Length < 3)
             {
@@ -144,7 +149,7 @@ namespace NHSE.Core
             for (int i = 0; i < result.Length; i++)
             {
                 var text = split[i].Trim();
-                var item = CreateItem(text, i, config, lang);
+                var item = CreateItem(text, i, config, type, lang);
 
                 if (item.ItemId >= strings.Length)
                     throw new Exception($"Item requested is out of expected range ({item.ItemId:X4} > {strings.Length:X4}).");
@@ -164,7 +169,8 @@ namespace NHSE.Core
         /// </remarks>
         /// <param name="split">List of recipe IDs as u16 hex</param>
         /// <param name="config">Item packaging options</param>
-        public static IReadOnlyCollection<Item> GetItemsHexCode(IReadOnlyList<string> split, IConfigItem config)
+        /// <param name="type">Destination where the item will end up at</param>
+        public static IReadOnlyCollection<Item> GetItemsHexCode(IReadOnlyList<string> split, IConfigItem config, ItemDestination type = ItemDestination.PlayerDropped)
         {
             var strings = GameInfo.Strings.itemlistdisplay;
             var result = new Item[split.Count];
@@ -172,7 +178,7 @@ namespace NHSE.Core
             {
                 var text = split[i].Trim();
                 var convert = GetBytesFromString(text);
-                var item = CreateItem(convert, i, config);
+                var item = CreateItem(convert, i, config, type);
 
                 if (item.ItemId >= strings.Length)
                     throw new Exception($"Item requested is out of expected range ({item.ItemId:X4} > {strings.Length:X4}).");
@@ -191,26 +197,22 @@ namespace NHSE.Core
             return BitConverter.GetBytes(value);
         }
 
-        private static Item CreateItem(string name, int requestIndex, IConfigItem config, string lang = "en")
+        private static Item CreateItem(string name, int requestIndex, IConfigItem config, ItemDestination type, string lang = "en")
         {
             var item = GetItem(name, lang);
             if (item.IsNone)
                 throw new Exception($"Failed to convert item (index {requestIndex}: {name}) for Language {lang}.");
 
-            if (!ItemInfo.IsSaneItemForDrop(item))
-                throw new Exception($"Unsupported item: (index {requestIndex}: {name}).");
-
-            if (config.WrapAllItems && item.ShouldWrapItem())
-                item.SetWrapping(ItemWrapping.WrappingPaper, config.WrappingPaper, true);
-
-            return item;
+            return FinalizeItem(requestIndex, config, type, item);
         }
 
-        private static Item CreateItem(byte[] convert, int requestIndex, IConfigItem config)
+        private static Item CreateItem(byte[] convert, int requestIndex, IConfigItem config, ItemDestination type)
         {
             Item item;
             try
             {
+                if (convert.Length != Item.SIZE)
+                    throw new Exception();
                 item = convert.ToClass<Item>();
             }
             catch (Exception ex)
@@ -218,16 +220,34 @@ namespace NHSE.Core
                 throw new Exception($"Failed to convert item (index {requestIndex}: {ex.Message}).");
             }
 
-            if (!ItemInfo.IsSaneItemForDrop(item) || convert.Length != Item.SIZE)
-                throw new Exception($"Unsupported item: (index {requestIndex}).");
+            return FinalizeItem(requestIndex, config, type, item);
+        }
 
-            if (config.WrapAllItems && item.ShouldWrapItem())
-                item.SetWrapping(ItemWrapping.WrappingPaper, config.WrappingPaper, true);
+        private static Item FinalizeItem(int requestIndex, IConfigItem config, ItemDestination type, Item item)
+        {
+            if (type == ItemDestination.PlayerDropped)
+            {
+                if (!ItemInfo.IsSaneItemForDrop(item))
+                    throw new Exception($"Unsupported item: (index {requestIndex}).");
+                if (config.WrapAllItems && item.ShouldWrapItem())
+                    item.SetWrapping(ItemWrapping.WrappingPaper, config.WrappingPaper, true);
+            }
+
+            item.IsDropped = type == ItemDestination.FieldItemDropped;
+
             return item;
         }
 
         private static readonly CompareInfo Comparer = CultureInfo.InvariantCulture.CompareInfo;
-        private const CompareOptions opt = CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth;
+        private const CompareOptions optIncludeSymbols = CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreWidth;
+        private const CompareOptions optIgnoreSymbols = CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreSymbols | CompareOptions.IgnoreWidth;
+
+        /// <summary>
+        /// Gets a sensitive compare option, depending on the input string's qualities.
+        /// </summary>
+        /// <param name="str">Input string</param>
+        /// <returns>Default options if no symbols,</returns>
+        private static CompareOptions GetCompareOption(string str) => str.Any(ch => !char.IsLetterOrDigit(ch) && !char.IsWhiteSpace(ch)) ? optIgnoreSymbols & ~CompareOptions.IgnoreSymbols : optIgnoreSymbols;
 
         /// <summary>
         /// Gets the first item name-value that contains the <see cref="itemName"/> (case insensitive).
@@ -247,7 +267,7 @@ namespace NHSE.Core
         /// <param name="itemName">Requested Item</param>
         /// <param name="strings">Game strings</param>
         /// <returns>Returns <see cref="Item.NO_ITEM"/> if no match found.</returns>
-        public static Item GetItem(string itemName, IEnumerable<ComboItem> strings)
+        public static Item GetItem(string itemName, IReadOnlyList<ComboItem> strings)
         {
             if (TryGetItem(itemName, strings, out var id))
                 return new Item(id);
@@ -261,7 +281,14 @@ namespace NHSE.Core
         /// <param name="strings">List of item name-values</param>
         /// <param name="value">Item ID, if found. Otherwise, 0</param>
         /// <returns>True if found, false if none.</returns>
-        public static bool TryGetItem(string itemName, IEnumerable<ComboItem> strings, out ushort value)
+        public static bool TryGetItem(string itemName, IReadOnlyList<ComboItem> strings, out ushort value)
+        {
+            if (TryGetItem(itemName, strings, out value, optIncludeSymbols))
+                return true;
+            return TryGetItem(itemName, strings, out value, optIgnoreSymbols);
+        }
+
+        private static bool TryGetItem(string itemName, IEnumerable<ComboItem> strings, out ushort value, CompareOptions opt)
         {
             foreach (var item in strings)
             {
@@ -282,8 +309,9 @@ namespace NHSE.Core
         /// </summary>
         /// <param name="itemName">Item name</param>
         /// <param name="strings">Item names (and their Item ID values)</param>
-        public static IEnumerable<ComboItem> GetItemsMatching(string itemName, IReadOnlyList<ComboItem> strings)
+        public static IEnumerable<ComboItem> GetItemsMatching(string itemName, IEnumerable<ComboItem> strings)
         {
+            var opt = GetCompareOption(itemName);
             foreach (var item in strings)
             {
                 var result = Comparer.IndexOf(item.Text, itemName, opt);
@@ -301,7 +329,7 @@ namespace NHSE.Core
         /// </remarks>
         /// <param name="itemName">Item name</param>
         /// <param name="strings">Item names (and their Item ID values)</param>
-        public static IEnumerable<ComboItem> GetItemsMatchingOrdered(string itemName, IReadOnlyList<ComboItem> strings)
+        public static IEnumerable<ComboItem> GetItemsMatchingOrdered(string itemName, IEnumerable<ComboItem> strings)
         {
             var matches = GetItemsMatching(itemName, strings);
             return GetItemsClosestOrdered(itemName, matches);
@@ -338,5 +366,12 @@ namespace NHSE.Core
                 return Item.NONE;
             return (ushort)value;
         }
+    }
+
+    public enum ItemDestination
+    {
+        PlayerDropped,
+        FieldItemDropped,
+        HeldItem,
     }
 }

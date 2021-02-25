@@ -128,6 +128,7 @@ namespace NHSE.Core
         Kind_SequenceOnly,
         Kind_ShellDrift,
         Kind_ShellFish,
+        Kind_Shoes,
         Kind_Shovel,
         Kind_Slingshot,
         Kind_SlopeItem,
@@ -218,6 +219,8 @@ namespace NHSE.Core
         };
 
         public static bool IsFlower(this ItemKind k) => (Kind_Flower <= k && k <= Kind_FlowerBud) || (UnitIcon_FlwAnemone <= k && k <= UnitIcon_FlwTulip);
+        public static bool IsFlowerPicked(this ItemKind k) => k == Kind_Flower || (UnitIcon_FlwAnemone <= k && k <= UnitIcon_FlwTulip);
+        public static bool IsFlowerGene(this ItemKind k, ushort id) => k.IsFlower() && (id >= 60_000 || !k.IsFlowerPicked());
         public static bool IsClothing(this ItemKind k) => Clothing.Contains(k);
         public static bool IsCrafting(this ItemKind k) => k == Kind_Ore || k == Kind_CraftMaterial || k == Kind_CraftPhoneCase || k == Kind_CraftRemake;
         public static bool IsFurniture(this ItemKind k) => Furniture.Contains(k);

@@ -68,7 +68,7 @@ namespace NHSE.WinForms
             CB_ItemID.SelectedValue = (int)id;
             var kind = ItemInfo.GetItemKind(id);
 
-            if (kind.IsFlower())
+            if (kind.IsFlowerGene(id))
             {
                 LoadGenes(item.Genes);
                 CHK_Gold.Checked = item.IsWateredGold;
@@ -120,7 +120,7 @@ namespace NHSE.WinForms
             var kind = ItemInfo.GetItemKind(id);
 
             item.ItemId = id;
-            if (kind.IsFlower())
+            if (kind.IsFlowerGene(id))
             {
                 item.Genes = SaveGenes();
                 item.DaysWatered = (int) NUD_WaterDays.Value;
@@ -178,15 +178,24 @@ namespace NHSE.WinForms
             ChangeItem(itemID, itemCount);
             var kind = ItemInfo.GetItemKind(itemID);
 
-            ToggleEditorVisibility(kind);
+            ToggleEditorVisibility(kind, itemID);
             if (!Loading)
                 LoadItemTypeValues(kind, itemID);
 
             var remake = ItemRemakeUtil.GetRemakeIndex(itemID);
             if (remake < 0)
             {
-                L_RemakeBody.Visible = false;
-                L_RemakeFabric.Visible = false;
+                var closeItems = GameInfo.Strings.GetAssociatedItems(itemID, out var bse);
+                if (closeItems.Count > 1) // ignore if we are the only parenthesised item
+                {
+                    L_RemakeBody.Text = $"{bse.Trim()}:\n" + closeItems.ToStringList(false);
+                    L_RemakeBody.Visible = true;
+                }
+                else
+                {
+                    L_RemakeBody.Visible = false;
+                    L_RemakeFabric.Visible = false;
+                }
             }
             else
             {
@@ -233,9 +242,9 @@ namespace NHSE.WinForms
             FLP_Flag1.Visible = false;
         }
 
-        private void ToggleEditorVisibility(ItemKind k)
+        private void ToggleEditorVisibility(ItemKind k, ushort id)
         {
-            if (k.IsFlower())
+            if (k.IsFlowerGene(id))
             {
                 CB_Recipe.Visible = false;
                 FLP_Uses.Visible = FLP_Count.Visible = false;

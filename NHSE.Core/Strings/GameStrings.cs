@@ -149,7 +149,7 @@ namespace NHSE.Core
 
             var kind = ItemInfo.GetItemKind(index);
 
-            if (kind.IsFlower())
+            if (kind.IsFlowerGene(index))
             {
                 var display = GetItemName(index);
                 if (item.Genes != 0)
@@ -204,6 +204,26 @@ namespace NHSE.Core
                 return "Lloyd";
 
             return "???";
+        }
+
+        /// <summary>
+        /// Returns clothing or item recolors not a part of ItemRemake with brackets in their names
+        /// </summary>
+        /// <param name="id">ItemID of the color variation search</param>
+        /// <param name="baseItemName">Item name without the associated recolors</param>
+        /// <returns>Map of ItemID, ItemName</returns>
+        public List<ComboItem> GetAssociatedItems(ushort id, out string baseItemName)
+        {
+            var stringMatch = GetItemName(id);
+            var index = stringMatch.IndexOf('(');
+            if (index < 0)
+            {
+                baseItemName = string.Empty;
+                return new List<ComboItem>();
+            }
+
+            var search = baseItemName = stringMatch.Substring(0, index);
+            return ItemDataSource.FindAll(x => x.Text.StartsWith(search));
         }
     }
 

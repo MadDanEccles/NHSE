@@ -5,6 +5,7 @@ namespace NHSE.Core
     /// </summary>
     public enum ItemMenuIconType : ushort
     {
+        _0xE40569D4,
         Akoyagai,
         Amaebi,
         Anemone0,
@@ -273,6 +274,7 @@ namespace NHSE.Core
         Itotonbo,
         JohnnyQuestDust1,
         JohnyParts,
+        JuiceShamrock,
         Kabu,
         Kabutogani,
         Kairoudouketsu,

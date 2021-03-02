@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using NHSE.Core;
 
 namespace NHSE.WinForms.Zebra
 {

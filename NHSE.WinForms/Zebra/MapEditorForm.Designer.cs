@@ -32,223 +32,55 @@ namespace NHSE.WinForms.Zebra
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            NHSE.WinForms.Zebra.Tools.PanTool panTool2 = new NHSE.WinForms.Zebra.Tools.PanTool();
+            NHSE.WinForms.Zebra.Tools.PanTool panTool1 = new NHSE.WinForms.Zebra.Tools.PanTool();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditorForm));
             this.mapView = new NHSE.WinForms.Zebra.MapView();
-            this.barAndDockingController1 = new DevExpress.XtraBars.BarAndDockingController(this.components);
-            this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
-            this.barButtonGroup1 = new DevExpress.XtraBars.BarButtonGroup();
-            this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
-            this.btnPan = new DevExpress.XtraBars.BarButtonItem();
-            this.btnMarquee = new DevExpress.XtraBars.BarButtonItem();
-            this.btnMove = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
-            this.btnItemBrush = new DevExpress.XtraBars.BarButtonItem();
-            this.btnItemPicker = new DevExpress.XtraBars.BarButtonItem();
-            this.btnItemFill = new DevExpress.XtraBars.BarButtonItem();
-            this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.dockManager1 = new DevExpress.XtraBars.Docking.DockManager(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel1 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.dockPanel2 = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.rpgCompatability = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.barCheckItem1 = new DevExpress.XtraBars.BarCheckItem();
-            this.toggleEasterEgg = new DevExpress.XtraBars.BarToggleSwitchItem();
-            ((System.ComponentModel.ISupportInitialize)(this.barAndDockingController1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
+            this.itemEditor2 = new NHSE.WinForms.ItemEditor();
+            this.dockPanel1 = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnZoom = new System.Windows.Forms.ToolStripButton();
+            this.btnMarquee = new System.Windows.Forms.ToolStripButton();
+            this.btnMove = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnPaint = new System.Windows.Forms.ToolStripButton();
+            this.btnPick = new System.Windows.Forms.ToolStripButton();
+            this.btnTemplate = new System.Windows.Forms.ToolStripButton();
+            this.btnEraser = new System.Windows.Forms.ToolStripButton();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.categoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
             this.panelContainer1.SuspendLayout();
-            this.dockPanel1.SuspendLayout();
             this.dockPanel2.SuspendLayout();
+            this.dockPanel2_Container.SuspendLayout();
+            this.dockPanel1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // mapView
             // 
             this.mapView.BackColor = System.Drawing.Color.White;
-            this.mapView.CurrentTool = panTool2;
+            this.mapView.CurrentTool = panTool1;
             this.mapView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapView.Location = new System.Drawing.Point(0, 141);
+            this.mapView.Location = new System.Drawing.Point(37, 24);
             this.mapView.Map = null;
             this.mapView.Name = "mapView";
             this.mapView.ScrollPosition = new System.Drawing.Point(0, 0);
-            this.mapView.Size = new System.Drawing.Size(704, 388);
+            this.mapView.Size = new System.Drawing.Size(811, 657);
             this.mapView.TabIndex = 1;
             this.mapView.Text = "mapView1";
-            // 
-            // barAndDockingController1
-            // 
-            this.barAndDockingController1.PropertiesBar.DefaultGlyphSize = new System.Drawing.Size(16, 16);
-            this.barAndDockingController1.PropertiesBar.DefaultLargeGlyphSize = new System.Drawing.Size(32, 32);
-            // 
-            // popupMenu1
-            // 
-            this.popupMenu1.Name = "popupMenu1";
-            this.popupMenu1.Ribbon = this.ribbonControl1;
-            // 
-            // ribbonControl1
-            // 
-            this.ribbonControl1.Controller = this.barAndDockingController1;
-            this.ribbonControl1.ExpandCollapseItem.Id = 0;
-            this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.ribbonControl1.ExpandCollapseItem,
-            this.barButtonGroup1,
-            this.barButtonItem4,
-            this.btnPan,
-            this.btnMarquee,
-            this.btnMove,
-            this.barButtonItem1,
-            this.barButtonItem2,
-            this.barButtonItem3,
-            this.btnItemBrush,
-            this.btnItemPicker,
-            this.btnItemFill,
-            this.barCheckItem1,
-            this.toggleEasterEgg});
-            this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 14;
-            this.ribbonControl1.Name = "ribbonControl1";
-            this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
-            this.ribbonPage1,
-            this.ribbonPage2,
-            this.ribbonPage3});
-            this.ribbonControl1.Size = new System.Drawing.Size(904, 141);
-            // 
-            // barButtonGroup1
-            // 
-            this.barButtonGroup1.Caption = "barButtonGroup1";
-            this.barButtonGroup1.Id = 1;
-            this.barButtonGroup1.ItemLinks.Add(this.barButtonItem4);
-            this.barButtonGroup1.Name = "barButtonGroup1";
-            // 
-            // barButtonItem4
-            // 
-            this.barButtonItem4.Caption = "barButtonItem4";
-            this.barButtonItem4.Id = 2;
-            this.barButtonItem4.Name = "barButtonItem4";
-            // 
-            // btnPan
-            // 
-            this.btnPan.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check;
-            this.btnPan.Caption = "Pan && Zoom";
-            this.btnPan.Down = true;
-            this.btnPan.Glyph = global::NHSE.WinForms.Zebra.ZebraResources.magnifying_glass_16;
-            this.btnPan.Id = 3;
-            this.btnPan.LargeGlyph = global::NHSE.WinForms.Zebra.ZebraResources.magnifying_glass_32;
-            this.btnPan.Name = "btnPan";
-            this.btnPan.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnPan_ItemClick);
-            // 
-            // btnMarquee
-            // 
-            this.btnMarquee.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check;
-            this.btnMarquee.Caption = "Marquee";
-            this.btnMarquee.Glyph = global::NHSE.WinForms.Zebra.ZebraResources.selection_16;
-            this.btnMarquee.Id = 4;
-            this.btnMarquee.LargeGlyph = global::NHSE.WinForms.Zebra.ZebraResources.selection_32;
-            this.btnMarquee.Name = "btnMarquee";
-            this.btnMarquee.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnMarquee_ItemClick);
-            // 
-            // btnMove
-            // 
-            this.btnMove.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check;
-            this.btnMove.Caption = "Move";
-            this.btnMove.Glyph = global::NHSE.WinForms.Zebra.ZebraResources.arrow_cross_16;
-            this.btnMove.Id = 5;
-            this.btnMove.LargeGlyph = global::NHSE.WinForms.Zebra.ZebraResources.arrow_cross_32;
-            this.btnMove.Name = "btnMove";
-            this.btnMove.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnMove_ItemClick);
-            // 
-            // barButtonItem1
-            // 
-            this.barButtonItem1.Caption = "Item Type";
-            this.barButtonItem1.Id = 6;
-            this.barButtonItem1.Name = "barButtonItem1";
-            // 
-            // barButtonItem2
-            // 
-            this.barButtonItem2.Caption = "Status";
-            this.barButtonItem2.Id = 7;
-            this.barButtonItem2.Name = "barButtonItem2";
-            // 
-            // barButtonItem3
-            // 
-            this.barButtonItem3.Caption = "Validity";
-            this.barButtonItem3.Id = 8;
-            this.barButtonItem3.Name = "barButtonItem3";
-            // 
-            // btnItemBrush
-            // 
-            this.btnItemBrush.Caption = "Brush";
-            this.btnItemBrush.Glyph = global::NHSE.WinForms.Zebra.ZebraResources.brush_16;
-            this.btnItemBrush.Id = 9;
-            this.btnItemBrush.LargeGlyph = global::NHSE.WinForms.Zebra.ZebraResources.brush_32;
-            this.btnItemBrush.Name = "btnItemBrush";
-            // 
-            // btnItemPicker
-            // 
-            this.btnItemPicker.Caption = "Picker";
-            this.btnItemPicker.Glyph = global::NHSE.WinForms.Zebra.ZebraResources.pipette_16;
-            this.btnItemPicker.Id = 10;
-            this.btnItemPicker.LargeGlyph = global::NHSE.WinForms.Zebra.ZebraResources.pipette_32;
-            this.btnItemPicker.Name = "btnItemPicker";
-            // 
-            // btnItemFill
-            // 
-            this.btnItemFill.Caption = "Fill";
-            this.btnItemFill.Glyph = global::NHSE.WinForms.Zebra.ZebraResources.paint_roller_16;
-            this.btnItemFill.Id = 11;
-            this.btnItemFill.LargeGlyph = global::NHSE.WinForms.Zebra.ZebraResources.paint_roller_32;
-            this.btnItemFill.Name = "btnItemFill";
-            // 
-            // ribbonPage1
-            // 
-            this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup1,
-            this.ribbonPageGroup2,
-            this.rpgCompatability});
-            this.ribbonPage1.Name = "ribbonPage1";
-            this.ribbonPage1.Text = "Items";
-            // 
-            // ribbonPageGroup1
-            // 
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnPan, true, "", "", true);
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnMarquee, true, "", "", true);
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnMove, false, "", "", true);
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnItemBrush, true);
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnItemFill);
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnItemPicker);
-            this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            this.ribbonPageGroup1.Text = "Tools";
-            // 
-            // ribbonPageGroup2
-            // 
-            this.ribbonPageGroup2.ItemLinks.Add(this.barButtonItem1, true);
-            this.ribbonPageGroup2.ItemLinks.Add(this.barButtonItem2);
-            this.ribbonPageGroup2.ItemLinks.Add(this.barButtonItem3);
-            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
-            this.ribbonPageGroup2.Text = "Colours";
-            // 
-            // ribbonPage2
-            // 
-            this.ribbonPage2.Name = "ribbonPage2";
-            this.ribbonPage2.Text = "Terrain";
-            // 
-            // ribbonPage3
-            // 
-            this.ribbonPage3.Name = "ribbonPage3";
-            this.ribbonPage3.Text = "Templates";
+            this.mapView.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mapView_KeyPress);
             // 
             // dockManager1
             // 
-            this.dockManager1.Controller = this.barAndDockingController1;
             this.dockManager1.Form = this;
             this.dockManager1.RootPanels.AddRange(new DevExpress.XtraBars.Docking.DockPanel[] {
             this.panelContainer1});
@@ -266,17 +98,45 @@ namespace NHSE.WinForms.Zebra
             // 
             // panelContainer1
             // 
-            this.panelContainer1.ActiveChild = this.dockPanel1;
+            this.panelContainer1.ActiveChild = this.dockPanel2;
             this.panelContainer1.Controls.Add(this.dockPanel2);
             this.panelContainer1.Controls.Add(this.dockPanel1);
             this.panelContainer1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Right;
-            this.panelContainer1.ID = new System.Guid("6a0973e5-0a4a-4bea-8cd2-a15722f614c7");
-            this.panelContainer1.Location = new System.Drawing.Point(704, 141);
+            this.panelContainer1.ID = new System.Guid("72508660-0e23-45c9-880f-984ec81434b4");
+            this.panelContainer1.Location = new System.Drawing.Point(848, 24);
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
-            this.panelContainer1.Size = new System.Drawing.Size(200, 388);
+            this.panelContainer1.Size = new System.Drawing.Size(200, 657);
             this.panelContainer1.Tabbed = true;
             this.panelContainer1.Text = "panelContainer1";
+            // 
+            // dockPanel2
+            // 
+            this.dockPanel2.Controls.Add(this.dockPanel2_Container);
+            this.dockPanel2.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
+            this.dockPanel2.FloatVertical = true;
+            this.dockPanel2.ID = new System.Guid("f7a0dd9f-3265-42d2-9119-f9bf7047bb0e");
+            this.dockPanel2.Location = new System.Drawing.Point(5, 23);
+            this.dockPanel2.Name = "dockPanel2";
+            this.dockPanel2.OriginalSize = new System.Drawing.Size(191, 486);
+            this.dockPanel2.Size = new System.Drawing.Size(191, 603);
+            this.dockPanel2.Text = "Tool Settings";
+            // 
+            // dockPanel2_Container
+            // 
+            this.dockPanel2_Container.Controls.Add(this.itemEditor2);
+            this.dockPanel2_Container.Location = new System.Drawing.Point(0, 0);
+            this.dockPanel2_Container.Name = "dockPanel2_Container";
+            this.dockPanel2_Container.Size = new System.Drawing.Size(191, 603);
+            this.dockPanel2_Container.TabIndex = 0;
+            // 
+            // itemEditor2
+            // 
+            this.itemEditor2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemEditor2.Location = new System.Drawing.Point(0, 0);
+            this.itemEditor2.Name = "itemEditor2";
+            this.itemEditor2.Size = new System.Drawing.Size(191, 603);
+            this.itemEditor2.TabIndex = 0;
             // 
             // dockPanel1
             // 
@@ -285,71 +145,177 @@ namespace NHSE.WinForms.Zebra
             this.dockPanel1.ID = new System.Guid("0c6777ee-89f3-4b3f-909f-a6b5f4d99c4a");
             this.dockPanel1.Location = new System.Drawing.Point(5, 23);
             this.dockPanel1.Name = "dockPanel1";
-            this.dockPanel1.OriginalSize = new System.Drawing.Size(191, 262);
-            this.dockPanel1.Size = new System.Drawing.Size(191, 334);
+            this.dockPanel1.OriginalSize = new System.Drawing.Size(191, 486);
+            this.dockPanel1.Size = new System.Drawing.Size(191, 603);
             this.dockPanel1.Text = "dockPanel1";
             // 
             // dockPanel1_Container
             // 
             this.dockPanel1_Container.Location = new System.Drawing.Point(0, 0);
             this.dockPanel1_Container.Name = "dockPanel1_Container";
-            this.dockPanel1_Container.Size = new System.Drawing.Size(191, 334);
+            this.dockPanel1_Container.Size = new System.Drawing.Size(191, 603);
             this.dockPanel1_Container.TabIndex = 0;
             // 
-            // dockPanel2
+            // toolStrip1
             // 
-            this.dockPanel2.Controls.Add(this.dockPanel2_Container);
-            this.dockPanel2.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
-            this.dockPanel2.ID = new System.Guid("f7a0dd9f-3265-42d2-9119-f9bf7047bb0e");
-            this.dockPanel2.Location = new System.Drawing.Point(5, 23);
-            this.dockPanel2.Name = "dockPanel2";
-            this.dockPanel2.OriginalSize = new System.Drawing.Size(191, 262);
-            this.dockPanel2.Size = new System.Drawing.Size(191, 334);
-            this.dockPanel2.Text = "Item";
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnZoom,
+            this.btnMarquee,
+            this.btnMove,
+            this.toolStripSeparator1,
+            this.btnPaint,
+            this.btnPick,
+            this.btnTemplate,
+            this.btnEraser});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(37, 657);
+            this.toolStrip1.TabIndex = 4;
+            this.toolStrip1.Text = "toolStrip1";
             // 
-            // dockPanel2_Container
+            // btnZoom
             // 
-            this.dockPanel2_Container.Location = new System.Drawing.Point(0, 0);
-            this.dockPanel2_Container.Name = "dockPanel2_Container";
-            this.dockPanel2_Container.Size = new System.Drawing.Size(191, 334);
-            this.dockPanel2_Container.TabIndex = 0;
+            this.btnZoom.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnZoom.Image = ((System.Drawing.Image)(resources.GetObject("btnZoom.Image")));
+            this.btnZoom.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnZoom.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnZoom.Name = "btnZoom";
+            this.btnZoom.Size = new System.Drawing.Size(34, 36);
+            this.btnZoom.Text = "Zoom and Pan";
+            this.btnZoom.ToolTipText = "Zoom / Pan";
+            this.btnZoom.Click += new System.EventHandler(this.btnZoom_Click);
             // 
-            // rpgCompatability
+            // btnMarquee
             // 
-            this.rpgCompatability.ItemLinks.Add(this.toggleEasterEgg);
-            this.rpgCompatability.Name = "rpgCompatability";
-            this.rpgCompatability.Text = "Options";
+            this.btnMarquee.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnMarquee.Image = ((System.Drawing.Image)(resources.GetObject("btnMarquee.Image")));
+            this.btnMarquee.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnMarquee.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnMarquee.Name = "btnMarquee";
+            this.btnMarquee.Size = new System.Drawing.Size(34, 36);
+            this.btnMarquee.Text = "Rectangular Selection";
+            this.btnMarquee.Click += new System.EventHandler(this.btnMarquee_ItemClick);
             // 
-            // barCheckItem1
+            // btnMove
             // 
-            this.barCheckItem1.Caption = "barCheckItem1";
-            this.barCheckItem1.Id = 12;
-            this.barCheckItem1.Name = "barCheckItem1";
+            this.btnMove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnMove.Image = ((System.Drawing.Image)(resources.GetObject("btnMove.Image")));
+            this.btnMove.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnMove.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnMove.Name = "btnMove";
+            this.btnMove.Size = new System.Drawing.Size(34, 36);
+            this.btnMove.Text = "Item Mover";
+            this.btnMove.Click += new System.EventHandler(this.btnMove_ItemClick);
             // 
-            // toggleEasterEgg
+            // toolStripSeparator1
             // 
-            this.toggleEasterEgg.Caption = "ACNH Compatability Mode";
-            this.toggleEasterEgg.Id = 13;
-            this.toggleEasterEgg.Name = "toggleEasterEgg";
-            this.toggleEasterEgg.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.toggleEasterEgg_CheckedChanged);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(34, 6);
+            // 
+            // btnPaint
+            // 
+            this.btnPaint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnPaint.Image = ((System.Drawing.Image)(resources.GetObject("btnPaint.Image")));
+            this.btnPaint.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnPaint.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPaint.Name = "btnPaint";
+            this.btnPaint.Size = new System.Drawing.Size(34, 36);
+            this.btnPaint.Text = "Item Painter";
+            this.btnPaint.Click += new System.EventHandler(this.btnPaint_Click);
+            // 
+            // btnPick
+            // 
+            this.btnPick.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnPick.Image = ((System.Drawing.Image)(resources.GetObject("btnPick.Image")));
+            this.btnPick.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnPick.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPick.Name = "btnPick";
+            this.btnPick.Size = new System.Drawing.Size(34, 36);
+            this.btnPick.Text = "Item Picker";
+            this.btnPick.Click += new System.EventHandler(this.btnPick_Click);
+            // 
+            // btnTemplate
+            // 
+            this.btnTemplate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnTemplate.Image")));
+            this.btnTemplate.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnTemplate.Name = "btnTemplate";
+            this.btnTemplate.Size = new System.Drawing.Size(34, 36);
+            this.btnTemplate.Text = "Template";
+            this.btnTemplate.Click += new System.EventHandler(this.btnTemplate_Click);
+            // 
+            // btnEraser
+            // 
+            this.btnEraser.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnEraser.Image = ((System.Drawing.Image)(resources.GetObject("btnEraser.Image")));
+            this.btnEraser.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnEraser.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEraser.Name = "btnEraser";
+            this.btnEraser.Size = new System.Drawing.Size(34, 36);
+            this.btnEraser.Text = "Eraser";
+            this.btnEraser.Click += new System.EventHandler(this.btnEraser_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.optionsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1048, 24);
+            this.menuStrip1.TabIndex = 6;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.categoriesToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.optionsToolStripMenuItem.Text = "Options";
+            // 
+            // categoriesToolStripMenuItem
+            // 
+            this.categoriesToolStripMenuItem.Name = "categoriesToolStripMenuItem";
+            this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.categoriesToolStripMenuItem.Text = "Categories...";
             // 
             // MapEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(904, 529);
+            this.ClientSize = new System.Drawing.Size(1048, 681);
             this.Controls.Add(this.mapView);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.panelContainer1);
-            this.Controls.Add(this.ribbonControl1);
+            this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MapEditorForm";
             this.Text = "Map Editor";
-            ((System.ComponentModel.ISupportInitialize)(this.barAndDockingController1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
+            this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.MapEditorForm_PreviewKeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
             this.panelContainer1.ResumeLayout(false);
-            this.dockPanel1.ResumeLayout(false);
             this.dockPanel2.ResumeLayout(false);
+            this.dockPanel2_Container.ResumeLayout(false);
+            this.dockPanel1.ResumeLayout(false);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -357,33 +323,26 @@ namespace NHSE.WinForms.Zebra
 
         #endregion
         private MapView mapView;
-        private DevExpress.XtraBars.BarAndDockingController barAndDockingController1;
-        private DevExpress.XtraBars.PopupMenu popupMenu1;
-        private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
-        private DevExpress.XtraBars.BarButtonGroup barButtonGroup1;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem4;
-        private DevExpress.XtraBars.BarButtonItem btnPan;
-        private DevExpress.XtraBars.BarButtonItem btnMarquee;
-        private DevExpress.XtraBars.BarButtonItem btnMove;
-        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
-        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage2;
-        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage3;
         private DevExpress.XtraBars.Docking.DockManager dockManager1;
-        private DevExpress.XtraBars.Docking.DockPanel panelContainer1;
         private DevExpress.XtraBars.Docking.DockPanel dockPanel1;
         private DevExpress.XtraBars.Docking.ControlContainer dockPanel1_Container;
         private DevExpress.XtraBars.Docking.DockPanel dockPanel2;
         private DevExpress.XtraBars.Docking.ControlContainer dockPanel2_Container;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem2;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem3;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
-        private DevExpress.XtraBars.BarButtonItem btnItemBrush;
-        private DevExpress.XtraBars.BarButtonItem btnItemPicker;
-        private DevExpress.XtraBars.BarButtonItem btnItemFill;
-        private DevExpress.XtraBars.BarCheckItem barCheckItem1;
-        private DevExpress.XtraBars.BarToggleSwitchItem toggleEasterEgg;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup rpgCompatability;
+        private DevExpress.XtraBars.Docking.DockPanel panelContainer1;
+        private WinForms.ItemEditor itemEditor2;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton btnZoom;
+        private System.Windows.Forms.ToolStripButton btnMarquee;
+        private System.Windows.Forms.ToolStripButton btnMove;
+        private System.Windows.Forms.ToolStripButton btnPaint;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton btnPick;
+        private System.Windows.Forms.ToolStripButton btnTemplate;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem categoriesToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripButton btnEraser;
     }
 }

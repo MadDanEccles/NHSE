@@ -1,8 +1,21 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using NHSE.Core;
+using static System.Windows.Forms.MouseButtons;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
+    internal interface IItemSelector
+    {
+        public Item GetItem();
+    }
+
+    internal interface IPaintOptions : IItemSelector
+    {
+        public bool AlignToItemGrid { get; }
+    }
+
+
     class PanTool : IMapTool
     {
         private Point panStartScrollPosition;
@@ -11,7 +24,7 @@ namespace NHSE.WinForms.Zebra.Tools
 
         public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == Left)
             {
                 this.panStartScrollPosition = ctx.Viewport.ScrollPosition;
                 this.panStartLocation = e.Location;
@@ -30,7 +43,7 @@ namespace NHSE.WinForms.Zebra.Tools
 
         public void OnMouseUp(MouseEventArgs e, MapToolContext ctx)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == Left)
             {
                 isPanning = false;
             }

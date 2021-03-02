@@ -19,7 +19,7 @@ namespace NHSE.WinForms.Zebra
     {
         private readonly MapManager mapManager;
         private readonly MainSave save;
-        private readonly BarButtonItem[] toolButtons;
+        private readonly ToolStripButton[] toolButtons;
 
         public MapEditorForm(MainSave save)
         {
@@ -28,13 +28,18 @@ namespace NHSE.WinForms.Zebra
             this.mapManager = new MapManager(save);
             mapView.Map = this.mapManager;
 
-           toolButtons = new[]{btnMarquee, btnMove, btnPan};
+           toolButtons = new[]{btnMarquee, btnMove, btnZoom, btnPaint, btnPick, btnTemplate, btnEraser};
+
+           var data = GameInfo.Strings.ItemDataSource.ToList();
+           var field = FieldItemList.Items.Select(z => z.Value).ToList();
+           data.Add(field, GameInfo.Strings.InternalNameTranslation);
+           itemEditor2.Initialize(data, true);
         }
 
-        private void SetToolButton(BarButtonItem selectedButton)
+        private void SetToolButton(ToolStripButton selectedButton)
         {
             foreach (var button in toolButtons)
-                button.Down = button == selectedButton;
+                button.Checked = button == selectedButton;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -58,7 +63,7 @@ namespace NHSE.WinForms.Zebra
 
         private void SaveChanges()
         {
-           /* var unsupported = Map.Items.GetUnsupportedTiles();
+            var unsupported = mapManager.Items.GetUnsupportedTiles();
             if (unsupported.Count != 0)
             {
                 var err = MessageStrings.MsgFieldItemUnsupportedLayer2Tile;
@@ -72,42 +77,121 @@ namespace NHSE.WinForms.Zebra
             save.SetTerrainTiles(mapManager.Terrain.Tiles);
 
             save.SetAcreBytes(mapManager.Terrain.BaseAcres);
-            save.OutsideFieldTemplateUniqueId = (ushort)NUD_MapAcreTemplateOutside.Value;
-            save.MainFieldParamUniqueID = (ushort)NUD_MapAcreTemplateField.Value;
+            // save.OutsideFieldTemplateUniqueId = (ushort)NUD_MapAcreTemplateOutside.Value;
+            // save.MainFieldParamUniqueID = (ushort)NUD_MapAcreTemplateField.Value;
 
             save.Buildings = mapManager.Buildings;
             save.EventPlazaLeftUpX = mapManager.PlazaX;
-            save.EventPlazaLeftUpZ = mapManager.PlazaY;*/
+            save.EventPlazaLeftUpZ = mapManager.PlazaY;
         }
 
-        private void btnMove_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void btnMove_ItemClick(object sender, EventArgs e)
         {
             SetToolButton(btnMove);
-            mapView.CurrentTool = new MoveTool(mapView.SelectionService, mapView.SelectionRenderer, mapView.MapService);
+            mapView.CurrentTool = new MoveTool(mapView.SelectionService, mapView.SelectionRenderer, mapView.MapEditingService);
 
         }
 
-        private void btnMarquee_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void btnMarquee_ItemClick(object sender, EventArgs e)
         {
             SetToolButton(btnMarquee);
             mapView.CurrentTool = new MarqueeSelectionTool(mapView.SelectionService);
         }
 
-        private void btnPan_ItemClick(object sender, ItemClickEventArgs e)
+        private void btnZoom_Click(object sender, EventArgs e)
         {
-            SetToolButton(btnPan);
+            SetToolButton(btnZoom);
             mapView.CurrentTool = new PanTool();
         }
 
-        private void toggleEasterEgg_CheckedChanged(object sender, ItemClickEventArgs e)
+        private void btnPaint_Click(object sender, EventArgs e)
         {
-            if (toggleEasterEgg.Checked)
+            SetToolButton(btnPaint);
+            mapView.CurrentTool = new PaintTool(new PaintOptions(this.itemEditor2));
+        }
+
+        private void btnPick_Click(object sender, EventArgs e)
+        {
+            SetToolButton(btnPick);
+            mapView.CurrentTool = new PickTool( new PickTarget(this.itemEditor2));
+        }
+
+        private void btnTemplate_Click(object sender, EventArgs e)
+        {
+            SetToolButton(btnTemplate);
+            mapView.CurrentTool = null;
+        }
+
+        private void btnEraser_Click(object sender, EventArgs e)
+        {
+            SetToolButton(btnEraser);
+            mapView.CurrentTool = new EraserTool();
+
+        }
+
+        private void MapEditorForm_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+
+        }
+
+        private void mapView_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar)
             {
-                MessageBox.Show("Hmmm... There really isn't any news to speak of today", "Isabelle",
-                    MessageBoxButtons.OK);
-                MessageBox.Show("I'm sure we're in for a great day ... just stay happy!", "Isabelle",
-                    MessageBoxButtons.OK);
+                case 'I':
+                case 'i':
+                    btnPick_Click(null, null);
+                    break;
+                case 'B':
+                case 'b':
+                    btnPaint_Click(null, null);
+                    break;
+                case 'X':
+                case 'x':
+                    btnEraser_Click(null, null);
+                    break;
+                case 'Z':
+                case 'z':
+                    btnZoom_Click(null, null);
+                    break;
+                case 'M':
+                case 'm':
+                    btnMarquee_ItemClick(null, null);
+                    break;
             }
         }
+    }
+
+    internal class PickTarget : IPickTarget
+    {
+        private readonly WinForms.ItemEditor itemEditor;
+
+        public PickTarget(WinForms.ItemEditor itemEditor)
+        {
+            this.itemEditor = itemEditor;
+        }
+
+        public void Pick(Item item)
+        {
+            itemEditor.LoadItem(item);
+        }
+    }
+
+    internal class PaintOptions : IPaintOptions
+    {
+        private readonly WinForms.ItemEditor itemEditor;
+
+        public PaintOptions(WinForms.ItemEditor itemEditor)
+        {
+            this.itemEditor = itemEditor;
+        }
+
+        public Item GetItem()
+        {
+            Item item = new Item();
+            return itemEditor.SetItem(item);
+        }
+
+        public bool AlignToItemGrid => true;
     }
 }

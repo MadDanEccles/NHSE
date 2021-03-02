@@ -34,7 +34,7 @@ namespace NHSE.WinForms.Zebra
                     ClearRenderers();
                     map = value;
 
-                    this.MapService = new MapService(map);
+                    this.MapEditingService = new MapEditingService(map);
 
                     this.SelectionService = new SelectionService(map);
 
@@ -140,27 +140,30 @@ namespace NHSE.WinForms.Zebra
             base.OnPaint(e);
         }
 
+        private MapToolContext CreateMapToolContext() =>
+            new MapToolContext(ClientRectangle, TileSize, ScrollPosition, this, new MapEditingService(map));
+
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            CurrentTool?.OnMouseWheel(e, new MapToolContext(ClientRectangle, TileSize, ScrollPosition, this));
+            CurrentTool?.OnMouseWheel(e, CreateMapToolContext());
             base.OnMouseWheel(e);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            CurrentTool?.OnMouseDown(e, new MapToolContext(ClientRectangle, TileSize, ScrollPosition, this));
+            CurrentTool?.OnMouseDown(e, CreateMapToolContext());
             base.OnMouseDown(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            CurrentTool?.OnMouseMove(e, new MapToolContext(ClientRectangle, TileSize, ScrollPosition, this));
+            CurrentTool?.OnMouseMove(e, CreateMapToolContext());
             base.OnMouseMove(e);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            CurrentTool?.OnMouseUp(e, new MapToolContext(ClientRectangle, TileSize, ScrollPosition, this));
+            CurrentTool?.OnMouseUp(e, CreateMapToolContext());
             base.OnMouseUp(e);
         }
 
@@ -180,6 +183,6 @@ namespace NHSE.WinForms.Zebra
 
         public ISelectionService SelectionService { get; private set; }
         public SelectionRenderer SelectionRenderer { get; private set; }
-        public IMapService MapService { get; private set; }
+        public IMapEditingService MapEditingService { get; private set; }
     }
 }

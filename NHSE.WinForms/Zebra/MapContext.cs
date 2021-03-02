@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using NHSE.Core;
 
 namespace NHSE.WinForms.Zebra
 {
@@ -21,7 +20,8 @@ namespace NHSE.WinForms.Zebra
         public MapContext(
             Rectangle viewRect,
             int tileSize,
-            Point scrollPosition)
+            Point scrollPosition
+            )
         {
             this.scrollPosition = scrollPosition;
             ViewRect = viewRect;
@@ -108,105 +108,6 @@ namespace NHSE.WinForms.Zebra
             return new Point(
                 (viewportX - topLeftVisibleTilePosition.X) / TileSize + topLeftVisibleTile.X,
                 (viewportY - topLeftVisibleTilePosition.Y) / TileSize + topLeftVisibleTile.Y);
-        }
-    }
-
-    public interface IMapService
-    {
-        void DeleteTile(Point tilePt, bool resolveExtensions = false);
-        bool IsOccupied(Point tilePt);
-        void AddItem(Item item, Point location);
-    }
-
-    public class MapService : IMapService
-    {
-        private readonly MapManager mapManager;
-
-        public MapService(MapManager mapManager)
-        {
-            this.mapManager = mapManager;
-        }
-
-        public bool IsOccupied(Point tilePt) => !mapManager.CurrentLayer.GetTile(tilePt).IsNone;
-
-        /*public bool IsOccupied(Rectangle tileBounds)
-        {
-            for (int x = tileBounds.Left; x < tileBounds.Right; x++)
-            {
-                for (int y = tileBounds.Top; y < tileBounds.Bottom; y++)
-                {
-                    if (mapManager.CurrentLayer.Is)
-                }
-            }
-        }*/
-
-        public void AddItem(Item item, Point location)
-        {
-            if (!item.IsRoot)
-                throw new InvalidOperationException("Only root items may be added to the field.");
-
-            var l = mapManager.CurrentLayer;
-
-            switch (l.IsOccupied(item, location.X, location.Y))
-            {
-                case PlacedItemPermission.NoCollision:
-                    Item tile = l.GetTile(location);
-                    l.SetExtensionTiles(item, location.X, location.Y);
-                    tile.CopyFrom(item);
-                    break;
-                case PlacedItemPermission.Collision:
-                    throw new InvalidOperationException("The specified location is already occupied.");
-                case PlacedItemPermission.OutOfBounds:
-                    throw new InvalidOperationException("The specified location is outside of the island.");
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        public void DeleteTile(Point tilePt, bool resolveExtensions = false)
-        {
-            Item tile = mapManager.CurrentLayer.GetTile(tilePt);
-
-            if (!tile.IsRoot)
-            {
-                if (resolveExtensions)
-                {
-                    if (tile.IsExtension)
-                    {
-                        tilePt.Offset(- tile.ExtensionX, -tile.ExtensionY);
-                        tile = mapManager.CurrentLayer.GetTile(tilePt);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Specified location is not a root or extension tile.");
-                    }
-
-                }
-                else
-                {
-                    throw new InvalidOperationException("Specified location is not a root tile.");
-                }
-            }
-
-            Debug.Assert(tile.IsRoot);
-                   
-            mapManager.CurrentLayer.DeleteExtensionTiles(tile, tilePt);
-            tile.Delete();
-        }
-    }
-
-    static class MapExtensions
-    {
-        public static Item GetTile(this FieldItemLayer layer, Point itemPt)
-            => layer.GetTile(itemPt.X, itemPt.Y);
-
-        public static void DeleteExtensionTiles(this FieldItemLayer layer, Item tile, Point itemPt)
-            => layer.DeleteExtensionTiles(tile, itemPt.X, itemPt.Y);
-
-        public static Size GetSize(this Item item)
-        {
-            var type = ItemInfo.GetItemSize(item);
-            return new Size(type.GetWidth(), type.GetHeight());
         }
     }
 }

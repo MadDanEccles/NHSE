@@ -8,7 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Resources.NeutralResourcesLanguage("en")]
 namespace NHSE.WinForms.Properties {
     using System;
     
@@ -299,6 +298,16 @@ namespace NHSE.WinForms.Properties {
         internal static string lang_zht {
             get {
                 return ResourceManager.GetString("lang_zht", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap magnifying_glass_24 {
+            get {
+                object obj = ResourceManager.GetObject("magnifying_glass_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

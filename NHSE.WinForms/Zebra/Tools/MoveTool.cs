@@ -11,15 +11,15 @@ namespace NHSE.WinForms.Zebra.Tools
     {
         private readonly ISelectionService selectionService;
         private readonly SelectionRenderer selectionRenderer;
-        private readonly IMapService mapService;
+        private readonly IMapEditingService mapEditingService;
         private bool isDragging;
         private Point dragStart;
 
-        public MoveTool(ISelectionService selectionService, SelectionRenderer selectionRenderer, IMapService mapService)
+        public MoveTool(ISelectionService selectionService, SelectionRenderer selectionRenderer, IMapEditingService mapEditingService)
         {
             this.selectionService = selectionService;
             this.selectionRenderer = selectionRenderer;
-            this.mapService = mapService;
+            this.mapEditingService = mapEditingService;
         }
 
         public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
@@ -76,7 +76,7 @@ namespace NHSE.WinForms.Zebra.Tools
                         if (selectionService.SelectedItems.Any(i => i.Bounds.Contains(x, y)))
                             continue;
 
-                        if (mapService.IsOccupied(new Point(x, y)))
+                        if (mapEditingService.IsOccupied(new Point(x, y)))
                             return false;
                     }
                 }
@@ -95,13 +95,13 @@ namespace NHSE.WinForms.Zebra.Tools
                     // The drop location is valid; delete all tiles to be moved then recreate them in their
                     // new location.
                     foreach (var selectedItem in selectionService.SelectedItems)
-                        mapService.DeleteTile(selectedItem.Bounds.Location);
+                        mapEditingService.DeleteTile(selectedItem.Bounds.Location);
 
                     foreach (var selectedItem in selectionService.SelectedItems)
                     {
                         Point newLocation = selectedItem.Bounds.Location;
                         newLocation.Offset(tileDelta);
-                        mapService.AddItem(selectedItem.Item, newLocation);
+                        mapEditingService.AddItem(selectedItem.Item, newLocation);
                     }
 
                     selectionService.ApplyTileDelta(tileDelta);

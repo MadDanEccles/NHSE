@@ -181,7 +181,7 @@ namespace NHSE.WinForms.Zebra
             {
                 MoveItems => new MoveTool(mapView.SelectionService, mapView.SelectionRenderer, historyService),
                 FillRect => new FillRectTool(new ItemSelector(this.itemEditor2), historyService),
-                Marquee => new MarqueeSelectionTool(mapView.SelectionService),
+                Marquee => new MarqueeSelectionTool(mapView.SelectionService, mapView.SelectionRenderer, historyService),
                 PanAndZoom => new PanTool(),
                 Brush => new PaintTool(new PaintOptions(this.itemEditor2), historyService),
                 Pick => new PickTool(new PickTarget(this.itemEditor2)),

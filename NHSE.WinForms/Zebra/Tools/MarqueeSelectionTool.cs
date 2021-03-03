@@ -1,23 +1,67 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using NHSE.WinForms.Zebra.Renderers;
 using NHSE.WinForms.Zebra.Selection;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    class MarqueeSelectionTool : IMapTool
+    class MarqueeDragAction : IDragAction
     {
-        private bool isDragging;
+        private readonly ISelectionService selectionService;
+        private readonly MarqueeRenderer renderer;
         private Point dragStart;
         private Point dragEnd;
 
-        private readonly ISelectionService selectionService;
-        private readonly MarqueeRenderer renderer;
-
-        public MarqueeSelectionTool(ISelectionService selectionService)
+        public MarqueeDragAction(ISelectionService selectionService, MarqueeRenderer renderer)
         {
             this.selectionService = selectionService;
+            this.renderer = renderer;
+        }
+
+        public void Start(Point startLocation, MapToolContext ctx)
+        {
+            this.dragStart = startLocation;
+            this.dragEnd = startLocation;
+        }
+
+        public void Move(Point location, MapToolContext ctx)
+        {
+            this.dragEnd = location;
+            var marqueeBounds = GetMarqueeBounds();
+            this.renderer.MarqueeBounds = marqueeBounds;
+            this.selectionService.ClearSelection();
+            this.selectionService.ModifySelection(marqueeBounds, ctx, SelectionAction.Add);
+        }
+
+        public void End(Point location, MapToolContext ctx)
+        {
+            this.renderer.MarqueeBounds = Rectangle.Empty;
+        }
+
+        private Rectangle GetMarqueeBounds() =>
+            new Rectangle(
+                Math.Min(dragStart.X, dragEnd.X),
+                Math.Min(dragStart.Y, dragEnd.Y),
+                Math.Abs(dragEnd.X - dragStart.X),
+                Math.Abs(dragEnd.Y - dragStart.Y));
+
+    }
+
+    class MarqueeSelectionTool : IMapTool
+    {
+        private readonly ISelectionService selectionService;
+        private readonly SelectionRenderer selectionRenderer;
+        private readonly MarqueeRenderer renderer;
+        private readonly IHistoryService historyService;
+        private IDragAction? dragAction;
+
+        public MarqueeSelectionTool(ISelectionService selectionService, SelectionRenderer selectionRenderer, IHistoryService historyService)
+        {
+            this.selectionService = selectionService;
+            this.selectionRenderer = selectionRenderer;
+            this.historyService = historyService;
             this.renderer = new MarqueeRenderer();
         }
 
@@ -25,41 +69,33 @@ namespace NHSE.WinForms.Zebra.Tools
         {
             if (e.Button == MouseButtons.Left)
             {
-                this.dragStart = e.Location;
-                this.dragEnd = e.Location;
-                this.isDragging = true;
+                Point tilePt = ctx.ToTile(e.Location);
+                if (selectionService.SelectedItems.Any(i => i.Bounds.Contains(tilePt)))
+                {
+                    this.dragAction = new MoveAction(selectionRenderer, selectionService, historyService);
+                }
+                else
+                {
+                    this.dragAction = new MarqueeDragAction(selectionService, renderer);
+                }
+
+                this.dragAction.Start(e.Location, ctx);
             }
         }
 
         public void OnMouseMove(MouseEventArgs e, MapToolContext ctx)
         {
-            if (this.isDragging)
-            {
-                this.dragEnd = e.Location;
-                var marqueeBounds = GetMarqueeBounds();
-                this.renderer.MarqueeBounds = marqueeBounds;
-                this.selectionService.ClearSelection();
-                this.selectionService.ModifySelection(marqueeBounds, ctx, SelectionAction.Add);
-            }
+            this.dragAction?.Move(e.Location, ctx);
         }
 
         public void OnMouseUp(MouseEventArgs e, MapToolContext ctx)
         {
-            if (this.isDragging && e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
-                this.isDragging = false;
-                this.renderer.MarqueeBounds = Rectangle.Empty;
+                dragAction?.End(e.Location, ctx);
+                dragAction = null;
             }
         }
-
-        private Rectangle GetMarqueeBounds() =>
-            isDragging
-                ? new Rectangle(
-                    Math.Min(dragStart.X, dragEnd.X),
-                    Math.Min(dragStart.Y, dragEnd.Y),
-                    Math.Abs(dragEnd.X - dragStart.X),
-                    Math.Abs(dragEnd.Y - dragStart.Y))
-                : Rectangle.Empty;
 
         public void OnDeselect(IMapViewport viewport)
         {
@@ -75,6 +111,6 @@ namespace NHSE.WinForms.Zebra.Tools
         {
         }
 
-        public bool CanDeselect => !isDragging;
+        public bool CanDeselect => dragAction == null;
     }
 }

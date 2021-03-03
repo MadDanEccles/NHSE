@@ -61,5 +61,7 @@ namespace NHSE.WinForms.Zebra.Tools
         {
             ctx.Viewport.Zoom(ctx.Viewport.ZoomLevel + e.Delta / 120, e.Location);
         }
+
+        public bool CanDeselect => !isPanning;
     }
 }

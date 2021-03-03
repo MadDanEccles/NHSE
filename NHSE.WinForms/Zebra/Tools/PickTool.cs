@@ -44,5 +44,7 @@ namespace NHSE.WinForms.Zebra.Tools
         public void OnMouseWheel(MouseEventArgs e, MapToolContext ctx)
         {
         }
+
+        public bool CanDeselect => true;
     }
 }

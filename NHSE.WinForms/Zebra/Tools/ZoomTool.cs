@@ -36,5 +36,7 @@ namespace NHSE.WinForms.Zebra.Tools
         {
             
         }
+
+        public bool CanDeselect => true;
     }
 }

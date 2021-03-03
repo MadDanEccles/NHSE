@@ -35,35 +35,29 @@ namespace NHSE.WinForms.Zebra
             NHSE.WinForms.Zebra.Tools.PanTool panTool1 = new NHSE.WinForms.Zebra.Tools.PanTool();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditorForm));
             this.mapView = new NHSE.WinForms.Zebra.MapView();
-            this.dockManager1 = new DevExpress.XtraBars.Docking.DockManager(this.components);
-            this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel2 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.itemEditor2 = new NHSE.WinForms.ItemEditor();
-            this.dockPanel1 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnZoom = new System.Windows.Forms.ToolStripButton();
             this.btnMarquee = new System.Windows.Forms.ToolStripButton();
-            this.btnMove = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnPaint = new System.Windows.Forms.ToolStripButton();
             this.btnPick = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnMove = new System.Windows.Forms.ToolStripButton();
+            this.btnBrush = new System.Windows.Forms.ToolStripButton();
             this.btnTemplate = new System.Windows.Forms.ToolStripButton();
             this.btnEraser = new System.Windows.Forms.ToolStripButton();
+            this.btnFillRect = new System.Windows.Forms.ToolStripButton();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteSelectedItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.categoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnFillRect = new System.Windows.Forms.ToolStripButton();
-            ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
-            this.panelContainer1.SuspendLayout();
-            this.dockPanel2.SuspendLayout();
-            this.dockPanel2_Container.SuspendLayout();
-            this.dockPanel1.SuspendLayout();
+            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // mapView
@@ -75,87 +69,17 @@ namespace NHSE.WinForms.Zebra
             this.mapView.Map = null;
             this.mapView.Name = "mapView";
             this.mapView.ScrollPosition = new System.Drawing.Point(0, 0);
-            this.mapView.Size = new System.Drawing.Size(811, 657);
+            this.mapView.Size = new System.Drawing.Size(808, 657);
             this.mapView.TabIndex = 1;
             this.mapView.Text = "mapView1";
-            this.mapView.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mapView_KeyPress);
-            // 
-            // dockManager1
-            // 
-            this.dockManager1.Form = this;
-            this.dockManager1.RootPanels.AddRange(new DevExpress.XtraBars.Docking.DockPanel[] {
-            this.panelContainer1});
-            this.dockManager1.TopZIndexControls.AddRange(new string[] {
-            "DevExpress.XtraBars.BarDockControl",
-            "DevExpress.XtraBars.StandaloneBarDockControl",
-            "System.Windows.Forms.StatusBar",
-            "System.Windows.Forms.MenuStrip",
-            "System.Windows.Forms.StatusStrip",
-            "DevExpress.XtraBars.Ribbon.RibbonStatusBar",
-            "DevExpress.XtraBars.Ribbon.RibbonControl",
-            "DevExpress.XtraBars.Navigation.OfficeNavigationBar",
-            "DevExpress.XtraBars.Navigation.TileNavPane",
-            "DevExpress.XtraBars.TabFormControl"});
-            // 
-            // panelContainer1
-            // 
-            this.panelContainer1.ActiveChild = this.dockPanel2;
-            this.panelContainer1.Controls.Add(this.dockPanel2);
-            this.panelContainer1.Controls.Add(this.dockPanel1);
-            this.panelContainer1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Right;
-            this.panelContainer1.ID = new System.Guid("72508660-0e23-45c9-880f-984ec81434b4");
-            this.panelContainer1.Location = new System.Drawing.Point(848, 24);
-            this.panelContainer1.Name = "panelContainer1";
-            this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
-            this.panelContainer1.Size = new System.Drawing.Size(200, 657);
-            this.panelContainer1.Tabbed = true;
-            this.panelContainer1.Text = "panelContainer1";
-            // 
-            // dockPanel2
-            // 
-            this.dockPanel2.Controls.Add(this.dockPanel2_Container);
-            this.dockPanel2.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
-            this.dockPanel2.FloatVertical = true;
-            this.dockPanel2.ID = new System.Guid("f7a0dd9f-3265-42d2-9119-f9bf7047bb0e");
-            this.dockPanel2.Location = new System.Drawing.Point(5, 23);
-            this.dockPanel2.Name = "dockPanel2";
-            this.dockPanel2.OriginalSize = new System.Drawing.Size(191, 486);
-            this.dockPanel2.Size = new System.Drawing.Size(191, 603);
-            this.dockPanel2.Text = "Tool Settings";
-            // 
-            // dockPanel2_Container
-            // 
-            this.dockPanel2_Container.Controls.Add(this.itemEditor2);
-            this.dockPanel2_Container.Location = new System.Drawing.Point(0, 0);
-            this.dockPanel2_Container.Name = "dockPanel2_Container";
-            this.dockPanel2_Container.Size = new System.Drawing.Size(191, 603);
-            this.dockPanel2_Container.TabIndex = 0;
             // 
             // itemEditor2
             // 
             this.itemEditor2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.itemEditor2.Location = new System.Drawing.Point(0, 0);
             this.itemEditor2.Name = "itemEditor2";
-            this.itemEditor2.Size = new System.Drawing.Size(191, 603);
+            this.itemEditor2.Size = new System.Drawing.Size(200, 657);
             this.itemEditor2.TabIndex = 0;
-            // 
-            // dockPanel1
-            // 
-            this.dockPanel1.Controls.Add(this.dockPanel1_Container);
-            this.dockPanel1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
-            this.dockPanel1.ID = new System.Guid("0c6777ee-89f3-4b3f-909f-a6b5f4d99c4a");
-            this.dockPanel1.Location = new System.Drawing.Point(5, 23);
-            this.dockPanel1.Name = "dockPanel1";
-            this.dockPanel1.OriginalSize = new System.Drawing.Size(191, 486);
-            this.dockPanel1.Size = new System.Drawing.Size(191, 603);
-            this.dockPanel1.Text = "dockPanel1";
-            // 
-            // dockPanel1_Container
-            // 
-            this.dockPanel1_Container.Location = new System.Drawing.Point(0, 0);
-            this.dockPanel1_Container.Name = "dockPanel1_Container";
-            this.dockPanel1_Container.Size = new System.Drawing.Size(191, 603);
-            this.dockPanel1_Container.TabIndex = 0;
             // 
             // toolStrip1
             // 
@@ -163,10 +87,10 @@ namespace NHSE.WinForms.Zebra
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnZoom,
             this.btnMarquee,
-            this.btnMove,
-            this.toolStripSeparator1,
-            this.btnPaint,
             this.btnPick,
+            this.toolStripSeparator1,
+            this.btnMove,
+            this.btnBrush,
             this.btnTemplate,
             this.btnEraser,
             this.btnFillRect});
@@ -184,7 +108,7 @@ namespace NHSE.WinForms.Zebra
             this.btnZoom.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnZoom.Name = "btnZoom";
             this.btnZoom.Size = new System.Drawing.Size(34, 36);
-            this.btnZoom.Text = "Zoom and Pan";
+            this.btnZoom.Text = "Zoom and Pan (Z)";
             this.btnZoom.ToolTipText = "Zoom / Pan";
             this.btnZoom.Click += new System.EventHandler(this.btnZoom_Click);
             // 
@@ -196,35 +120,8 @@ namespace NHSE.WinForms.Zebra
             this.btnMarquee.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnMarquee.Name = "btnMarquee";
             this.btnMarquee.Size = new System.Drawing.Size(34, 36);
-            this.btnMarquee.Text = "Rectangular Selection";
-            this.btnMarquee.Click += new System.EventHandler(this.btnMarquee_ItemClick);
-            // 
-            // btnMove
-            // 
-            this.btnMove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMove.Image = ((System.Drawing.Image)(resources.GetObject("btnMove.Image")));
-            this.btnMove.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.btnMove.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMove.Name = "btnMove";
-            this.btnMove.Size = new System.Drawing.Size(34, 36);
-            this.btnMove.Text = "Item Mover";
-            this.btnMove.Click += new System.EventHandler(this.btnMove_ItemClick);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(34, 6);
-            // 
-            // btnPaint
-            // 
-            this.btnPaint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnPaint.Image = ((System.Drawing.Image)(resources.GetObject("btnPaint.Image")));
-            this.btnPaint.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.btnPaint.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnPaint.Name = "btnPaint";
-            this.btnPaint.Size = new System.Drawing.Size(34, 36);
-            this.btnPaint.Text = "Item Painter";
-            this.btnPaint.Click += new System.EventHandler(this.btnPaint_Click);
+            this.btnMarquee.Text = "Marquee Selection (M)";
+            this.btnMarquee.Click += new System.EventHandler(this.btnMarquee_Click);
             // 
             // btnPick
             // 
@@ -234,8 +131,35 @@ namespace NHSE.WinForms.Zebra
             this.btnPick.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnPick.Name = "btnPick";
             this.btnPick.Size = new System.Drawing.Size(34, 36);
-            this.btnPick.Text = "Item Picker";
+            this.btnPick.Text = "Item Picker (I)";
             this.btnPick.Click += new System.EventHandler(this.btnPick_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(34, 6);
+            // 
+            // btnMove
+            // 
+            this.btnMove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnMove.Image = ((System.Drawing.Image)(resources.GetObject("btnMove.Image")));
+            this.btnMove.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnMove.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnMove.Name = "btnMove";
+            this.btnMove.Size = new System.Drawing.Size(34, 36);
+            this.btnMove.Text = "Move Items (V)";
+            this.btnMove.Click += new System.EventHandler(this.btnMove_Click);
+            // 
+            // btnBrush
+            // 
+            this.btnBrush.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnBrush.Image = ((System.Drawing.Image)(resources.GetObject("btnBrush.Image")));
+            this.btnBrush.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnBrush.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnBrush.Name = "btnBrush";
+            this.btnBrush.Size = new System.Drawing.Size(34, 36);
+            this.btnBrush.Text = "Item Brush (B)";
+            this.btnBrush.Click += new System.EventHandler(this.btnPaint_Click);
             // 
             // btnTemplate
             // 
@@ -245,7 +169,7 @@ namespace NHSE.WinForms.Zebra
             this.btnTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnTemplate.Name = "btnTemplate";
             this.btnTemplate.Size = new System.Drawing.Size(34, 36);
-            this.btnTemplate.Text = "Template";
+            this.btnTemplate.Text = "Template (T)";
             this.btnTemplate.Click += new System.EventHandler(this.btnTemplate_Click);
             // 
             // btnEraser
@@ -256,8 +180,19 @@ namespace NHSE.WinForms.Zebra
             this.btnEraser.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnEraser.Name = "btnEraser";
             this.btnEraser.Size = new System.Drawing.Size(34, 36);
-            this.btnEraser.Text = "Eraser";
+            this.btnEraser.Text = "Eraser (X)";
             this.btnEraser.Click += new System.EventHandler(this.btnEraser_Click);
+            // 
+            // btnFillRect
+            // 
+            this.btnFillRect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnFillRect.Image = ((System.Drawing.Image)(resources.GetObject("btnFillRect.Image")));
+            this.btnFillRect.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnFillRect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnFillRect.Name = "btnFillRect";
+            this.btnFillRect.Size = new System.Drawing.Size(34, 36);
+            this.btnFillRect.Text = "Fill Rectangle (R)";
+            this.btnFillRect.Click += new System.EventHandler(this.btnFillRect_Click);
             // 
             // contextMenuStrip1
             // 
@@ -268,6 +203,7 @@ namespace NHSE.WinForms.Zebra
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.editToolStripMenuItem,
             this.optionsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -281,6 +217,22 @@ namespace NHSE.WinForms.Zebra
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteSelectedItemsToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // deleteSelectedItemsToolStripMenuItem
+            // 
+            this.deleteSelectedItemsToolStripMenuItem.Name = "deleteSelectedItemsToolStripMenuItem";
+            this.deleteSelectedItemsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.deleteSelectedItemsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.deleteSelectedItemsToolStripMenuItem.Text = "Delete Selected Items";
+            this.deleteSelectedItemsToolStripMenuItem.Click += new System.EventHandler(this.deleteSelectedItemsToolStripMenuItem_Click);
+            // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -292,19 +244,26 @@ namespace NHSE.WinForms.Zebra
             // categoriesToolStripMenuItem
             // 
             this.categoriesToolStripMenuItem.Name = "categoriesToolStripMenuItem";
-            this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.categoriesToolStripMenuItem.Text = "Categories...";
             // 
-            // btnFillRect
+            // splitter1
             // 
-            this.btnFillRect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnFillRect.Image = ((System.Drawing.Image)(resources.GetObject("btnFillRect.Image")));
-            this.btnFillRect.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.btnFillRect.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnFillRect.Name = "btnFillRect";
-            this.btnFillRect.Size = new System.Drawing.Size(34, 36);
-            this.btnFillRect.Text = "Fill Rectangle";
-            this.btnFillRect.Click += new System.EventHandler(this.btnFillRect_Click);
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.splitter1.Location = new System.Drawing.Point(845, 24);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(3, 657);
+            this.splitter1.TabIndex = 7;
+            this.splitter1.TabStop = false;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.itemEditor2);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel1.Location = new System.Drawing.Point(848, 24);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(200, 657);
+            this.panel1.TabIndex = 8;
             // 
             // MapEditorForm
             // 
@@ -312,23 +271,19 @@ namespace NHSE.WinForms.Zebra
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1048, 681);
             this.Controls.Add(this.mapView);
+            this.Controls.Add(this.splitter1);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.panelContainer1);
             this.Controls.Add(this.menuStrip1);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MapEditorForm";
             this.Text = "Map Editor";
-            this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.MapEditorForm_PreviewKeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
-            this.panelContainer1.ResumeLayout(false);
-            this.dockPanel2.ResumeLayout(false);
-            this.dockPanel2_Container.ResumeLayout(false);
-            this.dockPanel1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -336,18 +291,12 @@ namespace NHSE.WinForms.Zebra
 
         #endregion
         private MapView mapView;
-        private DevExpress.XtraBars.Docking.DockManager dockManager1;
-        private DevExpress.XtraBars.Docking.DockPanel dockPanel1;
-        private DevExpress.XtraBars.Docking.ControlContainer dockPanel1_Container;
-        private DevExpress.XtraBars.Docking.DockPanel dockPanel2;
-        private DevExpress.XtraBars.Docking.ControlContainer dockPanel2_Container;
-        private DevExpress.XtraBars.Docking.DockPanel panelContainer1;
         private WinForms.ItemEditor itemEditor2;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton btnZoom;
         private System.Windows.Forms.ToolStripButton btnMarquee;
         private System.Windows.Forms.ToolStripButton btnMove;
-        private System.Windows.Forms.ToolStripButton btnPaint;
+        private System.Windows.Forms.ToolStripButton btnBrush;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton btnPick;
         private System.Windows.Forms.ToolStripButton btnTemplate;
@@ -358,5 +307,9 @@ namespace NHSE.WinForms.Zebra
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripButton btnEraser;
         private System.Windows.Forms.ToolStripButton btnFillRect;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteSelectedItemsToolStripMenuItem;
+        private System.Windows.Forms.Splitter splitter1;
+        private System.Windows.Forms.Panel panel1;
     }
 }

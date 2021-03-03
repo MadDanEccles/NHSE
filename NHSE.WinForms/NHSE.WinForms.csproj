@@ -149,19 +149,4 @@
     <Folder Include="Zebra\Music\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="DevExpress.Data.v16.1">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\DevExpress 16.1\Components\Bin\Framework\DevExpress.Data.v16.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Utils.v16.1">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\DevExpress 16.1\Components\Bin\Framework\DevExpress.Utils.v16.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraBars.v16.1">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\DevExpress 16.1\Components\Bin\Framework\DevExpress.XtraBars.v16.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraEditors.v16.1">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\DevExpress 16.1\Components\Bin\Framework\DevExpress.XtraEditors.v16.1.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

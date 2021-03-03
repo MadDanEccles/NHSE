@@ -33,17 +33,6 @@ namespace NHSE.WinForms.Zebra
             return false;
         }
 
-        /*public bool IsOccupied(Rectangle tileBounds)
-              {
-                  for (int x = tileBounds.Left; x < tileBounds.Right; x++)
-                  {
-                      for (int y = tileBounds.Top; y < tileBounds.Bottom; y++)
-                      {
-                          if (mapManager.CurrentLayer.Is)
-                      }
-                  }
-              }*/
-
         private bool IsInWorldBounds(Rectangle tileRect)
             => Rectangle.Intersect(tileRect, worldTileBounds) == tileRect;
         private bool IsInWorldBounds(Point tilePt)

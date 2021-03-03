@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using NHSE.Core;
 using NHSE.WinForms.Zebra.Renderers;
 using NHSE.WinForms.Zebra.Selection;
 
@@ -11,15 +10,13 @@ namespace NHSE.WinForms.Zebra.Tools
     {
         private readonly ISelectionService selectionService;
         private readonly SelectionRenderer selectionRenderer;
-        private readonly IMapEditingService mapEditingService;
         private bool isDragging;
         private Point dragStart;
 
-        public MoveTool(ISelectionService selectionService, SelectionRenderer selectionRenderer, IMapEditingService mapEditingService)
+        public MoveTool(ISelectionService selectionService, SelectionRenderer selectionRenderer)
         {
             this.selectionService = selectionService;
             this.selectionRenderer = selectionRenderer;
-            this.mapEditingService = mapEditingService;
         }
 
         public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
@@ -60,7 +57,7 @@ namespace NHSE.WinForms.Zebra.Tools
                 (e.Location.Y - dragStart.Y) / ctx.TileSize);
         }
 
-        private bool IsValidDropPos(Point tileDelta)
+        private bool IsValidDropPos(Point tileDelta, IMapEditingService mapEditingService)
         {
             // We now need to verify that, given the specified tile delta, the selected items will
             // not drop on any item or building that is not itself currently selected.
@@ -90,18 +87,18 @@ namespace NHSE.WinForms.Zebra.Tools
             if (isDragging && e.Button == MouseButtons.Left)
             {
                 Point tileDelta = GetTileDelta(e, ctx);
-                if (IsValidDropPos(tileDelta))
+                if (IsValidDropPos(tileDelta, ctx.MapEditingService))
                 {
                     // The drop location is valid; delete all tiles to be moved then recreate them in their
                     // new location.
                     foreach (var selectedItem in selectionService.SelectedItems)
-                        mapEditingService.DeleteTile(selectedItem.Bounds.Location);
+                        ctx.MapEditingService.DeleteTile(selectedItem.Bounds.Location);
 
                     foreach (var selectedItem in selectionService.SelectedItems)
                     {
                         Point newLocation = selectedItem.Bounds.Location;
                         newLocation.Offset(tileDelta);
-                        mapEditingService.AddItem(selectedItem.Item, newLocation);
+                        ctx.MapEditingService.AddItem(selectedItem.Item, newLocation);
                     }
 
                     selectionService.ApplyTileDelta(tileDelta);
@@ -128,5 +125,7 @@ namespace NHSE.WinForms.Zebra.Tools
         public void OnMouseWheel(MouseEventArgs e, MapToolContext ctx)
         {
         }
+
+        public bool CanDeselect => !isDragging;
     }
 }

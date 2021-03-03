@@ -10,5 +10,6 @@ namespace NHSE.WinForms.Zebra.Tools
         void OnDeselect(IMapViewport viewport);
         void OnSelect(IMapViewport viewport);
         void OnMouseWheel(MouseEventArgs e, MapToolContext ctx);
+        bool CanDeselect { get; }
     }
 }

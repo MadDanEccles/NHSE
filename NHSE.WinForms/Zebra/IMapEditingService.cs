@@ -4,12 +4,17 @@ using static NHSE.WinForms.Zebra.CollisionAction;
 
 namespace NHSE.WinForms.Zebra
 {
-    public interface IMapEditingService
+    public interface IMapEditingService : IMapQueryService
     {
-        bool DeleteTile(Point tilePt, bool resolveExtensions = false);
-        bool IsOccupied(Point tilePt);
+        bool DeleteTile(Point tilePt, bool resolveExtensions = true);
         bool AddItem(Item item, Point location, CollisionAction collisionAction = ThrowException);
         void DeleteRect(Rectangle tileRect);
-        Item? GetItem(Point tilePt, bool resolveExtensions);
+    }
+
+    public interface IMapQueryService
+    {
+        Item? GetItem(Point tilePt, bool resolveExtensions = true);
+        bool IsOccupied(Point tilePt);
+        bool IsOccupied(Rectangle tileRect);
     }
 }

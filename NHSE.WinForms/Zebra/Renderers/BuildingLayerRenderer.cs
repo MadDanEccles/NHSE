@@ -7,34 +7,39 @@ namespace NHSE.WinForms.Zebra.Renderers
     class BuildingLayerRenderer : MapLayerRendererBase
     {
         private readonly MapManager map;
+        private readonly Font font;
 
         public BuildingLayerRenderer(MapManager map)
         {
             this.map = map;
+            this.font = new Font("Calibri", 9.25f);
+        }
+
+        public override void Dispose()
+        {
+            this.font.Dispose();
+            base.Dispose();
         }
 
         public override void Paint(Graphics gfx, MapRenderContext context)
         {
             using (var stringFormat = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
             {
-                using (Font font = new Font("Calibri", 9.25f))
+                using (Pen pen = new Pen(Color.Coral, 1))
                 {
-                    using (Pen pen = new Pen(Color.Coral, 1))
+                    using (Brush brush = new SolidBrush(Color.Coral))
                     {
-                        using (Brush brush = new SolidBrush(Color.Coral))
+                        foreach (var building in map.Buildings)
                         {
-                            foreach (var building in map.Buildings)
-                            {
-                                Size buildingSize = GetBuildingSize(building);
+                            Size buildingSize = GetBuildingSize(building);
 
-                                // From observation, a building is centered on its coordinate...
-                                var buildingRect = context.ToViewport(building.X - 32 - buildingSize.Width / 2,
-                                    building.Y - 32 - buildingSize.Height / 2, buildingSize.Width, buildingSize.Height);
-                                buildingRect = buildingRect.Shrink(4, 4, 3, 3);
+                            // From observation, a building is centered on its coordinate...
+                            var buildingRect = context.ToViewport(building.X - 32 - buildingSize.Width / 2,
+                                building.Y - 32 - buildingSize.Height / 2, buildingSize.Width, buildingSize.Height);
+                            buildingRect = buildingRect.Shrink(4, 4, 3, 3);
 
-                                gfx.FillRectangle(brush, buildingRect);
-                                gfx.DrawString(building.BuildingType.ToString(), font, Brushes.White, buildingRect, stringFormat);
-                            }
+                            gfx.FillRectangle(brush, buildingRect);
+                            gfx.DrawString(building.BuildingType.ToString(), font, Brushes.White, buildingRect, stringFormat);
                         }
                     }
                 }

@@ -28,7 +28,7 @@ namespace NHSE.WinForms.Zebra
             this.mapManager = new MapManager(save);
             mapView.Map = this.mapManager;
 
-           toolButtons = new[]{btnMarquee, btnMove, btnZoom, btnPaint, btnPick, btnTemplate, btnEraser};
+           toolButtons = new[]{btnMarquee, btnMove, btnZoom, btnPaint, btnPick, btnTemplate, btnEraser, btnFillRect};
 
            var data = GameInfo.Strings.ItemDataSource.ToList();
            var field = FieldItemList.Items.Select(z => z.Value).ToList();
@@ -160,6 +160,28 @@ namespace NHSE.WinForms.Zebra
                     break;
             }
         }
+
+        private void btnFillRect_Click(object sender, EventArgs e)
+        {
+            SetToolButton(btnFillRect);
+            mapView.CurrentTool = new FillRectTool(new ItemSelector(this.itemEditor2));
+        }
+    }
+
+    internal class ItemSelector : IItemSelector
+    {
+        private readonly WinForms.ItemEditor itemEditor;
+
+        public ItemSelector(WinForms.ItemEditor itemEditor)
+        {
+            this.itemEditor = itemEditor;
+        }
+
+        public Item GetItem()
+        {
+            Item item = new Item();
+            return itemEditor.SetItem(item);
+        }
     }
 
     internal class PickTarget : IPickTarget
@@ -177,19 +199,11 @@ namespace NHSE.WinForms.Zebra
         }
     }
 
-    internal class PaintOptions : IPaintOptions
+    internal class PaintOptions : ItemSelector, IPaintOptions
     {
-        private readonly WinForms.ItemEditor itemEditor;
-
         public PaintOptions(WinForms.ItemEditor itemEditor)
+            : base(itemEditor)
         {
-            this.itemEditor = itemEditor;
-        }
-
-        public Item GetItem()
-        {
-            Item item = new Item();
-            return itemEditor.SetItem(item);
         }
 
         public bool AlignToItemGrid => true;

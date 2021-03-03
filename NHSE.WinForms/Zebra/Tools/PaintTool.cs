@@ -10,6 +10,7 @@ namespace NHSE.WinForms.Zebra.Tools
         void Pick(Item item);
     }
 
+
     class PaintTool : IMapTool
     {
         private Point startTile;

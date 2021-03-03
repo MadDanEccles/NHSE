@@ -56,6 +56,7 @@ namespace NHSE.WinForms.Zebra
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.categoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnFillRect = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
             this.panelContainer1.SuspendLayout();
             this.dockPanel2.SuspendLayout();
@@ -167,7 +168,8 @@ namespace NHSE.WinForms.Zebra
             this.btnPaint,
             this.btnPick,
             this.btnTemplate,
-            this.btnEraser});
+            this.btnEraser,
+            this.btnFillRect});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(37, 657);
@@ -293,6 +295,17 @@ namespace NHSE.WinForms.Zebra
             this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.categoriesToolStripMenuItem.Text = "Categories...";
             // 
+            // btnFillRect
+            // 
+            this.btnFillRect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnFillRect.Image = ((System.Drawing.Image)(resources.GetObject("btnFillRect.Image")));
+            this.btnFillRect.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnFillRect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnFillRect.Name = "btnFillRect";
+            this.btnFillRect.Size = new System.Drawing.Size(34, 36);
+            this.btnFillRect.Text = "Fill Rectangle";
+            this.btnFillRect.Click += new System.EventHandler(this.btnFillRect_Click);
+            // 
             // MapEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -344,5 +357,6 @@ namespace NHSE.WinForms.Zebra
         private System.Windows.Forms.ToolStripMenuItem categoriesToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripButton btnEraser;
+        private System.Windows.Forms.ToolStripButton btnFillRect;
     }
 }

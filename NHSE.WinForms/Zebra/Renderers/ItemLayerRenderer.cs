@@ -63,12 +63,11 @@ namespace NHSE.WinForms.Zebra.Renderers
                     if (root != null)
                     {
                         var type = ItemInfo.GetItemSize(root);
-                        var w = type.GetWidth();
-                        var h = type.GetHeight();
-                        Rectangle itemRect = context.ToViewport(rootLocation.X, rootLocation.Y, w, h).Shrink(2, 2, 1, 1);
+                        var itemSize = root.GetSize();
+                        Rectangle itemRect = context.ToViewport(rootLocation.X, rootLocation.Y, itemSize.Width, itemSize.Height).Shrink(2, 2, 1, 1);
                         gfx.FillRectangle(context.ResourceCache.GetSolidBrush(ItemColor.GetItemColor(root)), itemRect);
 
-                        for (int ix = 0; ix < w; ix++)
+                        for (int ix = 0; ix < itemSize.Width; ix++)
                         {
                             int drawnX = rootLocation.X + ix - context.TileRange.Left;
                             if (drawnX < 0)
@@ -76,7 +75,7 @@ namespace NHSE.WinForms.Zebra.Renderers
                             if (drawnX >= context.TileRange.Width)
                                 break;
 
-                            for (int iy = 0; iy < h; iy++)
+                            for (int iy = 0; iy < itemSize.Height; iy++)
                             {
                                 int drawnY = rootLocation.Y + iy - context.TileRange.Top;
 

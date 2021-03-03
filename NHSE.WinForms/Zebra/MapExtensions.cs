@@ -14,6 +14,8 @@ namespace NHSE.WinForms.Zebra
         public static Size GetSize(this Item item)
         {
             var type = ItemInfo.GetItemSize(item);
+            if ((item.Rotation & 1) == 1)
+                return new Size(type.GetHeight(), type.GetWidth());
             return new Size(type.GetWidth(), type.GetHeight());
         }
     }

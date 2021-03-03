@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using NHSE.Core;
 using NHSE.WinForms.Zebra.Tools;
+using NHSE.WinForms.Zebra.Validation;
 using static NHSE.WinForms.Zebra.EditorTool;
 
 namespace NHSE.WinForms.Zebra
@@ -21,6 +22,22 @@ namespace NHSE.WinForms.Zebra
             this.save = save;
             this.mapManager = new MapManager(save);
             mapView.Map = this.mapManager;
+
+            ItemIntegrityValidation val = new ItemIntegrityValidation(mapManager);
+            ValidationResult vr = new ValidationResult();
+            val.Validate(vr);
+
+            if (vr.HasFixes)
+            {
+                if (MessageBox.Show(
+                    "Errors were detected in the map - do you wish to fix these now? Please ensure that you have a backup of the map before proceeding.",
+                    "Validation Errors", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                {
+                    string summary = vr.Fix(mapManager);
+                    MessageBox.Show(summary, "Fixed!");
+                }
+            }
+
             historyService = new HistoryService();
             historyService.HistoryChanged += HistoryServiceOnHistoryChanged;
 
@@ -213,6 +230,11 @@ namespace NHSE.WinForms.Zebra
         private void mapView_Click(object sender, EventArgs e)
         {
             mapView.Focus();
+        }
+
+        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
 

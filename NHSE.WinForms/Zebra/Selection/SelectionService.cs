@@ -127,6 +127,8 @@ namespace NHSE.WinForms.Zebra.Selection
                 {
                     tileLocation.Offset(-item.ExtensionX, -item.ExtensionY);
                     item = map.CurrentLayer.GetTile(tileLocation.X, tileLocation.Y);
+                    if (!item.IsRoot)
+                        throw new Exception();
                 }
 
                 if (item.IsDropped)

@@ -10,16 +10,19 @@ namespace NHSE.WinForms.Zebra.Tools
     {
         private readonly ISelectionService selectionService;
         private readonly SelectionRenderer selectionRenderer;
+        private readonly IHistoryService historyService;
         private bool isDragging;
         private Point dragStart;
 
-        public MoveTool(ISelectionService selectionService, SelectionRenderer selectionRenderer)
+        public MoveTool(ISelectionService selectionService, SelectionRenderer selectionRenderer,
+            IHistoryService historyService)
         {
             this.selectionService = selectionService;
             this.selectionRenderer = selectionRenderer;
+            this.historyService = historyService;
         }
 
-        public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseDown(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -89,16 +92,19 @@ namespace NHSE.WinForms.Zebra.Tools
                 Point tileDelta = GetTileDelta(e, ctx);
                 if (IsValidDropPos(tileDelta, ctx.MapEditingService))
                 {
-                    // The drop location is valid; delete all tiles to be moved then recreate them in their
-                    // new location.
-                    foreach (var selectedItem in selectionService.SelectedItems)
-                        ctx.MapEditingService.DeleteTile(selectedItem.Bounds.Location);
-
-                    foreach (var selectedItem in selectionService.SelectedItems)
+                    using (var trans = historyService.BeginTransaction($"Move {selectionService.SelectedItems.Count()} items"))
                     {
-                        Point newLocation = selectedItem.Bounds.Location;
-                        newLocation.Offset(tileDelta);
-                        ctx.MapEditingService.AddItem(selectedItem.Item, newLocation);
+                        // The drop location is valid; delete all tiles to be moved then recreate them in their
+                        // new location.
+                        foreach (var selectedItem in selectionService.SelectedItems)
+                            ctx.MapEditingService.DeleteTile(selectedItem.Bounds.Location, trans);
+
+                        foreach (var selectedItem in selectionService.SelectedItems)
+                        {
+                            Point newLocation = selectedItem.Bounds.Location;
+                            newLocation.Offset(tileDelta);
+                            ctx.MapEditingService.AddItem(selectedItem.Item, newLocation, trans);
+                        }
                     }
 
                     selectionService.ApplyTileDelta(tileDelta);

@@ -13,7 +13,7 @@ namespace NHSE.WinForms.Zebra.Tools
             this.pickTarget = pickTarget;
         }
 
-        public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseDown(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             Point tilePt = ctx.ToTile(e.Location);
             Item item = ctx.MapEditingService.GetItem(tilePt, true);

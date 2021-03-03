@@ -13,16 +13,18 @@ namespace NHSE.WinForms.Zebra.Tools
         private bool isDragging;
 
         private readonly IItemSelector options;
+        private readonly IHistoryService historyService;
         private readonly FillRectRenderer renderer;
         private Point startLocation;
 
-        public FillRectTool(IItemSelector options)
+        public FillRectTool(IItemSelector options, IHistoryService historyService)
         {
             this.options = options;
+            this.historyService = historyService;
             this.renderer = new FillRectRenderer();
         }
 
-        public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseDown(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -60,14 +62,18 @@ namespace NHSE.WinForms.Zebra.Tools
             if (e.Button == MouseButtons.Left)
             {
                 isDragging = false;
-                var tileRect = ctx.ToTiles(GetMarqueeBounds(e.Location));
-                for (int x = tileRect.Left; x <= tileRect.Right - itemSize.Width; x += itemSize.Width)
+                using (var trans = historyService.BeginTransaction("Fill Rectangle"))
                 {
-                    for (int y = tileRect.Top; y <= tileRect.Bottom - itemSize.Height; y += itemSize.Height)
+                    var tileRect = ctx.ToTiles(GetMarqueeBounds(e.Location));
+                    for (int x = tileRect.Left; x <= tileRect.Right - itemSize.Width; x += itemSize.Width)
                     {
-                        ctx.MapEditingService.AddItem(item, new Point(x, y), CollisionAction.Abort);
+                        for (int y = tileRect.Top; y <= tileRect.Bottom - itemSize.Height; y += itemSize.Height)
+                        {
+                            ctx.MapEditingService.AddItem(item, new Point(x, y), trans, CollisionAction.Abort);
+                        }
                     }
                 }
+
                 renderer.MarqueeBounds = Rectangle.Empty;
             }
         }

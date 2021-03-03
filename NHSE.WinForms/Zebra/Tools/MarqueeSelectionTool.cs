@@ -21,7 +21,7 @@ namespace NHSE.WinForms.Zebra.Tools
             this.renderer = new MarqueeRenderer();
         }
 
-        public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseDown(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == MouseButtons.Left)
             {

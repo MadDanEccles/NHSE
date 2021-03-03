@@ -19,21 +19,25 @@ namespace NHSE.WinForms.Zebra.Tools
         private bool isPainting;
 
         private readonly IPaintOptions options;
+        private readonly IHistoryService historyService;
+        private IHistoryTransaction transaction;
 
-        public PaintTool(IPaintOptions options)
+        public PaintTool(IPaintOptions options, IHistoryService historyService)
         {
             this.options = options;
+            this.historyService = historyService;
         }
 
-        public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseDown(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == Left)
             {
                 this.startTile = ctx.ToTile(e.Location);
+                this.transaction = historyService.BeginTransaction("Item Brush");
                 this.isPainting = true;
                 item = options.GetItem();
                 itemSize = item.GetSize();
-                if (ctx.MapEditingService.AddItem(item, this.startTile, CollisionAction.Abort))
+                if (ctx.MapEditingService.AddItem(item, this.startTile, this.transaction, CollisionAction.Abort))
                     ctx.Viewport.Invalidate();
 
             }
@@ -49,13 +53,13 @@ namespace NHSE.WinForms.Zebra.Tools
                     tilePt = new Point(
                         tilePt.X - (tilePt.X - startTile.X) % itemSize.Width,
                         tilePt.Y - (tilePt.Y - startTile.Y) % itemSize.Height);
-                    if (ctx.MapEditingService.AddItem(item, tilePt, CollisionAction.Abort))
+                    if (ctx.MapEditingService.AddItem(item, tilePt, this.transaction, CollisionAction.Abort))
                         ctx.Viewport.Invalidate();
 
                 }
                 else
                 {
-                    if (ctx.MapEditingService.AddItem(item, this.startTile))
+                    if (ctx.MapEditingService.AddItem(item, this.startTile, this.transaction))
                         ctx.Viewport.Invalidate();
                 }
             }
@@ -66,6 +70,7 @@ namespace NHSE.WinForms.Zebra.Tools
             if (e.Button == Left)
             {
                 isPainting = false;
+                this.transaction.Dispose();
             }
         }
 

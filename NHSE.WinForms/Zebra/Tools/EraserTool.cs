@@ -5,16 +5,24 @@ namespace NHSE.WinForms.Zebra.Tools
 {
     class EraserTool : IMapTool
     {
+        private readonly IHistoryService historyService;
         private bool isErasing;
         private Point lastTile;
+        private IHistoryTransaction transaction;
 
-        public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
+        public EraserTool(IHistoryService historyService)
+        {
+            this.historyService = historyService;
+        }
+
+        public void OnMouseDown(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == MouseButtons.Left)
             {
                 this.isErasing = true;
+                this.transaction = historyService.BeginTransaction("Eraser");
                 lastTile = ctx.ToTile(e.Location);
-                if (ctx.MapEditingService.DeleteTile(lastTile, true))
+                if (ctx.MapEditingService.DeleteTile(lastTile, transaction, true))
                     ctx.Viewport.Invalidate();
             }
         }
@@ -27,7 +35,7 @@ namespace NHSE.WinForms.Zebra.Tools
                 if (tilePt != lastTile)
                 {
                     lastTile = tilePt;
-                    if (ctx.MapEditingService.DeleteTile(lastTile, true))
+                    if (ctx.MapEditingService.DeleteTile(lastTile, transaction, true))
                         ctx.Viewport.Invalidate();
                 }
             }
@@ -38,6 +46,7 @@ namespace NHSE.WinForms.Zebra.Tools
             if (e.Button == MouseButtons.Left)
             {
                 isErasing = false;
+                transaction.Dispose();
             }
         }
 

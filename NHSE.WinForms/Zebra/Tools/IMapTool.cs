@@ -4,7 +4,7 @@ namespace NHSE.WinForms.Zebra.Tools
 {
     interface IMapTool
     {
-        void OnMouseDown(MouseEventArgs e, MapToolContext ctx);
+        void OnMouseDown(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx);
         void OnMouseMove(MouseEventArgs e, MapToolContext ctx);
         void OnMouseUp(MouseEventArgs e, MapToolContext ctx);
         void OnDeselect(IMapViewport viewport);

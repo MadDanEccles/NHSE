@@ -22,9 +22,17 @@ namespace NHSE.WinForms.Zebra.Tools
         private Point panStartLocation;
         private bool isPanning;
 
-        public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseDown(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
-            if (e.Button == Left)
+            if (e.Button == Left && modifierKeys.HasFlag(Keys.Alt))
+            {
+                ctx.Viewport.Zoom(ctx.Viewport.ZoomLevel + 1, e.Location);
+            }
+            else if (e.Button == Right && modifierKeys.HasFlag(Keys.Alt))
+            {
+                ctx.Viewport.Zoom(ctx.Viewport.ZoomLevel - 1, e.Location);
+            }
+            else if (e.Button == Left)
             {
                 this.panStartScrollPosition = ctx.Viewport.ScrollPosition;
                 this.panStartLocation = e.Location;

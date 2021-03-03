@@ -151,7 +151,7 @@ namespace NHSE.WinForms.Zebra
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            CurrentTool?.OnMouseDown(e, CreateMapToolContext());
+            CurrentTool?.OnMouseDown(e, ModifierKeys, CreateMapToolContext());
             base.OnMouseDown(e);
         }
 

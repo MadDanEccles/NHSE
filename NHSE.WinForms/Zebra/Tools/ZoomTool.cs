@@ -4,7 +4,7 @@ namespace NHSE.WinForms.Zebra.Tools
 {
     class ZoomTool : IMapTool
     {
-        public void OnMouseDown(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseDown(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == MouseButtons.Left)
             {

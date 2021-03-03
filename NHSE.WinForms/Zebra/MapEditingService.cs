@@ -30,15 +30,18 @@ namespace NHSE.WinForms.Zebra
                         return true;
                 }
             }
+
             return false;
         }
 
         private bool IsInWorldBounds(Rectangle tileRect)
             => Rectangle.Intersect(tileRect, worldTileBounds) == tileRect;
+
         private bool IsInWorldBounds(Point tilePt)
             => worldTileBounds.Contains(tilePt);
 
-        public bool AddItem(Item item, Point location, CollisionAction collisionAction = CollisionAction.ThrowException)
+        public bool AddItem(Item item, Point location, IHistoryTransaction trans,
+            CollisionAction collisionAction = CollisionAction.ThrowException)
         {
             if (!item.IsRoot)
                 throw new InvalidOperationException("Only root items may be added to the field.");
@@ -55,7 +58,7 @@ namespace NHSE.WinForms.Zebra
                     case CollisionAction.Abort:
                         return false;
                     case CollisionAction.Overwrite:
-                        DeleteRect(itemRect);
+                        DeleteRect(itemRect, trans);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(collisionAction), collisionAction, null);
@@ -78,6 +81,7 @@ namespace NHSE.WinForms.Zebra
 
             }
 
+            trans?.AddStep(new AddItemStep(item, location, this));
             Item tile = l.GetTile(location);
             l.SetExtensionTiles(item, location.X, location.Y);
             tile.CopyFrom(item);
@@ -88,13 +92,13 @@ namespace NHSE.WinForms.Zebra
         /// Deletes any items wholly or partially in the specified rectangle.
         /// </summary>
         /// <param name="tileRect"></param>
-        public void DeleteRect(Rectangle tileRect)
+        public void DeleteRect(Rectangle tileRect, IHistoryTransaction? trans)
         {
             for (int x = tileRect.Left; x < tileRect.Right; x++)
             {
                 for (int y = tileRect.Top; y < tileRect.Bottom; y++)
                 {
-                    DeleteTile(new Point(x, y), true);
+                    DeleteTile(new Point(x, y), trans, true);
                 }
             }
         }
@@ -119,7 +123,7 @@ namespace NHSE.WinForms.Zebra
 
         }
 
-        public bool DeleteTile(Point tilePt, bool resolveExtensions = false)
+        public bool DeleteTile(Point tilePt, IHistoryTransaction? trans, bool resolveExtensions = false)
         {
             if (!IsInWorldBounds(tilePt))
                 return false;
@@ -152,10 +156,68 @@ namespace NHSE.WinForms.Zebra
 
             Debug.Assert(tile.IsRoot);
 
+            trans?.AddStep(new DeleteItemStep(tile, tilePt, this));
             mapManager.CurrentLayer.DeleteExtensionTiles(tile, tilePt);
             tile.Delete();
             return true;
         }
+
+        private class AddItemStep : IHistoryStep
+        {
+            private Item item;
+            private Point location;
+            private readonly IMapEditingService service;
+
+            public AddItemStep(Item item, Point location, IMapEditingService service)
+            {
+                this.item = new Item();
+                this.item.CopyFrom(item);
+                this.location = location;
+                this.service = service;
+            }
+
+            public void Undo()
+            {
+                service.DeleteTile(location, null, false);
+            }
+
+            public void Redo()
+            {
+                service.AddItem(item, location, null);
+            }
+        }
+
+        private class DeleteItemStep : IHistoryStep
+        {
+            private Item item;
+            private Point location;
+            private readonly IMapEditingService service;
+
+            public DeleteItemStep(Item item, Point location, IMapEditingService service)
+            {
+                this.item = new Item();
+                this.item.CopyFrom(item);
+                this.location = location;
+                this.service = service;
+            }
+
+            public void Undo()
+            {
+                service.AddItem(item, location, null);
+            }
+
+            public void Redo()
+            {
+                service.DeleteTile(location, null, false);
+            }
+        }
+    }
+
+    public interface IHistoryStep
+    {
+        void Undo();
+
+        void Redo();
     }
 
     public enum CollisionAction

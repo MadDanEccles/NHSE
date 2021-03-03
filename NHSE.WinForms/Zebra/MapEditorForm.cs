@@ -13,6 +13,7 @@ namespace NHSE.WinForms.Zebra
     {
         private readonly MapManager mapManager;
         private readonly MainSave save;
+        private readonly IHistoryService historyService;
 
         public MapEditorForm(MainSave save)
         {
@@ -20,6 +21,8 @@ namespace NHSE.WinForms.Zebra
             this.save = save;
             this.mapManager = new MapManager(save);
             mapView.Map = this.mapManager;
+            historyService = new HistoryService();
+            historyService.HistoryChanged += HistoryServiceOnHistoryChanged;
 
             var data = GameInfo.Strings.ItemDataSource.ToList();
             var field = FieldItemList.Items.Select(z => z.Value).ToList();
@@ -27,6 +30,14 @@ namespace NHSE.WinForms.Zebra
             itemEditor2.Initialize(data, true);
 
             SelectTool(PanAndZoom);
+        }
+
+        private void HistoryServiceOnHistoryChanged(object sender, EventArgs e)
+        {
+            undoToolStripMenuItem.Enabled = historyService.CanUndo;
+            undoToolStripMenuItem.Text = $"Undo {historyService.UndoDescription}";
+            redoToolStripMenuItem.Enabled = historyService.CanRedo;
+            redoToolStripMenuItem.Text = $"Redo {historyService.RedoDescription}";
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -83,9 +94,12 @@ namespace NHSE.WinForms.Zebra
 
         private void deleteSelectedItemsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (var selectedItem in mapView.SelectionService.SelectedItems)
+            using (var trans = historyService.BeginTransaction("Delete Selection"))
             {
-                mapView.MapEditingService.DeleteTile(selectedItem.Bounds.Location);
+                foreach (var selectedItem in mapView.SelectionService.SelectedItems)
+                {
+                    mapView.MapEditingService.DeleteTile(selectedItem.Bounds.Location, trans);
+                }
             }
 
             mapView.SelectionService.ClearSelection();
@@ -148,13 +162,13 @@ namespace NHSE.WinForms.Zebra
         {
             return tool switch
             {
-                MoveItems => new MoveTool(mapView.SelectionService, mapView.SelectionRenderer),
-                FillRect => new FillRectTool(new ItemSelector(this.itemEditor2)),
+                MoveItems => new MoveTool(mapView.SelectionService, mapView.SelectionRenderer, historyService),
+                FillRect => new FillRectTool(new ItemSelector(this.itemEditor2), historyService),
                 Marquee => new MarqueeSelectionTool(mapView.SelectionService),
                 PanAndZoom => new PanTool(),
-                Brush => new PaintTool(new PaintOptions(this.itemEditor2)),
+                Brush => new PaintTool(new PaintOptions(this.itemEditor2), historyService),
                 Pick => new PickTool(new PickTarget(this.itemEditor2)),
-                Erase => new EraserTool(),
+                Erase => new EraserTool(historyService),
                 Template => null,
                 None => null,
                 _ => throw new ArgumentOutOfRangeException()
@@ -182,6 +196,23 @@ namespace NHSE.WinForms.Zebra
                 container = control as IContainerControl;
             }
             return control;
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            historyService.Undo();
+            mapView.Invalidate();
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            historyService.Redo();
+            mapView.Invalidate();
+        }
+
+        private void mapView_Click(object sender, EventArgs e)
+        {
+            mapView.Focus();
         }
     }
 

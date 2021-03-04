@@ -90,7 +90,7 @@ namespace NHSE.WinForms.Zebra
 
         public int ZoomLevel { get; private set; }
 
-        private readonly int[] zoomLevels = {4, 5, 6, 7, 8, 10, 12, 16, 24, 32};
+        private readonly int[] zoomLevels = {3, 4, 5, 6, 7, 8, 10, 12, 16, 24, 32};
 
         public void Zoom(int newZoomLevel, Point zoomCenter)
         {
@@ -163,7 +163,7 @@ namespace NHSE.WinForms.Zebra
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            CurrentTool?.OnMouseUp(e, CreateMapToolContext());
+            CurrentTool?.OnMouseUp(e, ModifierKeys, CreateMapToolContext());
             base.OnMouseUp(e);
         }
 

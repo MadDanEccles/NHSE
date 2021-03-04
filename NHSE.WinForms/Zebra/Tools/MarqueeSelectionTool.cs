@@ -35,7 +35,7 @@ namespace NHSE.WinForms.Zebra.Tools
             this.selectionService.ModifySelection(marqueeBounds, ctx, SelectionAction.Add);
         }
 
-        public void End(Point location, MapToolContext ctx)
+        public void End(Point location, Keys modifierKeys, MapToolContext ctx)
         {
             this.renderer.MarqueeBounds = Rectangle.Empty;
         }
@@ -72,10 +72,11 @@ namespace NHSE.WinForms.Zebra.Tools
                 Point tilePt = ctx.ToTile(e.Location);
                 if (selectionService.SelectedItems.Any(i => i.Bounds.Contains(tilePt)))
                 {
-                    this.dragAction = new MoveAction(selectionRenderer, selectionService, historyService);
+                    this.dragAction = new MoveDragAction(selectionRenderer, selectionService, historyService);
                 }
                 else
                 {
+                    selectionService.ClearSelection();
                     this.dragAction = new MarqueeDragAction(selectionService, renderer);
                 }
 
@@ -88,11 +89,11 @@ namespace NHSE.WinForms.Zebra.Tools
             this.dragAction?.Move(e.Location, ctx);
         }
 
-        public void OnMouseUp(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseUp(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == MouseButtons.Left)
             {
-                dragAction?.End(e.Location, ctx);
+                dragAction?.End(e.Location, modifierKeys, ctx);
                 dragAction = null;
             }
         }

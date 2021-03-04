@@ -49,7 +49,7 @@ namespace NHSE.WinForms.Zebra.Tools
             }
         }
 
-        public void OnMouseUp(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseUp(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == Left)
             {

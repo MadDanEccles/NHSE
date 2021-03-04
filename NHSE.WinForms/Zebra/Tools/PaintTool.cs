@@ -32,14 +32,21 @@ namespace NHSE.WinForms.Zebra.Tools
         {
             if (e.Button == Left)
             {
-                this.startTile = ctx.ToTile(e.Location);
-                this.transaction = historyService.BeginTransaction("Item Brush");
-                this.isPainting = true;
                 item = options.GetItem();
-                itemSize = item.GetSize();
-                if (ctx.MapEditingService.AddItem(item, this.startTile, this.transaction, CollisionAction.Abort))
-                    ctx.Viewport.Invalidate();
-
+                if (!item.IsRoot)
+                {
+                    MessageBox.Show(ctx.Viewport, "Please select a valid item before drawing", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    this.startTile = ctx.ToTile(e.Location);
+                    this.transaction = historyService.BeginTransaction("Item Brush");
+                    this.isPainting = true;
+                    itemSize = item.GetSize();
+                    if (ctx.MapEditingService.AddItem(item, this.startTile, this.transaction, CollisionAction.Abort))
+                        ctx.Viewport.Invalidate();
+                }
             }
         }
 
@@ -65,7 +72,7 @@ namespace NHSE.WinForms.Zebra.Tools
             }
         }
 
-        public void OnMouseUp(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseUp(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == Left)
             {

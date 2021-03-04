@@ -6,13 +6,6 @@ using NHSE.WinForms.Zebra.Selection;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    internal interface IDragAction
-    {
-        void Start(Point startLocation, MapToolContext ctx);
-        void Move(Point location, MapToolContext ctx);
-        void End(Point location, MapToolContext ctx);
-    }
-
     class MoveTool : IMapTool
     {
         private readonly ISelectionService selectionService;
@@ -44,7 +37,7 @@ namespace NHSE.WinForms.Zebra.Tools
 
                 if (selectionService.SelectedItems.Any())
                 {
-                    this.dragAction = new MoveAction(
+                    this.dragAction = new MoveDragAction(
                         selectionRenderer,
                         selectionService,
                         historyService);
@@ -58,11 +51,11 @@ namespace NHSE.WinForms.Zebra.Tools
             dragAction?.Move(e.Location, ctx);
         }
 
-        public void OnMouseUp(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseUp(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == MouseButtons.Left)
             {
-                this.dragAction?.End(e.Location, ctx);
+                this.dragAction?.End(e.Location, modifierKeys, ctx);
                 this.dragAction = null;
             }
         }

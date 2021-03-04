@@ -6,14 +6,14 @@ using NHSE.WinForms.Zebra.Selection;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    class MoveAction : IDragAction
+    class MoveDragAction : IDragAction
     {
         private Point dragStart;
         private readonly SelectionRenderer selectionRenderer;
         private readonly ISelectionService selectionService;
         private readonly IHistoryService historyService;
 
-        public MoveAction(SelectionRenderer selectionRenderer, ISelectionService selectionService,
+        public MoveDragAction(SelectionRenderer selectionRenderer, ISelectionService selectionService,
             IHistoryService historyService)
         {
             this.selectionRenderer = selectionRenderer;
@@ -40,7 +40,7 @@ namespace NHSE.WinForms.Zebra.Tools
                 (location.Y - dragStart.Y) / ctx.TileSize);
         }
 
-        private bool IsValidDropPos(Point tileDelta, IMapEditingService mapEditingService)
+        private bool IsValidDropPos(Point tileDelta, IMapEditingService mapEditingService, bool createCopy)
         {
             // We now need to verify that, given the specified tile delta, the selected items will
             // not drop on any item or building that is not itself currently selected.
@@ -53,7 +53,7 @@ namespace NHSE.WinForms.Zebra.Tools
                     {
                         // Deal with the case where this tile will drop on an item that is to be
                         // moved...
-                        if (selectionService.SelectedItems.Any(i => i.Bounds.Contains(x, y)))
+                        if (!createCopy && selectionService.SelectedItems.Any(i => i.Bounds.Contains(x, y)))
                             continue;
 
                         if (mapEditingService.IsOccupied(new Point(x, y)))
@@ -65,17 +65,21 @@ namespace NHSE.WinForms.Zebra.Tools
             return true;
         }
 
-        public void End(Point location, MapToolContext ctx)
+        public void End(Point location, Keys modifierKeys, MapToolContext ctx)
         {
+            bool createCopy = modifierKeys.HasFlag(Keys.Control);
             Point tileDelta = GetTileDelta(location, ctx);
-            if (IsValidDropPos(tileDelta, ctx.MapEditingService))
+            if (IsValidDropPos(tileDelta, ctx.MapEditingService, createCopy))
             {
                 using (var trans = historyService.BeginTransaction($"Move {selectionService.SelectedItems.Count()} items"))
                 {
-                    // The drop location is valid; delete all tiles to be moved then recreate them in their
-                    // new location.
-                    foreach (var selectedItem in selectionService.SelectedItems)
-                        ctx.MapEditingService.DeleteTile(selectedItem.Bounds.Location, trans);
+                    if (!createCopy)
+                    {
+                        // The drop location is valid; delete all tiles to be moved then recreate them in their
+                        // new location.
+                        foreach (var selectedItem in selectionService.SelectedItems)
+                            ctx.MapEditingService.DeleteTile(selectedItem.Bounds.Location, trans);
+                    }
 
                     foreach (var selectedItem in selectionService.SelectedItems)
                     {

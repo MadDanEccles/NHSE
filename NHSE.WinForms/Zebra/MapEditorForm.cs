@@ -135,6 +135,8 @@ namespace NHSE.WinForms.Zebra
                 || focusedControl is NumericUpDown
                 || focusedControl is ComboBox)
                 return false;
+            if (mapView.Focused && mapView.CurrentTool?.CanDeselect == false)
+                return false;
             if (ProcessToolKey(keyData))
                 return true;
             return base.ProcessCmdKey(ref msg, keyData);
@@ -164,7 +166,7 @@ namespace NHSE.WinForms.Zebra
 
         private bool SelectTool(EditorTool newTool)
         {
-            if (currentTool != newTool && mapView.CurrentTool?.CanDeselect == true)
+            if (currentTool != newTool && mapView.CurrentTool?.CanDeselect != false)
             {
                 mapView.CurrentTool = CreateMapTool(newTool);
                 currentTool = newTool;

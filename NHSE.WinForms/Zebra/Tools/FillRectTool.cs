@@ -57,7 +57,7 @@ namespace NHSE.WinForms.Zebra.Tools
         private Rectangle GetMarqueeBounds(Point secondLocation)
             => new Rectangle(startLocation, secondLocation.Subtract(startLocation));
 
-        public void OnMouseUp(MouseEventArgs e, MapToolContext ctx)
+        public void OnMouseUp(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
             if (e.Button == MouseButtons.Left)
             {

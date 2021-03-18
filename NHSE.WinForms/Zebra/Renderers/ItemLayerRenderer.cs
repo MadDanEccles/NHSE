@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using NHSE.Core;
+using NHSE.WinForms.Zebra.Renderers.RenderStyles;
 
 namespace NHSE.WinForms.Zebra.Renderers
 {
@@ -13,6 +14,12 @@ namespace NHSE.WinForms.Zebra.Renderers
         {
             this.map = map;
         }
+
+        public IItemRenderStyle RenderStyle
+        {
+            get;
+            set;
+        } = new ClairesRenderStyle();
 
         public override void Paint(Graphics gfx, MapRenderContext context)
         {
@@ -64,8 +71,9 @@ namespace NHSE.WinForms.Zebra.Renderers
                     {
                         var type = ItemInfo.GetItemSize(root);
                         var itemSize = root.GetSize();
-                        Rectangle itemRect = context.ToViewport(rootLocation.X, rootLocation.Y, itemSize.Width, itemSize.Height).Shrink(2, 2, 1, 1);
-                        gfx.FillRectangle(context.ResourceCache.GetSolidBrush(ItemColor.GetItemColor(root)), itemRect);
+                        Rectangle itemRect = context.ToViewport(rootLocation.X, rootLocation.Y, itemSize.Width, itemSize.Height);
+
+                        RenderStyle?.DrawItem(gfx, context, itemRect, root);
 
                         for (int ix = 0; ix < itemSize.Width; ix++)
                         {

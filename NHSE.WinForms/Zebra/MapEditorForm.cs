@@ -44,7 +44,7 @@ namespace NHSE.WinForms.Zebra
             var data = GameInfo.Strings.ItemDataSource.ToList();
             var field = FieldItemList.Items.Select(z => z.Value).ToList();
             data.Add(field, GameInfo.Strings.InternalNameTranslation);
-            itemEditor2.Initialize(data, true);
+            itemEditor.Initialize(data, true);
 
             SelectTool(PanAndZoom);
         }
@@ -182,11 +182,11 @@ namespace NHSE.WinForms.Zebra
             return tool switch
             {
                 MoveItems => new MoveTool(mapView.SelectionService, mapView.SelectionRenderer, historyService),
-                FillRect => new FillRectTool(new ItemSelector(this.itemEditor2), historyService),
+                FillRect => new FillRectTool(new ItemSelector(this.itemEditor), historyService),
                 Marquee => new MarqueeSelectionTool(mapView.SelectionService, mapView.SelectionRenderer, historyService),
                 PanAndZoom => new PanTool(),
-                Brush => new PaintTool(new PaintOptions(this.itemEditor2), historyService),
-                Pick => new PickTool(new PickTarget(this.itemEditor2)),
+                Brush => new PaintTool(new PaintOptions(this.itemEditor), historyService, new PickTarget(itemEditor)),
+                Pick => new PickTool(new PickTarget(this.itemEditor)),
                 Erase => new EraserTool(historyService),
                 Template => null,
                 None => null,
@@ -237,6 +237,16 @@ namespace NHSE.WinForms.Zebra
         private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
+        }
+
+        private void copyIDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Item item = new Item();
+            item = itemEditor.SetItem(item);
+            if (item != null)
+            {
+                Clipboard.SetText(item.ItemId.ToString());
+            }
         }
     }
 

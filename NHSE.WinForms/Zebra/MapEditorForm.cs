@@ -1,20 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using NHSE.Core;
+using NHSE.WinForms.Zebra.Renderers.ColorSchemes;
+using NHSE.WinForms.Zebra.Renderers.RenderStyles;
 using NHSE.WinForms.Zebra.Tools;
 using NHSE.WinForms.Zebra.Validation;
 using static NHSE.WinForms.Zebra.EditorTool;
 
 namespace NHSE.WinForms.Zebra
 {
-    public partial class MapEditorForm : Form
+    public partial class MapEditorForm : Form, IColorSchemeProvider
     {
         private readonly MapManager mapManager;
         private readonly MainSave save;
         private readonly IHistoryService historyService;
+
+        private readonly Dictionary<Keys, EditorTool> toolKeys = new Dictionary<Keys, EditorTool>()
+        {
+            {Keys.I, Pick},
+            {Keys.B, Brush},
+            {Keys.X, Erase},
+            {Keys.Z, PanAndZoom},
+            {Keys.M, Marquee},
+            {Keys.V, MoveItems},
+            {Keys.R, FillRect},
+            {Keys.T, Template}
+        };
+
+        private EditorTool currentTool;
+        private IColorScheme colorScheme = new DefaultColorScheme();
 
         public MapEditorForm(MainSave save)
         {
@@ -22,7 +40,23 @@ namespace NHSE.WinForms.Zebra
             this.save = save;
             this.mapManager = new MapManager(save);
             mapView.Map = this.mapManager;
+            mapView.ItemRenderStyle = new ClairesRenderStyle(this);
 
+            // Check the map for common issues and allow the user to fix them before proceeding...
+            ValidateMap();
+
+            // Set up the history service to provide Undo/Redo functionality
+            historyService = new HistoryService();
+            historyService.HistoryChanged += HistoryServiceOnHistoryChanged;
+            
+            itemEditor.Initialize(new ItemSource());
+
+            // Select the initial tool
+            SelectTool(PanAndZoom);
+        }
+
+        private void ValidateMap()
+        {
             ItemIntegrityValidation val = new ItemIntegrityValidation(mapManager);
             ValidationResult vr = new ValidationResult();
             val.Validate(vr);
@@ -37,16 +71,14 @@ namespace NHSE.WinForms.Zebra
                     MessageBox.Show(summary, "Fixed!");
                 }
             }
+        }
 
-            historyService = new HistoryService();
-            historyService.HistoryChanged += HistoryServiceOnHistoryChanged;
-
-            var data = GameInfo.Strings.ItemDataSource.ToList();
-            var field = FieldItemList.Items.Select(z => z.Value).ToList();
-            data.Add(field, GameInfo.Strings.InternalNameTranslation);
-            itemEditor.Initialize(data, true);
-
-            SelectTool(PanAndZoom);
+        /// <summary>
+        /// This is a bit of a hack for the time being to get color schemes working...
+        /// </summary>
+        IColorScheme IColorSchemeProvider.GetColorScheme()
+        {
+            return this.colorScheme;
         }
 
         private void HistoryServiceOnHistoryChanged(object sender, EventArgs e)
@@ -142,18 +174,6 @@ namespace NHSE.WinForms.Zebra
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private readonly Dictionary<Keys, EditorTool> toolKeys = new Dictionary<Keys, EditorTool>()
-        {
-            {Keys.I, Pick},
-            {Keys.B, Brush},
-            {Keys.X, Erase},
-            {Keys.Z, PanAndZoom},
-            {Keys.M, Marquee},
-            {Keys.V, MoveItems},
-            {Keys.R, FillRect},
-            {Keys.T, Template}
-        };
-
         private bool ProcessToolKey(Keys keyData)
         {
             bool result = toolKeys.TryGetValue(keyData, out var tool);
@@ -161,8 +181,6 @@ namespace NHSE.WinForms.Zebra
                 SelectTool(tool);
             return result;
         }
-
-        private EditorTool currentTool;
 
         private bool SelectTool(EditorTool newTool)
         {
@@ -188,7 +206,7 @@ namespace NHSE.WinForms.Zebra
                 Brush => new PaintTool(new PaintOptions(this.itemEditor), historyService, new PickTarget(itemEditor)),
                 Pick => new PickTool(new PickTarget(this.itemEditor)),
                 Erase => new EraserTool(historyService),
-                Template => null,
+                Template => new TemplateTool(historyService, new ItemSelector(this.itemEditor)),
                 None => null,
                 _ => throw new ArgumentOutOfRangeException()
             };
@@ -241,11 +259,19 @@ namespace NHSE.WinForms.Zebra
 
         private void copyIDToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Item item = new Item();
-            item = itemEditor.SetItem(item);
-            if (item != null)
+            try
             {
-                Clipboard.SetText(item.ItemId.ToString());
+                Item item = new Item();
+                itemEditor.ApplyToItem(item);
+                if (item != null)
+                {
+                    Clipboard.SetText(item.ItemId.ToString());
+                }
+            }
+            catch (Exception caught)
+            {
+                ThreadExceptionDialog dlg = new ThreadExceptionDialog(caught);
+                dlg.ShowDialog(this);
             }
         }
     }
@@ -265,9 +291,9 @@ namespace NHSE.WinForms.Zebra
 
     internal class ItemSelector : IItemSelector
     {
-        private readonly WinForms.ItemEditor itemEditor;
+        private readonly IItemPropertiesUi itemEditor;
 
-        public ItemSelector(WinForms.ItemEditor itemEditor)
+        public ItemSelector(IItemPropertiesUi itemEditor)
         {
             this.itemEditor = itemEditor;
         }
@@ -275,28 +301,29 @@ namespace NHSE.WinForms.Zebra
         public Item GetItem()
         {
             Item item = new Item();
-            return itemEditor.SetItem(item);
+            itemEditor.ApplyToItem(item);
+            return item;
         }
     }
 
     internal class PickTarget : IPickTarget
     {
-        private readonly WinForms.ItemEditor itemEditor;
+        private readonly IItemPropertiesUi itemEditor;
 
-        public PickTarget(WinForms.ItemEditor itemEditor)
+        public PickTarget(IItemPropertiesUi itemEditor)
         {
             this.itemEditor = itemEditor;
         }
 
         public void Pick(Item item)
         {
-            itemEditor.LoadItem(item);
+            itemEditor.UpdateFromItem(item);
         }
     }
 
     internal class PaintOptions : ItemSelector, IPaintOptions
     {
-        public PaintOptions(WinForms.ItemEditor itemEditor)
+        public PaintOptions(ItemEditor itemEditor)
             : base(itemEditor)
         {
         }

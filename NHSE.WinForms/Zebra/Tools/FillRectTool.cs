@@ -5,21 +5,60 @@ using NHSE.WinForms.Zebra.Renderers;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    class FillRectTool : IMapTool
+    class FillRectTool : FillRectToolBase
     {
-        private Point startTile;
+        private readonly IItemSelector options;
         private Item item;
         private Size itemSize;
+
+        public FillRectTool(IItemSelector options, IHistoryService historyService) : base(historyService)
+        {
+            this.options = options;
+        }
+
+        protected override bool OnStartDrag(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
+        {
+            item = options.GetItem();
+            if (!item.IsRoot)
+            {
+                MessageBox.Show(ctx.Viewport, "Please select a valid item before drawing", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            itemSize = item.GetSize();
+            return true;
+        }
+
+        protected override void CalculateResult(MapToolContext ctx, Rectangle marqueeBounds, out ItemFieldFragment fragment, out string hint)
+        {
+            fragment = new ItemFieldFragment();
+            var tileRect = ctx.ToTiles(marqueeBounds);
+            for (int x = tileRect.Left; x <= tileRect.Right - itemSize.Width; x += itemSize.Width)
+            {
+                for (int y = tileRect.Top; y <= tileRect.Bottom - itemSize.Height; y += itemSize.Height)
+                {
+                    Rectangle itemTileRect = new Rectangle(x, y, itemSize.Width, itemSize.Height);
+                    fragment.Add(itemTileRect, item, ctx.MapEditingService.IsOccupied(itemTileRect));
+                }
+            }
+
+            int itemsX = tileRect.Width / itemSize.Width;
+            int itemsY = tileRect.Height / itemSize.Height;
+            hint = $"{itemsX} × {itemsY}";
+        }
+    }
+
+    abstract class FillRectToolBase : IMapTool
+    {
         private bool isDragging;
 
-        private readonly IItemSelector options;
         private readonly IHistoryService historyService;
         private readonly FillRectRenderer renderer;
         private Point startLocation;
+        private ItemFieldFragment? fragment;
 
-        public FillRectTool(IItemSelector options, IHistoryService historyService)
+        public FillRectToolBase(IHistoryService historyService)
         {
-            this.options = options;
             this.historyService = historyService;
             this.renderer = new FillRectRenderer();
         }
@@ -28,31 +67,31 @@ namespace NHSE.WinForms.Zebra.Tools
         {
             if (e.Button == MouseButtons.Left)
             {
-                item = options.GetItem();
-                if (!item.IsRoot)
+                fragment = null;
+                if (OnStartDrag(e, modifierKeys, ctx))
                 {
-                    MessageBox.Show(ctx.Viewport, "Please select a valid item before drawing", "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    this.startTile = ctx.ToTile(e.Location);
                     this.startLocation = e.Location;
                     this.isDragging = true;
-                    itemSize = item.GetSize();
-                    this.renderer.ItemSize = itemSize;
-                    this.renderer.MarqueeBounds = new Rectangle(e.Location, Size.Empty);
+                    this.renderer.Reset();
                 }
             }
         }
+
+        protected abstract bool OnStartDrag(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx);
 
         public void OnMouseMove(MouseEventArgs e, MapToolContext ctx)
         {
             if (isDragging)
             {
-                this.renderer.MarqueeBounds = GetMarqueeBounds(e.Location);
+                var marqueeBounds = GetMarqueeBounds(e.Location);
+                CalculateResult(ctx, marqueeBounds, out this.fragment, out var hint);
+                this.renderer.Update(fragment, hint, marqueeBounds);
             }
         }
+
+        protected abstract void CalculateResult(MapToolContext ctx, Rectangle marqueeBounds,
+            out ItemFieldFragment fragment,
+            out string hint);
 
         private Rectangle GetMarqueeBounds(Point secondLocation)
             => new Rectangle(startLocation, secondLocation.Subtract(startLocation));
@@ -62,19 +101,15 @@ namespace NHSE.WinForms.Zebra.Tools
             if (e.Button == MouseButtons.Left)
             {
                 isDragging = false;
-                using (var trans = historyService.BeginTransaction("Fill Rectangle"))
+                if (fragment != null)
                 {
-                    var tileRect = ctx.ToTiles(GetMarqueeBounds(e.Location));
-                    for (int x = tileRect.Left; x <= tileRect.Right - itemSize.Width; x += itemSize.Width)
+                    using (var trans = historyService.BeginTransaction("Fill Rectangle"))
                     {
-                        for (int y = tileRect.Top; y <= tileRect.Bottom - itemSize.Height; y += itemSize.Height)
-                        {
-                            ctx.MapEditingService.AddItem(item, new Point(x, y), trans, CollisionAction.Abort);
-                        }
+                        foreach (var entry in fragment)
+                            ctx.MapEditingService.AddItem(entry.Item, entry.TileRect.Location, trans, CollisionAction.Abort);
                     }
                 }
-
-                renderer.MarqueeBounds = Rectangle.Empty;
+                this.renderer.Reset();
             }
         }
 

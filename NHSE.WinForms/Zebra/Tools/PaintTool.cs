@@ -5,12 +5,6 @@ using static System.Windows.Forms.MouseButtons;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    interface IPickTarget
-    {
-        void Pick(Item item);
-    }
-
-
     class PaintTool : IMapTool
     {
         private Point startTile;

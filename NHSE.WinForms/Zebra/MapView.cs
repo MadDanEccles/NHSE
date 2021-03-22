@@ -4,12 +4,13 @@ using System.Drawing;
 using System.Windows.Forms;
 using NHSE.Core;
 using NHSE.WinForms.Zebra.Renderers;
+using NHSE.WinForms.Zebra.Renderers.RenderStyles;
 using NHSE.WinForms.Zebra.Selection;
 using NHSE.WinForms.Zebra.Tools;
 
 namespace NHSE.WinForms.Zebra
 {
-    class MapView : Control, IMapViewport
+    class MapView : Control, IMapViewport, IItemRenderStyleProvider
     {
         private MapManager? map;
         private readonly List<IMapLayerRenderer> renderers = new List<IMapLayerRenderer>();
@@ -23,6 +24,10 @@ namespace NHSE.WinForms.Zebra
 
             this.CurrentTool = new PanTool();
         }
+
+        IItemRenderStyle IItemRenderStyleProvider.GetStyle() => this.ItemRenderStyle;
+
+        public IItemRenderStyle ItemRenderStyle { get; set; }
 
         public MapManager Map
         {
@@ -42,7 +47,7 @@ namespace NHSE.WinForms.Zebra
                     AddRenderer(new TerrainRenderer(map));
                     AddRenderer(new GridOverlayRenderer());
                     AddRenderer(new BuildingLayerRenderer(map));
-                    AddRenderer(new ItemLayerRenderer(map));
+                    AddRenderer(new ItemLayerRenderer(map, this));
                     AddRenderer(SelectionRenderer = new SelectionRenderer(this.SelectionService));
                 }
             }

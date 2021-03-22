@@ -15,5 +15,7 @@ namespace NHSE.WinForms.Zebra
                 value.Width - left - right,
                 value.Height - top - bottom);
         }
+
+        public static bool Encompasses(this Size a, Size b) => a.Width >= b.Width && a.Height >= b.Height;
     }
 }

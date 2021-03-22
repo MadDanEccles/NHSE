@@ -37,7 +37,7 @@ namespace NHSE.Core
             ReFabricPattern0VisibleOff = fp0;
         }
 
-        private const string Invalid = nameof(Invalid);
+        public const string Invalid = nameof(Invalid);
 
         public bool HasBodyColor(int variant) => ReBodyPatternColors0[variant] != NoColor || ReBodyPatternColors1[variant] != NoColor;
         public bool HasFabricColor(int variant) => ReFabricPatternColors0[variant] != NoColor || ReFabricPatternColors1[variant] != NoColor;
@@ -101,19 +101,19 @@ namespace NHSE.Core
             if (str.BodyParts.TryGetValue(item, out var parts))
                 sb.Append(parts).AppendLine(":");
 
-            for (int i = 0; i < 8; i++)
-            {
-                var cd = GetBodyDescription(i);
-                var name = $"{ItemUniqueID:00000}_{i}";
-                var hasBody = str.BodyColor.TryGetValue(name, out var desc);
+                for (int i = 0; i < 8; i++)
+                {
+                    var cd = GetBodyDescription(i);
+                    var name = $"{ItemUniqueID:00000}_{i}";
+                    var hasBody = str.BodyColor.TryGetValue(name, out var desc);
 
-                if (hasBody && cd != Invalid)
-                    sb.Append(i).Append('=').Append(desc).Append(" (").Append(cd).AppendLine(")");
-                else if (hasBody)
-                    sb.Append(i).Append('=').AppendLine(desc);
-                // else don't add anything
-            }
-            return sb.ToString();
+                    if (hasBody && cd != Invalid)
+                        sb.Append(i).Append('=').Append(desc).Append(" (").Append(cd).AppendLine(")");
+                    else if (hasBody)
+                        sb.Append(i).Append('=').AppendLine(desc);
+                    // else don't add anything
+                }
+                return sb.ToString();
         }
 
         public string GetFabricSummary(IRemakeString str)

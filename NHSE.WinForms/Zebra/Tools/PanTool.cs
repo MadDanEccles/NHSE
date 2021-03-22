@@ -1,21 +1,9 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using NHSE.Core;
 using static System.Windows.Forms.MouseButtons;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    internal interface IItemSelector
-    {
-        public Item GetItem();
-    }
-
-    internal interface IPaintOptions : IItemSelector
-    {
-        public bool AlignToItemGrid { get; }
-    }
-
-
     class PanTool : IMapTool
     {
         private Point panStartScrollPosition;

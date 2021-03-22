@@ -16,6 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Zebra\Music\**" />
+    <EmbeddedResource Remove="Zebra\Music\**" />
+    <None Remove="Zebra\Music\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\NHSE.Core\NHSE.Core.csproj" />
     <ProjectReference Include="..\NHSE.Injection\NHSE.Injection.csproj" />
     <ProjectReference Include="..\NHSE.Sprites\NHSE.Sprites.csproj" />
@@ -109,6 +115,15 @@
     <Compile Update="Subforms\Villager\VillagerFlagEditor.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Zebra\ItemVariantSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Zebra\BaseItemSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Zebra\ItemDirectionSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Zebra\ZebraResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -136,17 +151,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Update="Zebra\Music\Animal Crossing_ New Horizons - 5PM %28Remix%29 %28192 kbps%29.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Zebra\Music\Animal Crossing_ New Horizons Main Theme %28Remix%29 %28192 kbps%29.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Resources\network\" />
-    <Folder Include="Zebra\Music\" />
   </ItemGroup>
 
 </Project>

@@ -35,7 +35,7 @@ namespace NHSE.WinForms.Zebra
             NHSE.WinForms.Zebra.Tools.PanTool panTool1 = new NHSE.WinForms.Zebra.Tools.PanTool();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditorForm));
             this.mapView = new NHSE.WinForms.Zebra.MapView();
-            this.itemEditor = new NHSE.WinForms.ItemEditor();
+            this.itemEditor = new ItemEditor();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnZoom = new System.Windows.Forms.ToolStripButton();
             this.btnMarquee = new System.Windows.Forms.ToolStripButton();
@@ -56,12 +56,12 @@ namespace NHSE.WinForms.Zebra
             this.deleteSelectedItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.categoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel1 = new System.Windows.Forms.Panel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.locationLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.itemLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.copyIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -73,9 +73,10 @@ namespace NHSE.WinForms.Zebra
             this.mapView.BackColor = System.Drawing.Color.White;
             this.mapView.CurrentTool = panTool1;
             this.mapView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapView.ItemRenderStyle = null;
             this.mapView.Location = new System.Drawing.Point(37, 28);
             this.mapView.Map = null;
-            this.mapView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.mapView.Margin = new System.Windows.Forms.Padding(4);
             this.mapView.Name = "mapView";
             this.mapView.ScrollPosition = new System.Drawing.Point(0, 0);
             this.mapView.Size = new System.Drawing.Size(1109, 784);
@@ -83,11 +84,11 @@ namespace NHSE.WinForms.Zebra
             this.mapView.Text = "mapView1";
             this.mapView.Click += new System.EventHandler(this.mapView_Click);
             // 
-            // itemEditor2
+            // itemEditor
             // 
             this.itemEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.itemEditor.Location = new System.Drawing.Point(0, 0);
-            this.itemEditor.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.itemEditor.Margin = new System.Windows.Forms.Padding(5);
             this.itemEditor.Name = "itemEditor";
             this.itemEditor.Size = new System.Drawing.Size(248, 784);
             this.itemEditor.TabIndex = 0;
@@ -288,11 +289,18 @@ namespace NHSE.WinForms.Zebra
             this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
             this.categoriesToolStripMenuItem.Text = "Categories...";
             // 
+            // copyIDToolStripMenuItem
+            // 
+            this.copyIDToolStripMenuItem.Name = "copyIDToolStripMenuItem";
+            this.copyIDToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.copyIDToolStripMenuItem.Text = "Copy ID";
+            this.copyIDToolStripMenuItem.Click += new System.EventHandler(this.copyIDToolStripMenuItem_Click);
+            // 
             // splitter1
             // 
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
             this.splitter1.Location = new System.Drawing.Point(1146, 28);
-            this.splitter1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.splitter1.Margin = new System.Windows.Forms.Padding(4);
             this.splitter1.Name = "splitter1";
             this.splitter1.Size = new System.Drawing.Size(3, 784);
             this.splitter1.TabIndex = 7;
@@ -303,7 +311,7 @@ namespace NHSE.WinForms.Zebra
             this.panel1.Controls.Add(this.itemEditor);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel1.Location = new System.Drawing.Point(1149, 28);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(248, 784);
             this.panel1.TabIndex = 8;
@@ -335,13 +343,6 @@ namespace NHSE.WinForms.Zebra
             this.itemLabel.Size = new System.Drawing.Size(15, 20);
             this.itemLabel.Text = "-";
             // 
-            // copyIDToolStripMenuItem
-            // 
-            this.copyIDToolStripMenuItem.Name = "copyIDToolStripMenuItem";
-            this.copyIDToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
-            this.copyIDToolStripMenuItem.Text = "Copy ID";
-            this.copyIDToolStripMenuItem.Click += new System.EventHandler(this.copyIDToolStripMenuItem_Click);
-            // 
             // MapEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -355,7 +356,7 @@ namespace NHSE.WinForms.Zebra
             this.Controls.Add(this.statusStrip1);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MapEditorForm";
             this.Text = "Map Editor";
             this.toolStrip1.ResumeLayout(false);
@@ -372,7 +373,7 @@ namespace NHSE.WinForms.Zebra
 
         #endregion
         private MapView mapView;
-        private WinForms.ItemEditor itemEditor;
+        private ItemEditor itemEditor;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton btnZoom;
         private System.Windows.Forms.ToolStripButton btnMarquee;

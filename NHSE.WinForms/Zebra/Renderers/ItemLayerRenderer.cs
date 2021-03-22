@@ -9,20 +9,17 @@ namespace NHSE.WinForms.Zebra.Renderers
     class ItemLayerRenderer : MapLayerRendererBase
     {
         private readonly MapManager map;
+        private readonly IItemRenderStyleProvider itemRenderStyleProvider;
 
-        public ItemLayerRenderer(MapManager map)
+        public ItemLayerRenderer(MapManager map, IItemRenderStyleProvider itemRenderStyleProvider)
         {
             this.map = map;
+            this.itemRenderStyleProvider = itemRenderStyleProvider;
         }
-
-        public IItemRenderStyle RenderStyle
-        {
-            get;
-            set;
-        } = new ClairesRenderStyle();
 
         public override void Paint(Graphics gfx, MapRenderContext context)
         {
+            var itemRenderStyle = itemRenderStyleProvider.GetStyle();
             var layer = map.CurrentLayer;
 
             bool[,] drawn = new bool[context.TileRange.Width, context.TileRange.Height];
@@ -73,7 +70,7 @@ namespace NHSE.WinForms.Zebra.Renderers
                         var itemSize = root.GetSize();
                         Rectangle itemRect = context.ToViewport(rootLocation.X, rootLocation.Y, itemSize.Width, itemSize.Height);
 
-                        RenderStyle?.DrawItem(gfx, context, itemRect, root);
+                        itemRenderStyle?.DrawItem(gfx, context, itemRect, root);
 
                         for (int ix = 0; ix < itemSize.Width; ix++)
                         {

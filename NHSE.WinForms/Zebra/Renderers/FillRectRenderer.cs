@@ -7,33 +7,32 @@ namespace NHSE.WinForms.Zebra.Renderers
     {
         private readonly Pen pen;
         private Rectangle marqueeBounds;
-        private Size itemSize;
-        private Font font;
+        private readonly Font font;
+        private ItemFieldFragment? fragment;
+        private string? hint;
 
-        public Rectangle MarqueeBounds
-        {
-            get => marqueeBounds;
-            set
-            {
-                if (marqueeBounds != value)
-                {
-                    marqueeBounds = value;
-                    OnContentChanged();
-                }
-            }
-        }
+        public void Reset() => Update(null, null, Rectangle.Empty);
 
-        public Size ItemSize
+        public void Update(ItemFieldFragment? fragment, string? hint, Rectangle marqueeBounds)
         {
-            get => itemSize;
-            set
+            bool contentChanged = false;
+            if (fragment != this.fragment)
             {
-                if (itemSize != value)
-                {
-                    itemSize = value;
-                    OnContentChanged();
-                }
+                this.fragment = fragment;
+                contentChanged = true;
             }
+            if (hint != this.hint)
+            {
+                this.hint = hint;
+                contentChanged = true;
+            }
+            if (marqueeBounds != this.marqueeBounds)
+            {
+                this.marqueeBounds = marqueeBounds;
+                contentChanged = true;
+            }
+            if (contentChanged)
+                OnContentChanged();
         }
 
         public FillRectRenderer()
@@ -55,35 +54,33 @@ namespace NHSE.WinForms.Zebra.Renderers
 
         public override void Paint(Graphics gfx, MapRenderContext context)
         {
-            if (!MarqueeBounds.IsEmpty)
+            if (!marqueeBounds.IsEmpty)
             {
-                gfx.DrawRectangle(Pens.White, MarqueeBounds);
-                gfx.DrawRectangle(pen, MarqueeBounds);
+                gfx.DrawRectangle(Pens.White, marqueeBounds);
+                gfx.DrawRectangle(pen, marqueeBounds);
+            }
 
-                var tileRect = context.ToTiles(MarqueeBounds);
-                for (int x = tileRect.Left; x <= tileRect.Right - itemSize.Width; x += itemSize.Width)
+            if (fragment != null)
+            {
+                foreach (var entry in fragment)
                 {
-                    for (int y = tileRect.Top; y <= tileRect.Bottom - itemSize.Height; y += itemSize.Height)
-                    {
-                        var itemRect = context.ToViewport(x, y, itemSize.Width, itemSize.Height);
-                        itemRect = itemRect.Shrink(2, 2, 1, 1);
-                        gfx.FillRectangle(Brushes.Red, itemRect);
-                    }
+                    var itemRect = context.ToViewport(entry.TileRect).Shrink(2, 2, 1, 1);
+                    var brush = entry.IsConflicted ? Brushes.Red : Brushes.LawnGreen;
+                    gfx.FillRectangle(brush, itemRect);
+
                 }
+            }
 
-                int itemsX = tileRect.Width / itemSize.Width;
-                int itemsY = tileRect.Height / itemSize.Height;
-
-                string hint = $"{itemsX} × {itemsY}";
+            if (!string.IsNullOrEmpty(hint))
+            {
                 Size hintSize = Size.Ceiling(gfx.MeasureString(hint, font));
                 Rectangle hintRect = new Rectangle(
-                    MarqueeBounds.Right - hintSize.Width,
-                    MarqueeBounds.Bottom - hintSize.Height,
+                    marqueeBounds.Right - hintSize.Width,
+                    marqueeBounds.Bottom - hintSize.Height,
                     hintSize.Width,
                     hintSize.Height);
                 gfx.FillRectangle(Brushes.Black, hintRect);
                 gfx.DrawString(hint, font, Brushes.White, hintRect);
-
             }
         }
     }

@@ -10,7 +10,7 @@ namespace NHSE.WinForms.Zebra
 
     public partial class BaseItemSelector : UserControl, IItemPropertiesUi
     {
-        public ItemEditorInfo SelectedItemInfo { get; private set; }
+        internal ItemEditorInfo SelectedItemInfo { get; private set; }
 
         public BaseItemSelector()
         {
@@ -34,7 +34,7 @@ namespace NHSE.WinForms.Zebra
 
         public void UpdateFromItem(Item item)
         {
-            cbItem.SelectedValue = (int)item.GetItemId();
+            cbItem.SelectedValue = (int)ItemConvertor.Instance.GetItemId(item);
         }
 
         public void Initialize(ItemSource itemSource)

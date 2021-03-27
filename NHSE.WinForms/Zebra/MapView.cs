@@ -93,7 +93,7 @@ namespace NHSE.WinForms.Zebra
             get => zoomLevels[ZoomLevel];
         }
 
-        public int ZoomLevel { get; private set; }
+        public int ZoomLevel { get; private set; } = 4;
 
         private readonly int[] zoomLevels = {3, 4, 5, 6, 7, 8, 10, 12, 16, 24, 32};
 
@@ -156,6 +156,7 @@ namespace NHSE.WinForms.Zebra
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            Focus();
             CurrentTool?.OnMouseDown(e, ModifierKeys, CreateMapToolContext());
             base.OnMouseDown(e);
         }
@@ -170,6 +171,11 @@ namespace NHSE.WinForms.Zebra
         {
             CurrentTool?.OnMouseUp(e, ModifierKeys, CreateMapToolContext());
             base.OnMouseUp(e);
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
         }
 
         public IMapTool? CurrentTool
@@ -189,5 +195,10 @@ namespace NHSE.WinForms.Zebra
         public ISelectionService SelectionService { get; private set; }
         public SelectionRenderer SelectionRenderer { get; private set; }
         public IMapEditingService MapEditingService { get; private set; }
+
+        public bool ProcessCommandKey(Keys keyData)
+        {
+            return CurrentTool?.OnKeyDown(keyData, CreateMapToolContext()) ?? false;
+        }
     }
 }

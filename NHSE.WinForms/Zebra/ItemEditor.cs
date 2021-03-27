@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Windows.Forms;
 using NHSE.Core;
+using NHSE.WinForms.Zebra.Tools;
 
 namespace NHSE.WinForms.Zebra
 {
-    public partial class ItemEditor : UserControl, IItemPropertiesUi
+    public partial class ItemEditor : UserControl, IItemPropertiesUi, IItemSelector, IPickTarget
     {
         public ItemEditor()
         {
@@ -17,23 +18,39 @@ namespace NHSE.WinForms.Zebra
             baseItemSelector.ApplyToItem(item);
             if (radBuried.Checked)
             {
-                ItemConvertor.ApplyPresentation(item, PresentationType.Buried);
+                ItemConvertor.Instance.ApplyPresentation(item, PresentationType.Buried);
                 ApplyStackSize(item);
             }
             else if (radDropped.Checked)
             {
-                ItemConvertor.ApplyPresentation(item, PresentationType.Dropped);
+                ItemConvertor.Instance.ApplyPresentation(item, PresentationType.Dropped);
                 ApplyStackSize(item);
             }
             else if (radHung.Checked)
             {
-                ItemConvertor.ApplyPresentation(item, PresentationType.Hung);
+                ItemConvertor.Instance.ApplyPresentation(item, PresentationType.Hung);
                 directionSelector.ApplyToItem(item);
+            }
+            else if (radRecipe.Checked)
+            {
+                ItemConvertor.Instance.ApplyPresentation(item, PresentationType.Recipe);
             }
             else
             {
                 directionSelector.ApplyToItem(item);
             }
+        }
+
+        void IPickTarget.Pick(Item item)
+        {
+            this.UpdateFromItem(item);
+        }
+
+        Item IItemSelector.GetItem()
+        {
+            Item item = new Item();
+            this.ApplyToItem(item);
+            return item;
         }
 
         private void ApplyStackSize(Item item)
@@ -61,8 +78,10 @@ namespace NHSE.WinForms.Zebra
                 if (!baseItemSelector.SelectedItemInfo.HasVariants)
                     nudStackSize.Value = item.Count + 1;
             }
-            else if (ItemConvertor.IsHung(item))
+            else if (ItemConvertor.Instance.IsHung(item))
                 radHung.Checked = true;
+            else if (ItemConvertor.Instance.IsRecipe(item))
+                radRecipe.Checked = true;
             else
                 radPlaced.Checked = true;
         }
@@ -76,6 +95,12 @@ namespace NHSE.WinForms.Zebra
         {
             switch (PresentationType)
             {
+                case PresentationType.Recipe:
+                    lblDirection.Hide();
+                    nudStackSize.Hide();
+                    lblStackSize.Hide();
+                    directionSelector.Hide();
+                    break;
                 case PresentationType.Hung:
                 case PresentationType.Placed:
                     lblDirection.Show();
@@ -105,7 +130,9 @@ namespace NHSE.WinForms.Zebra
                     return PresentationType.Hung;
                 if (radPlaced.Checked)
                     return PresentationType.Placed;
-                return PresentationType.Unknown;
+                if (radRecipe.Checked)
+                    return PresentationType.Recipe;
+                return PresentationType.None;
             }
             set
             {
@@ -123,6 +150,9 @@ namespace NHSE.WinForms.Zebra
                     case PresentationType.Hung:
                         radHung.Checked = true;
                         break;
+                    case PresentationType.Recipe:
+                        radRecipe.Checked = true;
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
@@ -134,8 +164,9 @@ namespace NHSE.WinForms.Zebra
             var selectedItemInfo = baseItemSelector.SelectedItemInfo;
             radDropped.Enabled = selectedItemInfo.CanDrop;
             radHung.Enabled = selectedItemInfo.CanHang;
-            radBuried.Enabled = selectedItemInfo.CanDrop;
-            radPlaced.Enabled = !selectedItemInfo.CanHang;
+            radBuried.Enabled = selectedItemInfo.CanBury;
+            radPlaced.Enabled = selectedItemInfo.CanPlace;
+            radRecipe.Enabled = selectedItemInfo.CanRecipe;
 
             if (selectedItemInfo.HasVariants)
             {

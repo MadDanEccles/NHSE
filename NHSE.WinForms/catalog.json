@@ -1,0 +1,288 @@
+{
+  "DefaultPresentationType": "Placed, Dropped, Buried",
+  "PlacedItemMap": [
+    {
+      "Placed": 60351,
+      "Normal": 3403
+    },
+    {
+      "Placed": 60594,
+      "Normal": 5213
+    },
+    {
+      "Placed": 60532,
+      "Normal": 4354
+    },
+    {
+      "Placed": 60540,
+      "Normal": 4356
+    },
+    {
+      "Placed": 60684,
+      "Normal": 12630
+    },
+    {
+      "Placed": 60709,
+      "Normal": 13275
+    },
+    {
+      "Placed": 60373,
+      "Normal": 4349
+    },
+    {
+      "Placed": 60680,
+      "Normal": 12758
+    },
+    {
+      "Placed": 60599,
+      "Normal": 5206
+    },
+    {
+      "Placed": 60598,
+      "Normal": 5207
+    },
+    {
+      "Placed": 60685,
+      "Normal": 12894
+    },
+    {
+      "Placed": 60611,
+      "Normal": 11712
+    },
+    {
+      "Placed": 60374,
+      "Normal": 4350
+    },
+    {
+      "Placed": 60376,
+      "Normal": 4352
+    },
+    {
+      "Placed": 60542,
+      "Normal": 4358
+    },
+    {
+      "Placed": 60541,
+      "Normal": 4357
+    },
+    {
+      "Placed": 60571,
+      "Normal": 5212
+    },
+    {
+      "Placed": 60346,
+      "Normal": 3402
+    },
+    {
+      "Placed": 60160,
+      "Normal": 3080
+    },
+    {
+      "Placed": 60610,
+      "Normal": 11711
+    }
+  ],
+  "Groups": [
+    {
+      "Name": "Cannot be Hung or Placed",
+      "PresentationType": "Dropped, Buried",
+      "ItemIds": [
+        2769,
+        2767,
+        2768,
+        2501,
+        2511,
+        3090,
+        2502,
+        2624,
+        2500,
+        12968,
+        2505,
+        2295,
+        3263,
+        5988,
+        5989,
+        5990,
+        5991,
+        5992,
+        5993,
+        5994,
+        5995,
+        5996,
+        5985,
+        5986,
+        5987,
+        5859,
+        5729,
+        12512,
+        12511,
+        12510,
+        12514,
+        12513,
+        12509,
+        5982,
+        5728,
+        5727,
+        7374,
+        3540,
+        3539,
+        5732,
+        5730,
+        5731,
+        3280,
+        3276,
+        3279,
+        3277,
+        3278,
+        1376,
+        1381,
+        1375,
+        1382,
+        1379,
+        1380,
+        1374,
+        2213,
+        2285,
+        2214,
+        2286,
+        2288,
+        2287,
+        4525,
+        4526,
+        4528,
+        4527,
+        2389,
+        2381,
+        3469,
+        3466,
+        3470,
+        5983,
+        5984,
+        12546,
+        13196,
+        13197,
+        9964,
+        13228,
+        9261,
+        5932,
+        5851
+      ]
+    },
+    {
+      "Name": "Can Be Placed but not dropped, buried or hung",
+      "PresentationType": "Placed, Buried",
+      "itemKinds": ["Kind_DummyPresentbox", "Kind_Tree" ]
+    },
+    {
+      "Name": "Can Be Placed or Dropped but not buried or hung",
+      "PresentationType": "Placed, Dropped",
+      "itemKinds": [ "Kind_Insect", "Kind_Fish", "Kind_DiveFish", "Kind_FlowerBud", "Kind_Bush" ]
+    },
+    {
+      "Name": "Can Be Hung or Placed",
+      "PresentationType": "Hung, Placed, Dropped, Buried",
+      "itemKinds": [ "Kind_Picture", "Kind_PictureFake" ],
+      "ItemIds": []
+    },
+    {
+      "Name": "Must Be Hung",
+      "PresentationType": "Hung, Dropped, Buried",
+      "itemKinds": [ "Kind_Poster", "Kind_DoorDeco" ],
+      "ItemIds": [
+        12417,
+        12418,
+        7040,
+        12268,
+        13353,
+        12242,
+        5964,
+        7139,
+        7145,
+        12266,
+        13315,
+        12257,
+        5958,
+        13248,
+        929,
+        3558,
+        4030,
+        682,
+        875,
+        7037,
+        3967,
+        12485,
+        11182,
+        4012,
+        6832,
+        4130,
+        1783,
+        915,
+        3996,
+        3340,
+        4144,
+        4133,
+        955,
+        12486,
+        3699,
+        3583,
+        4027,
+        4099,
+        12484,
+        7280,
+        7035,
+        11261,
+        11099,
+        7282,
+        3775,
+        3970,
+        8415,
+        3399,
+        3559,
+        3562,
+        3275,
+        3992,
+        3471,
+        4037,
+        4119,
+        4118,
+        11098,
+        12557,
+        9565,
+        11127,
+        11128,
+        3976,
+        6818,
+        4077,
+        3818,
+        928,
+        3785,
+        4028,
+        13930,
+        4017,
+        7036,
+        3817,
+        13222,
+        6827,
+        7190,
+        3584,
+        1165,
+        704,
+        4756,
+        6075,
+        957,
+        1744,
+        3431,
+        3986,
+        3428,
+        5165,
+        3987,
+        8417,
+        11100,
+        12407,
+        3208,
+        12741,
+        5636
+      ]
+    }
+  ]
+}

@@ -32,10 +32,8 @@ namespace NHSE.WinForms.Zebra
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            NHSE.WinForms.Zebra.Tools.PanTool panTool1 = new NHSE.WinForms.Zebra.Tools.PanTool();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditorForm));
-            this.mapView = new NHSE.WinForms.Zebra.MapView();
-            this.itemEditor = new ItemEditor();
+            NHSE.WinForms.Zebra.Tools.PanTool panTool1 = new NHSE.WinForms.Zebra.Tools.PanTool();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnZoom = new System.Windows.Forms.ToolStripButton();
             this.btnMarquee = new System.Windows.Forms.ToolStripButton();
@@ -43,9 +41,11 @@ namespace NHSE.WinForms.Zebra
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnMove = new System.Windows.Forms.ToolStripButton();
             this.btnBrush = new System.Windows.Forms.ToolStripButton();
-            this.btnTemplate = new System.Windows.Forms.ToolStripButton();
             this.btnEraser = new System.Windows.Forms.ToolStripButton();
             this.btnFillRect = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnSingleTemplate = new System.Windows.Forms.ToolStripButton();
+            this.btnMultiTemplate = new System.Windows.Forms.ToolStripButton();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,36 +62,14 @@ namespace NHSE.WinForms.Zebra
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.locationLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.itemLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.mapView = new NHSE.WinForms.Zebra.MapView();
+            this.multiItemSelector = new NHSE.WinForms.Zebra.MultiItemSelector();
+            this.itemEditor = new NHSE.WinForms.Zebra.ItemEditor();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // mapView
-            // 
-            this.mapView.BackColor = System.Drawing.Color.White;
-            this.mapView.CurrentTool = panTool1;
-            this.mapView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapView.ItemRenderStyle = null;
-            this.mapView.Location = new System.Drawing.Point(37, 28);
-            this.mapView.Map = null;
-            this.mapView.Margin = new System.Windows.Forms.Padding(4);
-            this.mapView.Name = "mapView";
-            this.mapView.ScrollPosition = new System.Drawing.Point(0, 0);
-            this.mapView.Size = new System.Drawing.Size(1109, 784);
-            this.mapView.TabIndex = 1;
-            this.mapView.Text = "mapView1";
-            this.mapView.Click += new System.EventHandler(this.mapView_Click);
-            // 
-            // itemEditor
-            // 
-            this.itemEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemEditor.Location = new System.Drawing.Point(0, 0);
-            this.itemEditor.Margin = new System.Windows.Forms.Padding(5);
-            this.itemEditor.Name = "itemEditor";
-            this.itemEditor.Size = new System.Drawing.Size(248, 784);
-            this.itemEditor.TabIndex = 0;
             // 
             // toolStrip1
             // 
@@ -104,12 +82,14 @@ namespace NHSE.WinForms.Zebra
             this.toolStripSeparator1,
             this.btnMove,
             this.btnBrush,
-            this.btnTemplate,
             this.btnEraser,
-            this.btnFillRect});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 28);
+            this.btnFillRect,
+            this.toolStripSeparator3,
+            this.btnSingleTemplate,
+            this.btnMultiTemplate});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(37, 784);
+            this.toolStrip1.Size = new System.Drawing.Size(37, 661);
             this.toolStrip1.TabIndex = 4;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -174,17 +154,6 @@ namespace NHSE.WinForms.Zebra
             this.btnBrush.Text = "Item Brush (B)";
             this.btnBrush.Click += new System.EventHandler(this.btnPaint_Click);
             // 
-            // btnTemplate
-            // 
-            this.btnTemplate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnTemplate.Image")));
-            this.btnTemplate.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.btnTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnTemplate.Name = "btnTemplate";
-            this.btnTemplate.Size = new System.Drawing.Size(34, 36);
-            this.btnTemplate.Text = "Template (T)";
-            this.btnTemplate.Click += new System.EventHandler(this.btnTemplate_Click);
-            // 
             // btnEraser
             // 
             this.btnEraser.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -207,6 +176,33 @@ namespace NHSE.WinForms.Zebra
             this.btnFillRect.Text = "Fill Rectangle (R)";
             this.btnFillRect.Click += new System.EventHandler(this.btnFillRect_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(34, 6);
+            // 
+            // btnSingleTemplate
+            // 
+            this.btnSingleTemplate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSingleTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnSingleTemplate.Image")));
+            this.btnSingleTemplate.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnSingleTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSingleTemplate.Name = "btnSingleTemplate";
+            this.btnSingleTemplate.Size = new System.Drawing.Size(34, 36);
+            this.btnSingleTemplate.Text = "Template (T)";
+            this.btnSingleTemplate.Click += new System.EventHandler(this.btnTemplate_Click);
+            // 
+            // btnMultiTemplate
+            // 
+            this.btnMultiTemplate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnMultiTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnMultiTemplate.Image")));
+            this.btnMultiTemplate.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btnMultiTemplate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnMultiTemplate.Name = "btnMultiTemplate";
+            this.btnMultiTemplate.Size = new System.Drawing.Size(34, 36);
+            this.btnMultiTemplate.Text = "toolStripButton1";
+            this.btnMultiTemplate.Click += new System.EventHandler(this.btnMultiTemplate_Click);
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -223,14 +219,14 @@ namespace NHSE.WinForms.Zebra
             this.copyIDToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1397, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1054, 24);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // editToolStripMenuItem
@@ -241,7 +237,7 @@ namespace NHSE.WinForms.Zebra
             this.toolStripSeparator2,
             this.deleteSelectedItemsToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(49, 24);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
             // 
             // undoToolStripMenuItem
@@ -249,7 +245,7 @@ namespace NHSE.WinForms.Zebra
             this.undoToolStripMenuItem.Enabled = false;
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(269, 26);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.undoToolStripMenuItem.Text = "Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
@@ -258,20 +254,20 @@ namespace NHSE.WinForms.Zebra
             this.redoToolStripMenuItem.Enabled = false;
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(269, 26);
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.redoToolStripMenuItem.Text = "Redo";
             this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(266, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(207, 6);
             // 
             // deleteSelectedItemsToolStripMenuItem
             // 
             this.deleteSelectedItemsToolStripMenuItem.Name = "deleteSelectedItemsToolStripMenuItem";
             this.deleteSelectedItemsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.deleteSelectedItemsToolStripMenuItem.Size = new System.Drawing.Size(269, 26);
+            this.deleteSelectedItemsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.deleteSelectedItemsToolStripMenuItem.Text = "Delete Selected Items";
             this.deleteSelectedItemsToolStripMenuItem.Click += new System.EventHandler(this.deleteSelectedItemsToolStripMenuItem_Click);
             // 
@@ -280,40 +276,41 @@ namespace NHSE.WinForms.Zebra
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.categoriesToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(75, 24);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
             // 
             // categoriesToolStripMenuItem
             // 
             this.categoriesToolStripMenuItem.Name = "categoriesToolStripMenuItem";
-            this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
+            this.categoriesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.categoriesToolStripMenuItem.Text = "Categories...";
             // 
             // copyIDToolStripMenuItem
             // 
             this.copyIDToolStripMenuItem.Name = "copyIDToolStripMenuItem";
-            this.copyIDToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.copyIDToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.copyIDToolStripMenuItem.Text = "Copy ID";
             this.copyIDToolStripMenuItem.Click += new System.EventHandler(this.copyIDToolStripMenuItem_Click);
             // 
             // splitter1
             // 
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.splitter1.Location = new System.Drawing.Point(1146, 28);
+            this.splitter1.Location = new System.Drawing.Point(762, 24);
             this.splitter1.Margin = new System.Windows.Forms.Padding(4);
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(3, 784);
+            this.splitter1.Size = new System.Drawing.Size(3, 661);
             this.splitter1.TabIndex = 7;
             this.splitter1.TabStop = false;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.multiItemSelector);
             this.panel1.Controls.Add(this.itemEditor);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(1149, 28);
+            this.panel1.Location = new System.Drawing.Point(765, 24);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(248, 784);
+            this.panel1.Size = new System.Drawing.Size(289, 661);
             this.panel1.TabIndex = 8;
             // 
             // statusStrip1
@@ -322,10 +319,10 @@ namespace NHSE.WinForms.Zebra
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.locationLabel,
             this.itemLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 812);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 685);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1397, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(1054, 26);
             this.statusStrip1.TabIndex = 9;
             this.statusStrip1.Text = "statusStrip1";
             this.statusStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.statusStrip1_ItemClicked);
@@ -334,20 +331,54 @@ namespace NHSE.WinForms.Zebra
             // 
             this.locationLabel.AutoSize = false;
             this.locationLabel.Name = "locationLabel";
-            this.locationLabel.Size = new System.Drawing.Size(60, 20);
+            this.locationLabel.Size = new System.Drawing.Size(60, 21);
             this.locationLabel.Text = "0, 0";
             // 
             // itemLabel
             // 
             this.itemLabel.Name = "itemLabel";
-            this.itemLabel.Size = new System.Drawing.Size(15, 20);
+            this.itemLabel.Size = new System.Drawing.Size(12, 21);
             this.itemLabel.Text = "-";
+            // 
+            // mapView
+            // 
+            this.mapView.BackColor = System.Drawing.Color.White;
+            this.mapView.CurrentTool = panTool1;
+            this.mapView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapView.ItemRenderStyle = null;
+            this.mapView.Location = new System.Drawing.Point(37, 24);
+            this.mapView.Map = null;
+            this.mapView.Margin = new System.Windows.Forms.Padding(4);
+            this.mapView.Name = "mapView";
+            this.mapView.ScrollPosition = new System.Drawing.Point(0, 0);
+            this.mapView.Size = new System.Drawing.Size(725, 661);
+            this.mapView.TabIndex = 1;
+            this.mapView.Text = "mapView1";
+            this.mapView.Click += new System.EventHandler(this.mapView_Click);
+            // 
+            // multiItemSelector
+            // 
+            this.multiItemSelector.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.multiItemSelector.Location = new System.Drawing.Point(0, 0);
+            this.multiItemSelector.Name = "multiItemSelector";
+            this.multiItemSelector.Size = new System.Drawing.Size(289, 661);
+            this.multiItemSelector.TabIndex = 1;
+            this.multiItemSelector.Visible = false;
+            // 
+            // itemEditor
+            // 
+            this.itemEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemEditor.Location = new System.Drawing.Point(0, 0);
+            this.itemEditor.Margin = new System.Windows.Forms.Padding(5);
+            this.itemEditor.Name = "itemEditor";
+            this.itemEditor.Size = new System.Drawing.Size(289, 661);
+            this.itemEditor.TabIndex = 0;
             // 
             // MapEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1397, 838);
+            this.ClientSize = new System.Drawing.Size(1054, 711);
             this.Controls.Add(this.mapView);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.panel1);
@@ -359,6 +390,7 @@ namespace NHSE.WinForms.Zebra
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MapEditorForm";
             this.Text = "Map Editor";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -381,7 +413,7 @@ namespace NHSE.WinForms.Zebra
         private System.Windows.Forms.ToolStripButton btnBrush;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton btnPick;
-        private System.Windows.Forms.ToolStripButton btnTemplate;
+        private System.Windows.Forms.ToolStripButton btnSingleTemplate;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
@@ -400,5 +432,8 @@ namespace NHSE.WinForms.Zebra
         private System.Windows.Forms.ToolStripStatusLabel locationLabel;
         private System.Windows.Forms.ToolStripStatusLabel itemLabel;
         private System.Windows.Forms.ToolStripMenuItem copyIDToolStripMenuItem;
+        private MultiItemSelector multiItemSelector;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton btnMultiTemplate;
     }
 }

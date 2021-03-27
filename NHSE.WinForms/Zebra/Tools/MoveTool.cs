@@ -74,5 +74,10 @@ namespace NHSE.WinForms.Zebra.Tools
         }
 
         public bool CanDeselect => dragAction == null;
+        public bool OnKeyDown(Keys e, MapToolContext ctx)
+        {
+            return false;
+
+        }
     }
 }

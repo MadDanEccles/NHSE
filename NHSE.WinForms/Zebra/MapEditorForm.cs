@@ -22,13 +22,13 @@ namespace NHSE.WinForms.Zebra
         private readonly Dictionary<Keys, EditorTool> toolKeys = new Dictionary<Keys, EditorTool>()
         {
             {Keys.I, Pick},
-            {Keys.B, Brush},
+            {Keys.B, EditorTool.Brush},
             {Keys.X, Erase},
             {Keys.Z, PanAndZoom},
             {Keys.M, Marquee},
             {Keys.V, MoveItems},
             {Keys.R, FillRect},
-            {Keys.T, Template}
+            {Keys.T, SingleTemplate}
         };
 
         private EditorTool currentTool;
@@ -42,6 +42,8 @@ namespace NHSE.WinForms.Zebra
             mapView.Map = this.mapManager;
             mapView.ItemRenderStyle = new ClairesRenderStyle(this);
 
+            ItemConvertor.Initialise();
+
             // Check the map for common issues and allow the user to fix them before proceeding...
             ValidateMap();
 
@@ -49,7 +51,12 @@ namespace NHSE.WinForms.Zebra
             historyService = new HistoryService();
             historyService.HistoryChanged += HistoryServiceOnHistoryChanged;
             
-            itemEditor.Initialize(new ItemSource());
+            var itemSource = new ItemSource();
+            itemEditor.Initialize(itemSource);
+            var itemCollectionManager = new ItemCollectionManager();
+            itemCollectionManager.Backup();
+            itemCollectionManager.Load();
+            multiItemSelector.Initialise(itemSource, itemCollectionManager);
 
             // Select the initial tool
             SelectTool(PanAndZoom);
@@ -135,9 +142,9 @@ namespace NHSE.WinForms.Zebra
         private void btnMove_Click(object sender, EventArgs e) => SelectTool(MoveItems);
         private void btnMarquee_Click(object sender, EventArgs e) => SelectTool(Marquee);
         private void btnZoom_Click(object sender, EventArgs e) => SelectTool(PanAndZoom);
-        private void btnPaint_Click(object sender, EventArgs e) => SelectTool(Brush);
+        private void btnPaint_Click(object sender, EventArgs e) => SelectTool(EditorTool.Brush);
         private void btnPick_Click(object sender, EventArgs e) => SelectTool(Pick);
-        private void btnTemplate_Click(object sender, EventArgs e) => SelectTool(Template);
+        private void btnTemplate_Click(object sender, EventArgs e) => SelectTool(SingleTemplate);
         private void btnEraser_Click(object sender, EventArgs e) => SelectTool(Erase);
         private void btnFillRect_Click(object sender, EventArgs e) => SelectTool(FillRect);
 
@@ -168,7 +175,10 @@ namespace NHSE.WinForms.Zebra
                 || focusedControl is ComboBox)
                 return false;
             if (mapView.Focused && mapView.CurrentTool?.CanDeselect == false)
+            {
+                mapView.ProcessCommandKey(keyData);
                 return false;
+            }
             if (ProcessToolKey(keyData))
                 return true;
             return base.ProcessCmdKey(ref msg, keyData);
@@ -200,16 +210,27 @@ namespace NHSE.WinForms.Zebra
             return tool switch
             {
                 MoveItems => new MoveTool(mapView.SelectionService, mapView.SelectionRenderer, historyService),
-                FillRect => new FillRectTool(new ItemSelector(this.itemEditor), historyService),
+                FillRect => new FillRectTool(SelectToolPropertiesControl(this.itemEditor), historyService),
                 Marquee => new MarqueeSelectionTool(mapView.SelectionService, mapView.SelectionRenderer, historyService),
                 PanAndZoom => new PanTool(),
-                Brush => new PaintTool(new PaintOptions(this.itemEditor), historyService, new PickTarget(itemEditor)),
-                Pick => new PickTool(new PickTarget(this.itemEditor)),
+                EditorTool.Brush => new PaintTool(SelectToolPropertiesControl(this.itemEditor), historyService, itemEditor),
+                Pick => new PickTool(SelectToolPropertiesControl(this.itemEditor)),
                 Erase => new EraserTool(historyService),
-                Template => new TemplateTool(historyService, new ItemSelector(this.itemEditor)),
+                SingleTemplate => new TemplateTool(historyService, SelectToolPropertiesControl(this.itemEditor)),
+                MultiTemplate => new MultiTemplateTool(historyService, SelectToolPropertiesControl(this.multiItemSelector)),
                 None => null,
                 _ => throw new ArgumentOutOfRangeException()
             };
+        }
+
+        private T SelectToolPropertiesControl<T>(T control) where T : Control
+        {
+            foreach (Control propControl in panel1.Controls)
+            {
+                propControl.Visible = propControl == control;
+            }
+
+            return control;
         }
 
         private void CheckToolboxItem(EditorTool editorTool)
@@ -217,11 +238,12 @@ namespace NHSE.WinForms.Zebra
             btnFillRect.Checked = editorTool == FillRect;
             btnMarquee.Checked = editorTool == Marquee;
             btnMove.Checked = editorTool == MoveItems;
-            btnBrush.Checked = editorTool == Brush;
-            btnTemplate.Checked = editorTool == Template;
+            btnBrush.Checked = editorTool == EditorTool.Brush;
+            btnSingleTemplate.Checked = editorTool == SingleTemplate;
             btnZoom.Checked = editorTool == PanAndZoom;
             btnEraser.Checked = editorTool == Erase;
             btnPick.Checked = editorTool == Pick;
+            btnMultiTemplate.Checked = editorTool == MultiTemplate;
         }
 
         public static Control FindFocusedControl(Control control)
@@ -274,6 +296,8 @@ namespace NHSE.WinForms.Zebra
                 dlg.ShowDialog(this);
             }
         }
+
+        private void btnMultiTemplate_Click(object sender, EventArgs e) => SelectTool(EditorTool.MultiTemplate);
     }
 
     internal enum EditorTool
@@ -285,49 +309,9 @@ namespace NHSE.WinForms.Zebra
         Erase,
         Brush,
         FillRect,
-        Template,
+        SingleTemplate,
         Pick,
+        MultiTemplate
     }
 
-    internal class ItemSelector : IItemSelector
-    {
-        private readonly IItemPropertiesUi itemEditor;
-
-        public ItemSelector(IItemPropertiesUi itemEditor)
-        {
-            this.itemEditor = itemEditor;
-        }
-
-        public Item GetItem()
-        {
-            Item item = new Item();
-            itemEditor.ApplyToItem(item);
-            return item;
-        }
-    }
-
-    internal class PickTarget : IPickTarget
-    {
-        private readonly IItemPropertiesUi itemEditor;
-
-        public PickTarget(IItemPropertiesUi itemEditor)
-        {
-            this.itemEditor = itemEditor;
-        }
-
-        public void Pick(Item item)
-        {
-            itemEditor.UpdateFromItem(item);
-        }
-    }
-
-    internal class PaintOptions : ItemSelector, IPaintOptions
-    {
-        public PaintOptions(ItemEditor itemEditor)
-            : base(itemEditor)
-        {
-        }
-
-        public bool AlignToItemGrid => true;
-    }
 }

@@ -26,14 +26,12 @@ namespace NHSE.WinForms.Zebra
 
             if (!ItemInfo.TryGetMaxStackCount(itemId, out var maxStackSize))
                 maxStackSize = 1;
-
+            var permittedPresentationTypes = ItemConvertor.Instance.GetPermittedPresentationTypes(itemId);
             return new ItemEditorInfo()
             {
                 ItemId = itemId,
                 Kind = ItemInfo.GetItemKind(itemId),
-                CanHang = ItemConvertor.CanHangItem(itemId),
-                MustHang = ItemConvertor.MustBeHung(itemId),
-                CanDrop = ItemInfo.IsDroppable(new Item(itemId)),
+                PermittedPresentationTypes =  permittedPresentationTypes,
                 HasVariants = remake > 0,
                 MaxStackSize = maxStackSize,
                 BodyVariants = bodyVariants,
@@ -41,11 +39,13 @@ namespace NHSE.WinForms.Zebra
             };
         }
 
-        public bool CanDrop { get; private set; }
+        public PresentationType PermittedPresentationTypes { get; private set; }
 
-        public bool MustHang { get; private set; }
-
-        public bool CanHang { get; private set; }
+        public bool CanBury => PermittedPresentationTypes.HasFlag(PresentationType.Buried);
+        public bool CanDrop => PermittedPresentationTypes.HasFlag(PresentationType.Dropped);
+        public bool CanPlace => PermittedPresentationTypes.HasFlag(PresentationType.Placed);
+        public bool CanHang => PermittedPresentationTypes.HasFlag(PresentationType.Hung);
+        public bool CanRecipe => PermittedPresentationTypes.HasFlag(PresentationType.Recipe);
 
         public ushort ItemId { get; private set; }
 

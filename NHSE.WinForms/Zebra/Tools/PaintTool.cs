@@ -12,12 +12,12 @@ namespace NHSE.WinForms.Zebra.Tools
         private Size itemSize;
         private bool isPainting;
 
-        private readonly IPaintOptions options;
+        private readonly IItemSelector options;
         private readonly IHistoryService historyService;
         private readonly IPickTarget pickTarget;
         private IHistoryTransaction transaction;
 
-        public PaintTool(IPaintOptions options, IHistoryService historyService, IPickTarget pickTarget)
+        public PaintTool(IItemSelector options, IHistoryService historyService, IPickTarget pickTarget)
         {
             this.options = options;
             this.historyService = historyService;
@@ -65,7 +65,7 @@ namespace NHSE.WinForms.Zebra.Tools
         {
             if (isPainting)
             {
-                if (options.AlignToItemGrid)
+                if (true /*options.AlignToItemGrid*/)
                 {
                     var tilePt = ctx.ToTile(e.Location);
                     tilePt = new Point(
@@ -105,5 +105,10 @@ namespace NHSE.WinForms.Zebra.Tools
         }
 
         public bool CanDeselect => !isPainting;
+        public bool OnKeyDown(Keys e, MapToolContext ctx)
+        {
+            return false;
+
+        }
     }
 }

@@ -118,6 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="radRecipe.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAAxBJREFUWEftlk1IVGEUhieLKDCCkokWURBIm1pGtBD6WUQQUTRqf5RQEER/EAQm
+        qDPO4BDYrtGhsoUUCUEERa2KxCSICsk2ERYUmjkuokWTyvSc2/mm63fvHR21aOELD9/cc84977nfvXNn
+        QnOaTA0NDcvq6+s3sJZq6N8K4z7IwRh0McwB1hJN/31h2KoDuOluampapflyuE7sBbyCjsbGxm3OybMh
+        GpbADbCH+ChDyAB8bmf9ZuWvwUJtMzPRKGiIns7OzvlSk0gklnN8y8pnoCcaja53Gs1ENPIdgu3eryWh
+        XC43j524adfA0KwMgdkWuzmGdzXtiJpddo3SoyVekSwV9DBQmF1xNXQg9lbTjjiO2jWK3A7/Z4JEP3zi
+        5HINeST3mvygNnPTpyVy9VUcj1r5PJz/ktX7TBD8rkWfg4bw237lvuQ5r5rPgeYWE58JAs9dyQlD6NN9
+        DOQ77m5iSFK/k9U2HyN+lfWDFTcMmG+QDFBnJWWI06yPoOBVsTMXWM9b8VG5HdKb9YiVMzyRb40zQDwe
+        X0HA3IZieReLxday1sI45M1FXMg+jbvP6Uomk0u05Lc46YxVVAxfoQL2us2NiB0nZ4bwmotkO0imtGg6
+        ZDGq0XYekTvIbrT6mhvJEBSeo9l0b4dwCWb2a8mkYQY5KRNDmoZ1HO/m80bwvIx8uFfwSotRf/vRRcNt
+        kYuZtsidTDrydCBVvQYD+0fHj15+LVdrm+lJzDF9kElX5lz0dqdOhDHotgz9+AKbtV1xCjA3PLwcr11J
+        8/cuM1+4ZT+4fYe17dQ0ibnDcLrqFAbrYMRt6Abzn67js9q+sKZiLnmpk3oab7WMhD59OS3g6p33i+wE
+        a5ljUkjD6coOf1PDH3MjTGrU2AGzSk05IvZaczs0FCxMsl5Tg9fciOYJNZEBDmnYETHzz7pCQ8EaSUce
+        F2su0jfpbTXqZ4hNrGUQ09gQBJ6f12BqTxizN8WYG7W0tCzG5Jkauhm3b0tByRC6E1l5JqZibtTc3LwU
+        M3l7yrcjC12wXdNz+t8UCv0CRmR6HhodgHoAAAAASUVORK5CYII=
+</value>
+  </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <data name="radDropped.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -136,9 +158,6 @@
         RU5ErkJggg==
 </value>
   </data>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <data name="radBuried.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

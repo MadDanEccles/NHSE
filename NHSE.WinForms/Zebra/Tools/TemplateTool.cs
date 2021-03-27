@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using NHSE.Core;
+using NHSE.WinForms.Zebra.SegmentLayouts;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
@@ -12,6 +13,7 @@ namespace NHSE.WinForms.Zebra.Tools
         private Size droppedItemSize;
 
         private readonly IItemSelector options;
+        private ITemplateSegmentLayout segmentLayout;
 
         public TemplateTool(IHistoryService historyService, IItemSelector options) : base(historyService)
         {
@@ -30,14 +32,13 @@ namespace NHSE.WinForms.Zebra.Tools
                 return false;
             }
 
-            placedItem = new Item();
-            placedItem.CopyFrom(rawItem);
-            ItemConvertor.ApplyPresentation(placedItem, PresentationType.Placed);
-            droppedItem = new Item();
-            droppedItem.CopyFrom(rawItem);
-            ItemConvertor.ApplyPresentation(droppedItem, PresentationType.Dropped);
-            placedItemSize = placedItem.GetSize();
-            droppedItemSize = droppedItem.GetSize();
+            ushort itemId = ItemConvertor.Instance.GetItemId(rawItem);
+            ItemEditorInfo info = ItemEditorInfo.FromItemId(itemId);
+            if (info.HasVariants)
+                segmentLayout = new DefaultTemplateSegmentLayout(new Item(itemId) {Count = 0});
+            else
+                segmentLayout = new DefaultTemplateSegmentLayout(new Item(itemId) {Count = (ushort) (info.MaxStackSize - 1)});
+
             return true;
         }
 
@@ -45,26 +46,8 @@ namespace NHSE.WinForms.Zebra.Tools
         {
             Rectangle tileRect = ctx.ToTiles(marqueeBounds);
             fragment = new ItemFieldFragment();
-            int droppedItemCount = 0;
-            if (tileRect.Size.Encompasses(placedItemSize))
-            {
-                Rectangle placedItemRect = new Rectangle(tileRect.Location, placedItemSize);
-                fragment.Add(placedItemRect, placedItem, ctx.MapEditingService.IsOccupied(placedItemRect));
-
-                for (int x = tileRect.Left; x < tileRect.Right; x += droppedItemSize.Width)
-                {
-                    for (int y = tileRect.Top; y < tileRect.Bottom; y += droppedItemSize.Height)
-                    {
-                        Rectangle droppedItemRect = new Rectangle(x, y, droppedItemSize.Width, droppedItemSize.Height);
-                        if (droppedItemRect.IntersectsWith(placedItemRect))
-                            continue;
-                        fragment.Add(droppedItemRect, droppedItem, ctx.MapEditingService.IsOccupied(droppedItemRect));
-                        droppedItemCount++;
-                    }
-                }
-
-            }
-            hint = droppedItemCount > 0 ? $"{droppedItemCount} Items" : "-";
+            segmentLayout.CalculateResult(ctx, tileRect, fragment);
+            hint = "";  //droppedItemCount > 0 ? $"{droppedItemCount} Items" : "-";
         }
     }
 }

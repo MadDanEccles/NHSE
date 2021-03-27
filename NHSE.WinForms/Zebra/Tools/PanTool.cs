@@ -59,5 +59,10 @@ namespace NHSE.WinForms.Zebra.Tools
         }
 
         public bool CanDeselect => !isPanning;
+        public bool OnKeyDown(Keys e, MapToolContext ctx)
+        {
+            return false;
+
+        }
     }
 }

@@ -42,8 +42,8 @@ namespace NHSE.WinForms.Zebra
             baseItemSelector1.UpdateFromItem(item);
             if (SelectedItemInfo.HasVariants)
             {
-                cbColor.SelectedValue = item.GetBodyVariant();
-                cbFabric.SelectedValue = item.GetFabricVariant();
+                cbColor.SelectedValue = ItemConvertor.Instance.GetBodyVariant(item);
+                cbFabric.SelectedValue = ItemConvertor.Instance.GetFabricVariant(item);
             }
         }
 

@@ -4,7 +4,7 @@ using static System.Windows.Forms.MouseButtons;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    class PanTool : IMapTool
+    public class PanTool : IMapTool
     {
         private Point panStartScrollPosition;
         private Point panStartLocation;

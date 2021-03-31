@@ -5,7 +5,7 @@ using static System.Windows.Forms.MouseButtons;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    class PaintTool : IMapTool
+    public class PaintTool : IMapTool
     {
         private Point startTile;
         private Item item;

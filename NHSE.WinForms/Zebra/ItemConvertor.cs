@@ -8,14 +8,14 @@ using NHSE.WinForms.Zebra.Catalog;
 
 namespace NHSE.WinForms.Zebra
 {
-
-    internal class ItemConvertor
+    public class ItemConvertor
     {
         private readonly CatalogRoot catalog;
         private const int RedsWallDisplayId = 12634;
         private readonly Dictionary<ushort, PresentationType> presentationTypesByItemId = new Dictionary<ushort, PresentationType>();
         private readonly Dictionary<ItemKind, PresentationType> presentationTypesByItemKind = new Dictionary<ItemKind, PresentationType>();
         private readonly Dictionary<ushort, ushort> reverseRecipeLookup = new Dictionary<ushort, ushort>();
+        private readonly Dictionary<ushort, ushort> creatureModelLookup = new Dictionary<ushort, ushort>(); // Creature => Creature Model
 
         public ushort GetItemId(Item item)
         {
@@ -87,6 +87,9 @@ namespace NHSE.WinForms.Zebra
 
             foreach (var recipe in RecipeList.Recipes)
                 reverseRecipeLookup.Add(recipe.Value, recipe.Key);
+
+            foreach (CreatureModelMapping mapping in catalog.CreatureModelMappings)
+                this.creatureModelLookup.Add(mapping.CreatureId, mapping.ModelId);
         }
 
         public PresentationType GetPermittedPresentationTypes(ushort itemId)
@@ -110,7 +113,7 @@ namespace NHSE.WinForms.Zebra
             return GetPermittedPresentationTypes(itemId).HasFlag(presentationType);
         }
 
-        public void ApplyPresentation(Item item, params PresentationType[] presentationTypes)
+        public Item ApplyPresentation(Item item, params PresentationType[] presentationTypes)
         {
             var itemId = GetItemId(item);
             var permittedPresentationTypes = GetPermittedPresentationTypes(itemId);
@@ -120,7 +123,7 @@ namespace NHSE.WinForms.Zebra
                     continue;
 
                 ApplyPresentationInternal(item, presentationType);
-                return;
+                return item;
             }
 
             throw new Exception("Presentation not permitted for item");
@@ -183,5 +186,10 @@ namespace NHSE.WinForms.Zebra
         public bool IsRecipe(Item item) => item.ItemId == Item.DIYRecipe;
 
         public bool IsHung(Item item) => item.ItemId == RedsWallDisplayId;
+
+        public ushort GetCreatureModel(ushort itemId)
+        {
+            return this.creatureModelLookup[itemId];
+        }
     }
 }

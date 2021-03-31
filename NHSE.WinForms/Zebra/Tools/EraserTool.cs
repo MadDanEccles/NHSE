@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    class EraserTool : IMapTool
+    public class EraserTool : IMapTool
     {
         private readonly IHistoryService historyService;
         private bool isErasing;

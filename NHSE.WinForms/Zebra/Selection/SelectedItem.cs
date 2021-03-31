@@ -3,7 +3,7 @@ using NHSE.Core;
 
 namespace NHSE.WinForms.Zebra.Selection
 {
-    class SelectedItem
+    public class SelectedItem
     {
         public SelectedItem(Item item, Rectangle bounds)
         {

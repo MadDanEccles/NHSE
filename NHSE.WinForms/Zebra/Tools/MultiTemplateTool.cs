@@ -3,15 +3,16 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using NHSE.Core;
+using NHSE.WinForms.Zebra.Controls;
 using NHSE.WinForms.Zebra.SegmentLayouts;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    internal class MultiTemplateTool : FillRectToolBase
+    public class MultiTemplateTool : FillRectToolBase
     {
         private readonly MultiItemSelector multiItemSelector;
         private Item[] items;
-        private ITemplateSegmentLayout[] segmentLayouts;
+        private ISegmentLayout[] segmentLayouts;
         private Size[] minSegementSizes;
 
         private int rowCount = 1;
@@ -26,7 +27,8 @@ namespace NHSE.WinForms.Zebra.Tools
 
         protected override bool OnStartDrag(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
-            this.items = multiItemSelector.ResolveItems().ToArray();
+            var factory = multiItemSelector.GetFactory();
+            this.items = multiItemSelector.ResolveItems().Where(i => factory.IsApplicable(i.ItemId)).ToArray();
             if (this.items.Length == 0)
             {
                 MessageBox.Show(ctx.Viewport, "Please select one or more items before using the template", "Error",
@@ -34,13 +36,13 @@ namespace NHSE.WinForms.Zebra.Tools
                 return false;
             }
 
-            segmentLayouts = new ITemplateSegmentLayout[items.Length];
+            segmentLayouts = new ISegmentLayout[items.Length];
             minSegementSizes = new Size[items.Length];
 
             for (var index = 0; index < items.Length; index++)
             {
                 var item = items[index];
-                segmentLayouts[index] = new DefaultTemplateSegmentLayout(item);
+                segmentLayouts[index] = factory.Create(item);
                 minSegementSizes[index] = segmentLayouts[index].CalculateMinimumTileSize();
             }
 

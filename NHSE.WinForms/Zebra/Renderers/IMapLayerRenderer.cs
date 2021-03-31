@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace NHSE.WinForms.Zebra.Renderers
 {
-    interface IMapLayerRenderer : IDisposable
+    public interface IMapLayerRenderer : IDisposable
     {
         /// <summary>
         /// Paints a portion of the layer to a graphics object.

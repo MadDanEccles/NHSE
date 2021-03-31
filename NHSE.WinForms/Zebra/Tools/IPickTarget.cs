@@ -2,7 +2,7 @@
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    interface IPickTarget
+    public interface IPickTarget
     {
         void Pick(Item item);
     }

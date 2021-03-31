@@ -4,7 +4,7 @@ using NHSE.WinForms.Zebra.Renderers.ColorSchemes;
 
 namespace NHSE.WinForms.Zebra.Renderers.RenderStyles
 {
-    class ClairesRenderStyle : IItemRenderStyle
+    public class ClairesRenderStyle : IItemRenderStyle
     {
         private readonly IColorSchemeProvider colorSchemeProvider;
 

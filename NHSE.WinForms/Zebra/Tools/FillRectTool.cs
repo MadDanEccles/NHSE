@@ -4,7 +4,7 @@ using NHSE.Core;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    class FillRectTool : FillRectToolBase
+    public class FillRectTool : FillRectToolBase
     {
         private readonly IItemSelector options;
         private Item item;

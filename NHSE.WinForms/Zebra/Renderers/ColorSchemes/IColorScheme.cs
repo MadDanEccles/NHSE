@@ -3,7 +3,7 @@ using NHSE.Core;
 
 namespace NHSE.WinForms.Zebra.Renderers.ColorSchemes
 {
-    interface IColorScheme
+    public interface IColorScheme
     {
         Color GetItemColor(Item item);
     }

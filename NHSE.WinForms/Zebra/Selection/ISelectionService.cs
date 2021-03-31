@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace NHSE.WinForms.Zebra.Selection
 {
-    internal interface ISelectionService
+    public interface ISelectionService
     {
         /// <summary>
         /// Clears the current selection and invalidates the viewport if required.

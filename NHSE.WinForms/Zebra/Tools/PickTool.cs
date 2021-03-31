@@ -4,7 +4,7 @@ using NHSE.Core;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    class PickTool : IMapTool
+    public class PickTool : IMapTool
     {
         private readonly IPickTarget pickTarget;
 

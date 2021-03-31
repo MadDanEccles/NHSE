@@ -2,7 +2,7 @@
 
 namespace NHSE.WinForms.Zebra
 {
-    class MapRenderContext : MapContext
+    public class MapRenderContext : MapContext
     {
         public MapRenderContext(Rectangle viewRect, int tileSize, Point scrollPosition, 
             IGdiResourceCache resourceCache)

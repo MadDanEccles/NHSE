@@ -2,7 +2,7 @@
 
 namespace NHSE.WinForms.Zebra
 {
-    class MapToolContext : MapContext
+    public class MapToolContext : MapContext
     {
         public IMapEditingService MapEditingService { get; }
 

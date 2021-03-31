@@ -79,7 +79,7 @@ namespace NHSE.WinForms.Zebra.Renderers
                 case BuildingType.Campsite:
                     return new Size(8, 8);
                 case BuildingType.Airport:
-                    return new Size(24, 16);
+                    return new Size(22, 22);
                 default:
                     return new Size(1, 1);
             }

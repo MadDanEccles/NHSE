@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NHSE.WinForms.Zebra
 {
-    internal class HistoryService : IHistoryService
+    public class HistoryService : IHistoryService
     {
         private readonly List<Transaction> history = new List<Transaction>();
 

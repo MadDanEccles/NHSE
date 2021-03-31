@@ -9,7 +9,7 @@ using NHSE.Core;
 
 namespace NHSE.WinForms.Zebra
 {
-    class ItemFieldFragment : IEnumerable<ItemFieldFragmentEntry>
+    public class ItemFieldFragment : IEnumerable<ItemFieldFragmentEntry>
     {
         private readonly List<ItemFieldFragmentEntry> entries = new List<ItemFieldFragmentEntry>();
 
@@ -38,7 +38,7 @@ namespace NHSE.WinForms.Zebra
         IEnumerator IEnumerable.GetEnumerator() => this.entries.GetEnumerator();
     }
 
-    class ItemFieldFragmentEntry
+    public class ItemFieldFragmentEntry
     {
         public ItemFieldFragmentEntry(Rectangle tileRect, Item item, bool isConflicted)
         {

@@ -4,7 +4,7 @@ using NHSE.WinForms.Zebra.Renderers;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    abstract class FillRectToolBase : IMapTool
+    public abstract class FillRectToolBase : IMapTool
     {
         protected bool IsDragging { get; private set; }
 

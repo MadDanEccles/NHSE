@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>NHSE</AssemblyName>
+    <PackageId>NHSE</PackageId>
+    <Product>NHSE</Product>
+    <Description>Animal Crossing - New Horizons Treasure Island Designer</Description>
+    <StartupObject>NHTID.WinForms.Program</StartupObject>
+    <ApplicationIcon>Resources\map_roads.ico</ApplicationIcon>
+    <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;x86</Platforms>
+  </PropertyGroup>
+  
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4')) AND '$(Configuration)' == 'Release'">
+    <PackageReference Include="Costura.Fody" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NHSE.Core\NHSE.Core.csproj" />
+    <ProjectReference Include="..\NHSE.WinForms\NHSE.WinForms.csproj" />
+  </ItemGroup>
+
+</Project>

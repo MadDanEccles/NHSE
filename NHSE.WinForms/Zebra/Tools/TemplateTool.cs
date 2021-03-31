@@ -1,11 +1,12 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using NHSE.Core;
 using NHSE.WinForms.Zebra.SegmentLayouts;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    class TemplateTool : FillRectToolBase
+    public class TemplateTool : FillRectToolBase
     {
         private Item placedItem;
         private Size placedItemSize;
@@ -13,7 +14,7 @@ namespace NHSE.WinForms.Zebra.Tools
         private Size droppedItemSize;
 
         private readonly IItemSelector options;
-        private ITemplateSegmentLayout segmentLayout;
+        private ISegmentLayout segmentLayout;
 
         public TemplateTool(IHistoryService historyService, IItemSelector options) : base(historyService)
         {
@@ -34,11 +35,12 @@ namespace NHSE.WinForms.Zebra.Tools
 
             ushort itemId = ItemConvertor.Instance.GetItemId(rawItem);
             ItemEditorInfo info = ItemEditorInfo.FromItemId(itemId);
-            if (info.HasVariants)
-                segmentLayout = new DefaultTemplateSegmentLayout(new Item(itemId) {Count = 0});
+           /* if (info.HasVariants)
+                segmentLayout = new DisplaySegmentLayout(new Item(itemId) {Count = 0});
             else
-                segmentLayout = new DefaultTemplateSegmentLayout(new Item(itemId) {Count = (ushort) (info.MaxStackSize - 1)});
-
+                segmentLayout = new DisplaySegmentLayout(new Item(itemId) {Count = (ushort) (info.MaxStackSize - 1)});
+           */
+           throw new Exception("TODO");
             return true;
         }
 

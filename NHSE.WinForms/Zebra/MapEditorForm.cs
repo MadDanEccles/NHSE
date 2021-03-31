@@ -5,8 +5,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using NHSE.Core;
+using NHSE.WinForms.Zebra.Controls;
 using NHSE.WinForms.Zebra.Renderers.ColorSchemes;
 using NHSE.WinForms.Zebra.Renderers.RenderStyles;
+using NHSE.WinForms.Zebra.SegmentLayouts;
 using NHSE.WinForms.Zebra.Tools;
 using NHSE.WinForms.Zebra.Validation;
 using static NHSE.WinForms.Zebra.EditorTool;
@@ -33,6 +35,7 @@ namespace NHSE.WinForms.Zebra
 
         private EditorTool currentTool;
         private IColorScheme colorScheme = new DefaultColorScheme();
+        private ItemCollectionCatalog collectionCatalog;
 
         public MapEditorForm(MainSave save)
         {
@@ -50,13 +53,47 @@ namespace NHSE.WinForms.Zebra
             // Set up the history service to provide Undo/Redo functionality
             historyService = new HistoryService();
             historyService.HistoryChanged += HistoryServiceOnHistoryChanged;
-            
+            LayoutManager layoutManager = new LayoutManager();
+            layoutManager.Register(new DisplaySegmentLayoutFactory());
+            layoutManager.Register(new DiyLoayoutFactory());
+
             var itemSource = new ItemSource();
             itemEditor.Initialize(itemSource);
-            var itemCollectionManager = new ItemCollectionManager();
-            itemCollectionManager.Backup();
-            itemCollectionManager.Load();
-            multiItemSelector.Initialise(itemSource, itemCollectionManager);
+            collectionCatalog = ItemCollectionManager.Load();
+            multiItemSelector.Initialise(itemSource, collectionCatalog, layoutManager);
+
+            //var itemDropdownData = itemSource.GetItemDropdownData();
+            //foreach (var item in itemDropdownData)
+            //{
+            //    if (ItemInfo.GetItemKind((ushort) item.Value) == ItemKind.Kind_Fish)
+            //    {
+            //        var model = itemDropdownData.FirstOrDefault(i => i.Text == $"{item.Text} model");
+            //        if (model != null)
+            //        {
+            //            if (ItemInfo.GetItemKind((ushort) model.Value) != ItemKind.Kind_FishToy)
+            //                throw new Exception();
+            //            Debug.WriteLine($"{{\"C\": {item.Value}, \"M\":{model.Value}}},");
+            //        }
+            //    }
+            //}
+
+            //foreach (var item in itemDropdownData)
+            //{
+            //    if (ItemInfo.GetItemKind((ushort)item.Value) == ItemKind.Kind_Insect)
+            //    {
+            //        var model = itemDropdownData.FirstOrDefault(i => i.Text == $"{item.Text} model");
+            //        if (model.Text !=  null)
+            //        {
+            //            if (ItemInfo.GetItemKind((ushort)model.Value) != ItemKind.Kind_InsectToy)
+            //                throw new Exception();
+            //            Debug.WriteLine($"{{\"C\": {item.Value}, \"M\":{model.Value}}},");
+            //        }
+            //        else
+            //        {
+            //            Debug.WriteLine($"{{\"C\": \"{item.Value}\", \"M\":\"{item.Text}\"}},");
+            //        }
+            //    }
+            //}
 
             // Select the initial tool
             SelectTool(PanAndZoom);
@@ -298,6 +335,12 @@ namespace NHSE.WinForms.Zebra
         }
 
         private void btnMultiTemplate_Click(object sender, EventArgs e) => SelectTool(EditorTool.MultiTemplate);
+
+        private void editCollectionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CollectionEditorForm.EditModal(this, this.collectionCatalog, new ItemSource());
+            multiItemSelector.RefreshCollections();
+        }
     }
 
     internal enum EditorTool

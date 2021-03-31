@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace NHSE.WinForms.Zebra
 {
-    class MapContext
+    public class MapContext
     {
         private readonly Point scrollPosition;
         private Point topLeftVisibleTilePosition;

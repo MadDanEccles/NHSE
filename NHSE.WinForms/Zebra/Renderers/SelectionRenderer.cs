@@ -6,7 +6,7 @@ using NHSE.WinForms.Zebra.Selection;
 
 namespace NHSE.WinForms.Zebra.Renderers
 {
-    class SelectionRenderer : MapLayerRendererBase
+    public class SelectionRenderer : MapLayerRendererBase
     {
         private readonly ISelectionService selectionService;
         private readonly HatchBrush brush;

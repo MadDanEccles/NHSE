@@ -4,7 +4,7 @@ using NHSE.WinForms.Zebra.Renderers;
 
 namespace NHSE.WinForms.Zebra
 {
-    internal interface IMapViewport : IWin32Window
+    public interface IMapViewport : IWin32Window
     {
         Point ScrollPosition { get; set; }
         int TileSize { get;  }

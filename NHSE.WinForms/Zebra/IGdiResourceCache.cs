@@ -2,7 +2,7 @@
 
 namespace NHSE.WinForms.Zebra
 {
-    internal interface IGdiResourceCache
+    public interface IGdiResourceCache
     {
         public Brush GetSolidBrush(Color color);
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using static NHSE.WinForms.Zebra.SegmentLayouts.FlowDirection;
 
 namespace NHSE.WinForms.Zebra.SegmentLayouts
 {
@@ -12,7 +13,7 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
         private int gutterVert = 2;
         private int pathWidth = 2;
 
-        public bool GetSegmentRects(Rectangle tileRect, ITemplateSegmentLayout[] segmentLayouts,
+        public bool GetSegmentRects(Rectangle tileRect, ISegmentLayout[] segmentLayouts,
             Size[] minSegementSizes, int pathCount, out Rectangle[] segmentRects, out string hint)
         {
             segmentRects = new Rectangle[segmentLayouts.Length];
@@ -27,12 +28,20 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
             List<List<int>> rowSegmentCounts = new List<List<int>>();
             int currentX = 0;
             List<int> currentRow = new();
+            FlowDirection flowDirection = LeftToRight;
             foreach (Size minSize in minSegementSizes)
             {
+                currentX = flowDirection == LeftToRight ? currentX : currentX - minSize.Width;
                 while (true)
                 {
-                    AdjustXPos(ref currentX, minSize.Width, pathX);
-                    if (currentX + minSize.Width <= tileRect.Width)
+                    AdjustXPos(ref currentX, minSize.Width, pathX, flowDirection);
+                    bool isValid = flowDirection switch
+                    {
+                        LeftToRight => currentX + minSize.Width <= tileRect.Width,
+                        RightToLeft => currentX >= 0,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+                    if (isValid)
                         break;
 
                     if (currentRow.Count == 0)
@@ -43,11 +52,13 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
 
                     rowSegmentCounts.Add(currentRow);
                     currentRow = new List<int>();
-                    currentX = 0;
+                    flowDirection = flowDirection.Reverse();
+                    currentX = flowDirection == LeftToRight ? 0 : tileRect.Width;
                 }
 
                 currentRow.Add(currentX);
-                currentX += minSize.Width + gutterHorz;
+                if (flowDirection == LeftToRight)
+                    currentX +=  minSize.Width + gutterHorz;
             }
 
             if (currentRow.Count > 0)
@@ -104,14 +115,28 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
             return true;
         }
 
-        private void AdjustXPos(ref int x, int width, int[] pathX)
+        private void AdjustXPos(ref int x, int width, int[] pathX, FlowDirection flowDirection)
         {
-            for (int i = 0; i < pathX.Length; i++)
+            if (flowDirection == LeftToRight)
             {
-                if (x < pathX[i] + pathWidth && x + width >= pathX[i])
+                for (int i = 0; i < pathX.Length; i++)
                 {
-                    x = pathX[i] + pathWidth;
+                    if (x < pathX[i] + pathWidth && x + width >= pathX[i])
+                    {
+                        x = pathX[i] + pathWidth;
+                    }
                 }
+            }
+            else
+            {
+                for (int i = pathX.Length - 1; i >= 0; i--)
+                {
+                    if (x < pathX[i] + pathWidth && x + width >= pathX[i])
+                    {
+                        x = pathX[i] - width;
+                    }
+                }
+
             }
         }
 
@@ -182,6 +207,25 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
             }
 
             return result;
+        }
+    }
+
+    public enum FlowDirection
+    {
+        LeftToRight,
+        RightToLeft
+    }
+
+    public static class LayoutExtensions
+    {
+        public static FlowDirection Reverse(this FlowDirection value)
+        {
+            return value switch
+            {
+                LeftToRight => RightToLeft,
+                RightToLeft => LeftToRight,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
 }

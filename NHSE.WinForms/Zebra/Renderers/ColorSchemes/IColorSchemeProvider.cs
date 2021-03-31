@@ -1,6 +1,6 @@
 ﻿namespace NHSE.WinForms.Zebra.Renderers.ColorSchemes
 {
-    interface IColorSchemeProvider
+    public interface IColorSchemeProvider
     {
         IColorScheme GetColorScheme();
     }

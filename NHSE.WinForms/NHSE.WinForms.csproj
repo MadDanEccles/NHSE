@@ -115,13 +115,13 @@
     <Compile Update="Subforms\Villager\VillagerFlagEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Zebra\ItemVariantSelector.cs">
+    <Compile Update="Zebra\Controls\ItemVariantSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Zebra\BaseItemSelector.cs">
+    <Compile Update="Zebra\Controls\BaseItemSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Zebra\ItemDirectionSelector.cs">
+    <Compile Update="Zebra\Controls\ItemDirectionSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Zebra\ZebraResources.Designer.cs">

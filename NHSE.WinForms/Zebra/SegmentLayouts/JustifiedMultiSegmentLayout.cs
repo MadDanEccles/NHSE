@@ -10,7 +10,7 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
         private int gutterHorz = 0;
         private int gutterVert = 2;
 
-        public bool GetSegmentRects(Rectangle tileRect, ITemplateSegmentLayout[] segmentLayouts,
+        public bool GetSegmentRects(Rectangle tileRect, ISegmentLayout[] segmentLayouts,
             Size[] minSegementSizes, int rowCount, out Rectangle[] segmentRects, out string hint)
         {
             segmentRects = new Rectangle[segmentLayouts.Length];

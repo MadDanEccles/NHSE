@@ -6,7 +6,7 @@ using NHSE.WinForms.Zebra.Selection;
 
 namespace NHSE.WinForms.Zebra.Tools
 {
-    class MarqueeSelectionTool : IMapTool
+    public class MarqueeSelectionTool : IMapTool
     {
         private readonly ISelectionService selectionService;
         private readonly SelectionRenderer selectionRenderer;

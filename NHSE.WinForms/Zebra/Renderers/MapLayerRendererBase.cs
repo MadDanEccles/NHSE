@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace NHSE.WinForms.Zebra.Renderers
 {
-    abstract class MapLayerRendererBase : IMapLayerRenderer
+    public abstract class MapLayerRendererBase : IMapLayerRenderer
     {
         public virtual void Dispose()
         {

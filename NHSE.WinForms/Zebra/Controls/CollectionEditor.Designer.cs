@@ -39,28 +39,35 @@ namespace NHSE.WinForms.Zebra.Controls
             this.itemsTab = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.txtSearch = new System.Windows.Forms.TextBox();
-            this.lbAll = new ListBoxEx();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.lbCollections = new ListBoxEx();
+            this.lbAll = new NHSE.WinForms.Zebra.Controls.ListBoxEx();
+            this.collectionsTab = new System.Windows.Forms.TabPage();
+            this.lbCollections = new NHSE.WinForms.Zebra.Controls.ListBoxEx();
             this.itemCollectionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lbKinds = new NHSE.WinForms.Zebra.Controls.ListBoxEx();
+            this.itemKindViewBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnMoveUp = new System.Windows.Forms.Button();
             this.btnMoveDown = new System.Windows.Forms.Button();
             this.btnSort = new System.Windows.Forms.Button();
-            this.lbInCollection = new ListBoxEx();
+            this.lbInCollection = new NHSE.WinForms.Zebra.Controls.ListBoxEx();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAdd = new System.Windows.Forms.Button();
+            this.btnAddAll = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
+            this.btnRemoveAll = new System.Windows.Forms.Button();
             this.lblItemCount = new System.Windows.Forms.Label();
             this.lblCollectionCount = new System.Windows.Forms.Label();
-            this.searchTimer = new System.Windows.Forms.Timer(this.components);
             this.chkTopLevel = new System.Windows.Forms.CheckBox();
+            this.searchTimer = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.itemsTab.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.collectionsTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.itemCollectionBindingSource)).BeginInit();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.itemKindViewBindingSource)).BeginInit();
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -79,7 +86,7 @@ namespace NHSE.WinForms.Zebra.Controls
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(324, 66);
+            this.label2.Location = new System.Drawing.Point(323, 66);
             this.label2.Margin = new System.Windows.Forms.Padding(2);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(81, 13);
@@ -131,7 +138,8 @@ namespace NHSE.WinForms.Zebra.Controls
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.itemsTab);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.collectionsTab);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(3, 84);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
@@ -191,16 +199,16 @@ namespace NHSE.WinForms.Zebra.Controls
             this.lbAll.SelectedIndexChanged += new System.EventHandler(this.lbAll_SelectedIndexChanged);
             this.lbAll.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lbAll_KeyDown);
             // 
-            // tabPage2
+            // collectionsTab
             // 
-            this.tabPage2.Controls.Add(this.lbCollections);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(269, 392);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Collections";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.collectionsTab.Controls.Add(this.lbCollections);
+            this.collectionsTab.Location = new System.Drawing.Point(4, 22);
+            this.collectionsTab.Name = "collectionsTab";
+            this.collectionsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.collectionsTab.Size = new System.Drawing.Size(269, 369);
+            this.collectionsTab.TabIndex = 1;
+            this.collectionsTab.Text = "Collections";
+            this.collectionsTab.UseVisualStyleBackColor = true;
             // 
             // lbCollections
             // 
@@ -211,12 +219,39 @@ namespace NHSE.WinForms.Zebra.Controls
             this.lbCollections.FormattingEnabled = true;
             this.lbCollections.Location = new System.Drawing.Point(3, 3);
             this.lbCollections.Name = "lbCollections";
-            this.lbCollections.Size = new System.Drawing.Size(263, 386);
+            this.lbCollections.Size = new System.Drawing.Size(263, 363);
             this.lbCollections.TabIndex = 0;
             // 
             // itemCollectionBindingSource
             // 
             this.itemCollectionBindingSource.DataSource = typeof(NHSE.WinForms.Zebra.ItemCollection);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.lbKinds);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(269, 369);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Kinds";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // lbKinds
+            // 
+            this.lbKinds.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lbKinds.DataSource = this.itemKindViewBindingSource;
+            this.lbKinds.DisplayMember = "Text";
+            this.lbKinds.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbKinds.FormattingEnabled = true;
+            this.lbKinds.Location = new System.Drawing.Point(0, 0);
+            this.lbKinds.Name = "lbKinds";
+            this.lbKinds.Size = new System.Drawing.Size(269, 369);
+            this.lbKinds.TabIndex = 0;
+            this.lbKinds.ValueMember = "Value";
+            // 
+            // itemKindViewBindingSource
+            // 
+            this.itemKindViewBindingSource.DataSource = typeof(NHSE.WinForms.Zebra.Controls.ItemKindView);
             // 
             // flowLayoutPanel3
             // 
@@ -226,7 +261,7 @@ namespace NHSE.WinForms.Zebra.Controls
             this.flowLayoutPanel3.Controls.Add(this.btnMoveUp);
             this.flowLayoutPanel3.Controls.Add(this.btnMoveDown);
             this.flowLayoutPanel3.Controls.Add(this.btnSort);
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(607, 229);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(606, 229);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(34, 102);
@@ -283,8 +318,9 @@ namespace NHSE.WinForms.Zebra.Controls
             this.lbInCollection.FormattingEnabled = true;
             this.lbInCollection.IntegralHeight = false;
             this.lbInCollection.ItemHeight = 18;
-            this.lbInCollection.Location = new System.Drawing.Point(325, 84);
+            this.lbInCollection.Location = new System.Drawing.Point(324, 84);
             this.lbInCollection.Name = "lbInCollection";
+            this.lbInCollection.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lbInCollection.Size = new System.Drawing.Size(277, 392);
             this.lbInCollection.TabIndex = 0;
             this.lbInCollection.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lbInCollection_DrawItem);
@@ -293,14 +329,15 @@ namespace NHSE.WinForms.Zebra.Controls
             // flowLayoutPanel2
             // 
             this.flowLayoutPanel2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.flowLayoutPanel2.AutoSize = true;
             this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel2.Controls.Add(this.btnAdd);
+            this.flowLayoutPanel2.Controls.Add(this.btnAddAll);
             this.flowLayoutPanel2.Controls.Add(this.btnRemove);
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(285, 246);
+            this.flowLayoutPanel2.Controls.Add(this.btnRemoveAll);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(285, 209);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(34, 68);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(34, 141);
             this.flowLayoutPanel2.TabIndex = 5;
             // 
             // btnAdd
@@ -317,19 +354,48 @@ namespace NHSE.WinForms.Zebra.Controls
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
+            // btnAddAll
+            // 
+            this.btnAddAll.AutoSize = true;
+            this.btnAddAll.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel2.SetFlowBreak(this.btnAddAll, true);
+            this.btnAddAll.Image = ((System.Drawing.Image)(resources.GetObject("btnAddAll.Image")));
+            this.btnAddAll.Location = new System.Drawing.Point(2, 36);
+            this.btnAddAll.Margin = new System.Windows.Forms.Padding(2);
+            this.btnAddAll.Name = "btnAddAll";
+            this.btnAddAll.Size = new System.Drawing.Size(30, 30);
+            this.btnAddAll.TabIndex = 2;
+            this.btnAddAll.UseVisualStyleBackColor = true;
+            this.btnAddAll.Visible = false;
+            this.btnAddAll.Click += new System.EventHandler(this.btnAddAll_Click);
+            // 
             // btnRemove
             // 
             this.btnRemove.AutoSize = true;
             this.btnRemove.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel2.SetFlowBreak(this.btnRemove, true);
             this.btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRemove.Image")));
-            this.btnRemove.Location = new System.Drawing.Point(2, 36);
+            this.btnRemove.Location = new System.Drawing.Point(2, 70);
             this.btnRemove.Margin = new System.Windows.Forms.Padding(2);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(30, 30);
             this.btnRemove.TabIndex = 1;
             this.btnRemove.UseVisualStyleBackColor = true;
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
+            // btnRemoveAll
+            // 
+            this.btnRemoveAll.AutoSize = true;
+            this.btnRemoveAll.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel2.SetFlowBreak(this.btnRemoveAll, true);
+            this.btnRemoveAll.Image = ((System.Drawing.Image)(resources.GetObject("btnRemoveAll.Image")));
+            this.btnRemoveAll.Location = new System.Drawing.Point(2, 104);
+            this.btnRemoveAll.Margin = new System.Windows.Forms.Padding(2);
+            this.btnRemoveAll.Name = "btnRemoveAll";
+            this.btnRemoveAll.Size = new System.Drawing.Size(30, 30);
+            this.btnRemoveAll.TabIndex = 3;
+            this.btnRemoveAll.UseVisualStyleBackColor = true;
+            this.btnRemoveAll.Click += new System.EventHandler(this.btnRemoveAll_Click);
             // 
             // lblItemCount
             // 
@@ -342,16 +408,11 @@ namespace NHSE.WinForms.Zebra.Controls
             // lblCollectionCount
             // 
             this.lblCollectionCount.AutoSize = true;
-            this.lblCollectionCount.Location = new System.Drawing.Point(324, 479);
+            this.lblCollectionCount.Location = new System.Drawing.Point(323, 479);
             this.lblCollectionCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCollectionCount.Name = "lblCollectionCount";
             this.lblCollectionCount.Size = new System.Drawing.Size(0, 13);
             this.lblCollectionCount.TabIndex = 9;
-            // 
-            // searchTimer
-            // 
-            this.searchTimer.Interval = 750;
-            this.searchTimer.Tick += new System.EventHandler(this.searchTimer_Tick);
             // 
             // chkTopLevel
             // 
@@ -362,6 +423,11 @@ namespace NHSE.WinForms.Zebra.Controls
             this.chkTopLevel.TabIndex = 10;
             this.chkTopLevel.Text = "Top Level Collection";
             this.chkTopLevel.UseVisualStyleBackColor = true;
+            // 
+            // searchTimer
+            // 
+            this.searchTimer.Interval = 750;
+            this.searchTimer.Tick += new System.EventHandler(this.searchTimer_Tick);
             // 
             // CollectionEditor
             // 
@@ -377,8 +443,10 @@ namespace NHSE.WinForms.Zebra.Controls
             this.itemsTab.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
+            this.collectionsTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.itemCollectionBindingSource)).EndInit();
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.itemKindViewBindingSource)).EndInit();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
@@ -408,10 +476,15 @@ namespace NHSE.WinForms.Zebra.Controls
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage itemsTab;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage collectionsTab;
         private System.Windows.Forms.Timer searchTimer;
         private ListBoxEx lbCollections;
         private System.Windows.Forms.BindingSource itemCollectionBindingSource;
         private System.Windows.Forms.CheckBox chkTopLevel;
+        private System.Windows.Forms.TabPage tabPage1;
+        private ListBoxEx lbKinds;
+        private System.Windows.Forms.BindingSource itemKindViewBindingSource;
+        private System.Windows.Forms.Button btnAddAll;
+        private System.Windows.Forms.Button btnRemoveAll;
     }
 }

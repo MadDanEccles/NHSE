@@ -103,6 +103,11 @@ namespace NHSE.WinForms.Zebra
             }
         }
 
+        public void DeleteAll(IHistoryTransaction trans)
+        {
+            DeleteRect(worldTileBounds, trans);
+        }
+
         public Item? GetItem(Point tilePt, bool resolveExtensions)
         {
             if (!IsInWorldBounds(tilePt))

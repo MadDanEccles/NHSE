@@ -28,7 +28,9 @@ namespace NHSE.WinForms.Zebra.Controls
 
         private void btnDeleteCollection_Click(object sender, System.EventArgs e)
         {
-
+            var selectedValue = (ItemCollection?)cmbCollections.SelectedValue;
+            if (selectedValue != null)
+                itemCollectionBindingSource.Remove(selectedValue);
         }
 
         protected override void OnClosing(CancelEventArgs e)

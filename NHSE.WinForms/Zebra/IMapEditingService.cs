@@ -10,6 +10,8 @@ namespace NHSE.WinForms.Zebra
         bool AddItem(Item item, Point location, IHistoryTransaction historyTransaction,
             CollisionAction collisionAction = ThrowException);
         void DeleteRect(Rectangle tileRect, IHistoryTransaction historyTransaction);
+
+        void DeleteAll(IHistoryTransaction historyTransaction);
     }
 
     public interface IMapQueryService

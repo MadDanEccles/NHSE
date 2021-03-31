@@ -1,7 +1,7 @@
 ﻿
 namespace NHSE.WinForms.Zebra.Controls
 {
-    partial class SegmentLayoutEditor
+    partial class MultiSegmentLayoutEditor
     {
         /// <summary> 
         /// Required designer variable.
@@ -82,12 +82,12 @@ namespace NHSE.WinForms.Zebra.Controls
             this.propertyGrid.TabIndex = 1;
             this.propertyGrid.ToolbarVisible = false;
             // 
-            // SegmentLayoutEditor
+            // MultiSegmentLayoutEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "SegmentLayoutEditor";
+            this.Name = "MultiSegmentLayoutEditor";
             this.Size = new System.Drawing.Size(371, 251);
             this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.iSegmentLayoutFactoryBindingSource)).EndInit();

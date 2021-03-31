@@ -184,6 +184,9 @@ namespace NHSE.WinForms.Zebra.Controls
             }
 
             layoutPanel.Controls.EnsureRadioGroupChecked();
+
+            lblInfo.Text =
+                $"ID:    {selectedItemInfo.ItemId} (0x{selectedItemInfo.ItemId:X})\r\nKind:  {selectedItemInfo.Kind}\r\nStack: {selectedItemInfo.MaxStackSize}";
         }
     }
 

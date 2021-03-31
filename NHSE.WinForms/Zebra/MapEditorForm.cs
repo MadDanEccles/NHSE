@@ -56,47 +56,55 @@ namespace NHSE.WinForms.Zebra
             LayoutManager layoutManager = new LayoutManager();
             layoutManager.Register(new DisplaySegmentLayoutFactory());
             layoutManager.Register(new DiyLoayoutFactory());
+            layoutManager.Register(new MinWidthMultiSegmentLayoutFactory());
+            layoutManager.Register(new JustifiedMultiSegmentLayoutFactory());
 
             var itemSource = new ItemSource();
             itemEditor.Initialize(itemSource);
             collectionCatalog = ItemCollectionManager.Load();
             multiItemSelector.Initialise(itemSource, collectionCatalog, layoutManager);
 
-            //var itemDropdownData = itemSource.GetItemDropdownData();
-            //foreach (var item in itemDropdownData)
-            //{
-            //    if (ItemInfo.GetItemKind((ushort) item.Value) == ItemKind.Kind_Fish)
-            //    {
-            //        var model = itemDropdownData.FirstOrDefault(i => i.Text == $"{item.Text} model");
-            //        if (model != null)
-            //        {
-            //            if (ItemInfo.GetItemKind((ushort) model.Value) != ItemKind.Kind_FishToy)
-            //                throw new Exception();
-            //            Debug.WriteLine($"{{\"C\": {item.Value}, \"M\":{model.Value}}},");
-            //        }
-            //    }
-            //}
+            // var itemKind = ItemInfo.GetItemKind(0x27B9);
 
-            //foreach (var item in itemDropdownData)
-            //{
-            //    if (ItemInfo.GetItemKind((ushort)item.Value) == ItemKind.Kind_Insect)
-            //    {
-            //        var model = itemDropdownData.FirstOrDefault(i => i.Text == $"{item.Text} model");
-            //        if (model.Text !=  null)
-            //        {
-            //            if (ItemInfo.GetItemKind((ushort)model.Value) != ItemKind.Kind_InsectToy)
-            //                throw new Exception();
-            //            Debug.WriteLine($"{{\"C\": {item.Value}, \"M\":{model.Value}}},");
-            //        }
-            //        else
-            //        {
-            //            Debug.WriteLine($"{{\"C\": \"{item.Value}\", \"M\":\"{item.Text}\"}},");
-            //        }
-            //    }
-            //}
 
-            // Select the initial tool
-            SelectTool(PanAndZoom);
+                var itemDropdownData = itemSource.GetItemDropdownData();
+            foreach (var item in itemDropdownData.Where(i => i.Text.StartsWith("fence", StringComparison.OrdinalIgnoreCase)))
+                Debug.WriteLine($"{item.Text} => {item.Value}");
+
+                //foreach (var item in itemDropdownData)
+                //{
+                //    if (ItemInfo.GetItemKind((ushort) item.Value) == ItemKind.Kind_Fish)
+                //    {
+                //        var model = itemDropdownData.FirstOrDefault(i => i.Text == $"{item.Text} model");
+                //        if (model != null)
+                //        {
+                //            if (ItemInfo.GetItemKind((ushort) model.Value) != ItemKind.Kind_FishToy)
+                //                throw new Exception();
+                //            Debug.WriteLine($"{{\"C\": {item.Value}, \"M\":{model.Value}}},");
+                //        }
+                //    }
+                //}
+
+                //foreach (var item in itemDropdownData)
+                //{
+                //    if (ItemInfo.GetItemKind((ushort)item.Value) == ItemKind.Kind_Insect)
+                //    {
+                //        var model = itemDropdownData.FirstOrDefault(i => i.Text == $"{item.Text} model");
+                //        if (model.Text !=  null)
+                //        {
+                //            if (ItemInfo.GetItemKind((ushort)model.Value) != ItemKind.Kind_InsectToy)
+                //                throw new Exception();
+                //            Debug.WriteLine($"{{\"C\": {item.Value}, \"M\":{model.Value}}},");
+                //        }
+                //        else
+                //        {
+                //            Debug.WriteLine($"{{\"C\": \"{item.Value}\", \"M\":\"{item.Text}\"}},");
+                //        }
+                //    }
+                //}
+
+                // Select the initial tool
+                SelectTool(PanAndZoom);
         }
 
         private void ValidateMap()
@@ -340,6 +348,19 @@ namespace NHSE.WinForms.Zebra
         {
             CollectionEditorForm.EditModal(this, this.collectionCatalog, new ItemSource());
             multiItemSelector.RefreshCollections();
+        }
+
+        private void deleteAllItemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(this, "Are you sure that you wish to clear all items?", "Delete All Items",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            {
+                using (var trans = historyService.BeginTransaction("Delete All Items"))
+                {
+                    mapView.MapEditingService.DeleteAll(trans);
+                    mapView.Invalidate();
+                }
+            }
         }
     }
 

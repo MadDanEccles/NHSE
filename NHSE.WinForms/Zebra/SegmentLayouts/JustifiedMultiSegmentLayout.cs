@@ -7,8 +7,12 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
 {
     internal class JustifiedMultiSegmentLayout : IMultiSegmentLayout
     {
-        private int gutterHorz = 0;
-        private int gutterVert = 2;
+        private readonly GridLayoutOptions options;
+
+        public JustifiedMultiSegmentLayout(GridLayoutOptions options)
+        {
+            this.options = options;
+        }
 
         public bool GetSegmentRects(Rectangle tileRect, ISegmentLayout[] segmentLayouts,
             Size[] minSegementSizes, int rowCount, out Rectangle[] segmentRects, out string hint)
@@ -17,7 +21,7 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
 
             int baseSegsPerRow = segmentLayouts.Length / rowCount;
             int rowsWithOneExtraSeg = segmentLayouts.Length % rowCount;
-            int rowHeight = (tileRect.Height - gutterVert * (rowCount - 1)) / rowCount;
+            int rowHeight = (tileRect.Height - options.HorizontalGutter * (rowCount - 1)) / rowCount;
 
             if (minSegementSizes.Any(i => i.Height > rowHeight))
             {
@@ -85,13 +89,13 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
                     var segmentWidth = segmentWidths[segmentIndex - rowFirstSegment];
                     segmentRects[segmentIndex] = new Rectangle(
                         segmentLeft,
-                        tileRect.Top + (rowHeight + gutterVert) * rowIndex,
+                        tileRect.Top + (rowHeight + options.HorizontalGutter) * rowIndex,
                         segmentWidth,
                         rowHeight);
                     
                     if(!tileRect.Contains(segmentRects[segmentIndex]))
                         Debugger.Break();
-                    segmentLeft += segmentWidth + gutterHorz;
+                    segmentLeft += segmentWidth + options.VerticalGutter;
                 }
 
                 rowFirstSegment += rowSegmentCounts[rowIndex];
@@ -105,7 +109,7 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
         {
             int result = 0;
             for(int i = rowFirstSegment; i < rowFirstSegment + rowSegmentCount; i++)
-                result += minSegementSizes[i].Width + gutterHorz * (rowSegmentCount - 1);
+                result += minSegementSizes[i].Width + options.VerticalGutter * (rowSegmentCount - 1);
             return result;
         }
     }

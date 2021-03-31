@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -27,7 +28,14 @@ namespace NHSE.WinForms.Zebra.Controls
 
             lbInCollection.DataSource = inCollectionViews;
             lbInCollection.DisplayMember = nameof(IInCollectionView.Text);
-            
+
+            foreach (ItemKind itemKind in Enum.GetValues(typeof(ItemKind)))
+            {
+                var k = itemKind;
+                itemKindViewBindingSource.Add(new ItemKindView($"Kind: {itemKind}", i => ItemInfo.GetItemKind(i) == k));
+            }
+
+            itemKindViewBindingSource.Add(new ItemKindView($"Has DIY", i => ItemEditorInfo.FromItemId(i).CanRecipe));
         }
 
         public ItemCollection? Collection
@@ -55,7 +63,8 @@ namespace NHSE.WinForms.Zebra.Controls
                             switch (member.Type)
                             {
                                 case CollectionMemberType.Item:
-                                    inCollectionViews.Add(new InCollectionItemView(member.ItemId, itemLookup[member.ItemId].Text));
+                                    if (itemLookup.TryGetValue(member.ItemId, out var item))
+                                        inCollectionViews.Add(new InCollectionItemView(member.ItemId, item.Text));
                                     break;
                                 case CollectionMemberType.Collection:
                                     inCollectionViews.Add(new InCollectionCollectionView(member.CollectionId, Collections.Cast<ItemCollection>().Single(i => i.Id == member.CollectionId).Name));
@@ -66,6 +75,8 @@ namespace NHSE.WinForms.Zebra.Controls
                         }
                     }
                 }
+
+                UpdateCollectionCount();
             }
         }
 
@@ -172,38 +183,57 @@ namespace NHSE.WinForms.Zebra.Controls
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            AddSelectedItem();
+            AddSelectedItem(false);
         }
 
-        private void AddSelectedItem()
+        private void AddSelectedItem(bool selectAll)
         {
+            inCollectionViews.RaiseListChangedEvents = false;
+
             if (tabControl1.SelectedTab == itemsTab)
             {
-                foreach (ComboItem item in lbAll.SelectedItems)
+                foreach (ComboItem item in selectAll ? allItems : (IEnumerable)lbAll.SelectedItems)
                 {
                     inCollectionViews.Add(new InCollectionItemView((ushort) item.Value, item.Text));
                 }
-                lbInCollection.SelectedIndex = inCollectionViews.Count - 1;
             }
-            else
+            else if (tabControl1.SelectedTab == collectionsTab)
             {
-                foreach (ItemCollection item in lbCollections.SelectedItems)
+                foreach (ItemCollection item in selectAll ? itemCollectionBindingSource : (IEnumerable)lbCollections.SelectedItems)
                 {
                     inCollectionViews.Add(new InCollectionCollectionView(item.Id, item.Name));
                 }
-                lbInCollection.SelectedIndex = inCollectionViews.Count - 1;
-
             }
+            else
+            {
+                foreach (ItemKindView itemKindView in selectAll ? itemKindViewBindingSource : (IEnumerable)lbKinds.SelectedItems)
+                {
+                    foreach (var item in allItems)
+                    {
+                        if (itemKindView.IsIncluded((ushort) item.Value))
+                        {
+                            inCollectionViews.Add(new InCollectionItemView((ushort) item.Value, item.Text));
+                        }
+                    }
+                }
+            }
+
+            inCollectionViews.RaiseListChangedEvents = true;
+            inCollectionViews.ResetBindings();
+            lbInCollection.SelectedIndex = inCollectionViews.Count - 1;
 
             UpdateCollectionCount();
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (lbInCollection.SelectedItem is IInCollectionView view)
+            inCollectionViews.RaiseListChangedEvents = false;
+            foreach (IInCollectionView item in lbInCollection.SelectedItems)
             {
-                inCollectionViews.Remove(view);
+                inCollectionViews.Remove(item);
             }
+            inCollectionViews.RaiseListChangedEvents = true;
+            inCollectionViews.ResetBindings();
 
             UpdateCollectionCount();
         }
@@ -241,7 +271,7 @@ namespace NHSE.WinForms.Zebra.Controls
             switch (e.KeyData)
             {
                 case Keys.Enter:
-                    AddSelectedItem();
+                    AddSelectedItem(false);
                     e.SuppressKeyPress = true;
                     break;
             }
@@ -330,10 +360,40 @@ namespace NHSE.WinForms.Zebra.Controls
             e.ItemHeight = Math.Max(16, measureString.Height);
             e.ItemWidth = 18 + measureString.Width;
         }
+
+        private void btnRemoveAll_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(this, "Are you aure you want to clear this collection?", "Clear Collection",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            {
+                inCollectionViews.Clear();
+            }
+        }
+
+        private void btnAddAll_Click(object sender, EventArgs e)
+        {
+            AddSelectedItem(true);
+        }
     }
 
     internal interface IInCollectionView
     {
         string Text { get; }
+    }
+
+    public class ItemKindView
+    {
+        private readonly Predicate<ushort> funcInclude;
+
+        public ItemKindView(string name, Predicate<ushort> funcInclude)
+        {
+            this.Text = name;
+            this.funcInclude = funcInclude;
+        }
+
+        public string Text { get; }
+    
+
+        public bool IsIncluded(ushort itemId) => funcInclude(itemId);
     }
 }

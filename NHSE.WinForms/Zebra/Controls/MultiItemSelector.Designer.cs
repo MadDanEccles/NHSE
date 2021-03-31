@@ -34,7 +34,7 @@ namespace NHSE.WinForms.Zebra.Controls
             this.chkVaryDiy = new System.Windows.Forms.CheckBox();
             this.chkVaryOther = new System.Windows.Forms.CheckBox();
             this.segmentLayoutEditor = new NHSE.WinForms.Zebra.Controls.SegmentLayoutEditor();
-            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.multiSegmentLayoutEditor = new NHSE.WinForms.Zebra.Controls.MultiSegmentLayoutEditor();
             this.flowLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,7 +45,7 @@ namespace NHSE.WinForms.Zebra.Controls
             this.treeView1.Location = new System.Drawing.Point(0, 42);
             this.treeView1.Margin = new System.Windows.Forms.Padding(2);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(253, 151);
+            this.treeView1.Size = new System.Drawing.Size(253, 146);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -90,27 +90,26 @@ namespace NHSE.WinForms.Zebra.Controls
             // segmentLayoutEditor
             // 
             this.segmentLayoutEditor.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.segmentLayoutEditor.Location = new System.Drawing.Point(0, 193);
+            this.segmentLayoutEditor.Location = new System.Drawing.Point(0, 293);
             this.segmentLayoutEditor.Name = "segmentLayoutEditor";
-            this.segmentLayoutEditor.Size = new System.Drawing.Size(253, 210);
+            this.segmentLayoutEditor.Size = new System.Drawing.Size(253, 110);
             this.segmentLayoutEditor.TabIndex = 3;
             // 
-            // splitter1
+            // multiSegmentLayoutEditor
             // 
-            this.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter1.Location = new System.Drawing.Point(0, 190);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(253, 3);
-            this.splitter1.TabIndex = 4;
-            this.splitter1.TabStop = false;
+            this.multiSegmentLayoutEditor.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.multiSegmentLayoutEditor.Location = new System.Drawing.Point(0, 188);
+            this.multiSegmentLayoutEditor.Name = "multiSegmentLayoutEditor";
+            this.multiSegmentLayoutEditor.Size = new System.Drawing.Size(253, 105);
+            this.multiSegmentLayoutEditor.TabIndex = 5;
             // 
             // MultiItemSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.splitter1);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.flowLayoutPanel2);
+            this.Controls.Add(this.multiSegmentLayoutEditor);
             this.Controls.Add(this.segmentLayoutEditor);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MultiItemSelector";
@@ -129,6 +128,6 @@ namespace NHSE.WinForms.Zebra.Controls
         private System.Windows.Forms.CheckBox chkVaryDiy;
         private System.Windows.Forms.CheckBox chkVaryOther;
         private SegmentLayoutEditor segmentLayoutEditor;
-        private System.Windows.Forms.Splitter splitter1;
+        private MultiSegmentLayoutEditor multiSegmentLayoutEditor;
     }
 }

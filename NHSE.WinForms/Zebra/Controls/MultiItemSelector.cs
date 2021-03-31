@@ -41,8 +41,10 @@ namespace NHSE.WinForms.Zebra.Controls
             itemsNode.HideCheckBox();
             itemsNode.HideCheckBox();
             collectionsNode.HideCheckBox();
+            collectionsNode.Expand();
 
             segmentLayoutEditor.Initialise(layoutManager);
+            multiSegmentLayoutEditor.Initialise(layoutManager);
         }
 
         private Dictionary<Guid, ItemCollection> collectionLookup = new Dictionary<Guid, ItemCollection>();
@@ -183,6 +185,10 @@ namespace NHSE.WinForms.Zebra.Controls
         public ISegmentLayoutFactory GetFactory()
         {
             return segmentLayoutEditor.Factory;
+        }
+        public IMultiSegmentLayoutFactory GetMultiFactory()
+        {
+            return multiSegmentLayoutEditor.Factory;
         }
     }
 }

@@ -124,6 +124,9 @@
     <Compile Update="Zebra\Controls\ItemDirectionSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Zebra\Controls\MultiSegmentLayoutEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Zebra\ZebraResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

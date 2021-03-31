@@ -17,7 +17,7 @@ namespace NHSE.WinForms.Zebra.Tools
 
         private int rowCount = 1;
 
-        private IMultiSegmentLayout layout = new MinWidthMultiSegmentLayout();
+        private IMultiSegmentLayout layout;
 
         public MultiTemplateTool(IHistoryService historyService, MultiItemSelector multiItemSelector)
             : base(historyService)
@@ -27,6 +27,7 @@ namespace NHSE.WinForms.Zebra.Tools
 
         protected override bool OnStartDrag(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
+            this.layout = multiItemSelector.GetMultiFactory().Create();
             var factory = multiItemSelector.GetFactory();
             this.items = multiItemSelector.ResolveItems().Where(i => factory.IsApplicable(i.ItemId)).ToArray();
             if (this.items.Length == 0)

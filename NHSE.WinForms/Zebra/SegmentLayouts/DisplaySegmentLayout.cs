@@ -46,7 +46,10 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
             else
             {
                 displayItemId = itemInfo.ItemId;
-                droppedItems.Add(ItemConvertor.Instance.ApplyPresentation(new Item(itemInfo.ItemId), PresentationType.Dropped));
+                var item = new Item(itemInfo.ItemId);
+                if (!itemInfo.HasVariants)
+                    item.Count = (ushort) (itemInfo.MaxStackSize - 1);
+                droppedItems.Add(ItemConvertor.Instance.ApplyPresentation(item, PresentationType.Dropped));
             }
 
             placedItem = new Item(displayItemId);

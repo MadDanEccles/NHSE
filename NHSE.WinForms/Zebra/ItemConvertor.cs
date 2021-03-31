@@ -16,6 +16,8 @@ namespace NHSE.WinForms.Zebra
         private readonly Dictionary<ItemKind, PresentationType> presentationTypesByItemKind = new Dictionary<ItemKind, PresentationType>();
         private readonly Dictionary<ushort, ushort> reverseRecipeLookup = new Dictionary<ushort, ushort>();
         private readonly Dictionary<ushort, ushort> creatureModelLookup = new Dictionary<ushort, ushort>(); // Creature => Creature Model
+        private readonly Dictionary<ushort, ushort> placedItemLookup = new Dictionary<ushort, ushort>();
+        private readonly Dictionary<ushort, ushort> reversePlacedItemLookup = new Dictionary<ushort, ushort>();
 
         public ushort GetItemId(Item item)
         {
@@ -23,7 +25,14 @@ namespace NHSE.WinForms.Zebra
                 return item.Count;
             if (IsRecipe(item))
                 return RecipeList.Recipes[item.Count];
+            if (IsPlaced(item) && reversePlacedItemLookup.TryGetValue(item.ItemId, out var mappedId))
+                return mappedId;
             return item.ItemId;
+        }
+
+        private bool IsPlaced(Item item)
+        {
+            return (item.SystemParam & ~0x03) == 0;
         }
 
         public ushort GetBodyVariant(Item item)
@@ -90,6 +99,12 @@ namespace NHSE.WinForms.Zebra
 
             foreach (CreatureModelMapping mapping in catalog.CreatureModelMappings)
                 this.creatureModelLookup.Add(mapping.CreatureId, mapping.ModelId);
+
+            foreach (var mapping in catalog.ItemPresentationMappings)
+            {
+                this.placedItemLookup.Add(mapping.InventoryId, mapping.PlacedId);
+                this.reversePlacedItemLookup.Add(mapping.PlacedId, mapping.InventoryId);
+            }
         }
 
         public PresentationType GetPermittedPresentationTypes(ushort itemId)
@@ -141,21 +156,37 @@ namespace NHSE.WinForms.Zebra
                     item.SystemParam = 0x00;
                     break;
                 case PresentationType.Dropped:
+                {
+                    if (reversePlacedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
+                        item.ItemId = mappedValue;
                     item.SystemParam = 0x20;
                     break;
+                }
                 case PresentationType.Placed:
+                {
                     // Clear buried or dropped flags...
+                    if (placedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
+                        item.ItemId = mappedValue;
                     item.SystemParam = (byte) (item.SystemParam & ~0x24);
                     break;
+                }
                 case PresentationType.Buried:
+                {
                     // Apply buried flag
+                    if (reversePlacedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
+                        item.ItemId = mappedValue;
                     item.SystemParam = 0x04;
                     break;
+                }
                 case PresentationType.Recipe:
+                {
+                    if (reversePlacedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
+                        item.ItemId = mappedValue;
                     item.Count = reverseRecipeLookup[item.ItemId];
                     item.ItemId = Item.DIYRecipe;
                     item.SystemParam = 0x00;
                     break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(presentationType), presentationType, null);
             }

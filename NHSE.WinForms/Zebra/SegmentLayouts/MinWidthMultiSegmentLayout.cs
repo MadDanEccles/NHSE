@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using NHSE.Core;
 using static NHSE.WinForms.Zebra.SegmentLayouts.FlowDirection;
 
 namespace NHSE.WinForms.Zebra.SegmentLayouts
 {
     internal class MinWidthMultiSegmentLayout : IMultiSegmentLayout
     {
-        private int gutterHorz = 0;
-        private int gutterVert = 2;
+        private readonly GridLayoutOptions options;
         private int pathWidth = 2;
+
+        public MinWidthMultiSegmentLayout(GridLayoutOptions options)
+        {
+            this.options = options;
+        }
 
         public bool GetSegmentRects(Rectangle tileRect, ISegmentLayout[] segmentLayouts,
             Size[] minSegementSizes, int pathCount, out Rectangle[] segmentRects, out string hint)
@@ -52,13 +57,13 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
 
                     rowSegmentCounts.Add(currentRow);
                     currentRow = new List<int>();
-                    flowDirection = flowDirection.Reverse();
+                    flowDirection = flowDirection.Reverse(options.Flow);
                     currentX = flowDirection == LeftToRight ? 0 : tileRect.Width;
                 }
 
                 currentRow.Add(currentX);
                 if (flowDirection == LeftToRight)
-                    currentX +=  minSize.Width + gutterHorz;
+                    currentX +=  minSize.Width + options.VerticalGutter;
             }
 
             if (currentRow.Count > 0)
@@ -68,7 +73,7 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
                 Debugger.Break();
 
             var rowCount = rowSegmentCounts.Count;
-            int maxUsableHeight = tileRect.Height - gutterVert * (rowCount - 1);
+            int maxUsableHeight = tileRect.Height - options.HorizontalGutter * (rowCount - 1);
             int initialRowHeight = maxUsableHeight / rowCount;
 
             // Adapt row heights...
@@ -108,7 +113,7 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
                         rowHeights[rowIndex]);
                     segmentIndex++;
                 }
-                y += rowHeights[rowIndex] + gutterVert;
+                y += rowHeights[rowIndex] + options.HorizontalGutter;
             }
 
             hint = string.Empty;
@@ -207,25 +212,6 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
             }
 
             return result;
-        }
-    }
-
-    public enum FlowDirection
-    {
-        LeftToRight,
-        RightToLeft
-    }
-
-    public static class LayoutExtensions
-    {
-        public static FlowDirection Reverse(this FlowDirection value)
-        {
-            return value switch
-            {
-                LeftToRight => RightToLeft,
-                RightToLeft => LeftToRight,
-                _ => throw new ArgumentOutOfRangeException()
-            };
         }
     }
 }

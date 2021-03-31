@@ -20,7 +20,8 @@ namespace NHSE.WinForms.Zebra
     {
         public List<ComboItem> GetItemDropdownData()
         {
-            var data = GameInfo.Strings.ItemDataSource.ToList();
+
+            var data = GameInfo.Strings.ItemDataSource.Where(i => !i.Text.StartsWith("(Item #")).ToList();
             var field = FieldItemList.Items.Select(z => z.Value).ToList();
             data.Add(field, GameInfo.Strings.InternalNameTranslation);
             return data;

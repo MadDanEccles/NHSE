@@ -55,19 +55,20 @@ namespace NHSE.WinForms.Zebra
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteSelectedItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.editCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.categoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.multiItemSelector = new MultiItemSelector();
-            this.itemEditor = new Controls.ItemEditor();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.locationLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.itemLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.mapView = new MapView();
-            this.editCollectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.deleteAllItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mapView = new NHSE.WinForms.Zebra.Controls.MapView();
+            this.multiItemSelector = new NHSE.WinForms.Zebra.Controls.MultiItemSelector();
+            this.itemEditor = new NHSE.WinForms.Zebra.Controls.ItemEditor();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -240,6 +241,7 @@ namespace NHSE.WinForms.Zebra
             this.redoToolStripMenuItem,
             this.toolStripSeparator2,
             this.deleteSelectedItemsToolStripMenuItem,
+            this.deleteAllItemsToolStripMenuItem,
             this.toolStripSeparator4,
             this.editCollectionsToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
@@ -276,6 +278,18 @@ namespace NHSE.WinForms.Zebra
             this.deleteSelectedItemsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.deleteSelectedItemsToolStripMenuItem.Text = "Delete Selected Items";
             this.deleteSelectedItemsToolStripMenuItem.Click += new System.EventHandler(this.deleteSelectedItemsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(207, 6);
+            // 
+            // editCollectionsToolStripMenuItem
+            // 
+            this.editCollectionsToolStripMenuItem.Name = "editCollectionsToolStripMenuItem";
+            this.editCollectionsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.editCollectionsToolStripMenuItem.Text = "Edit Collections...";
+            this.editCollectionsToolStripMenuItem.Click += new System.EventHandler(this.editCollectionsToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -317,25 +331,6 @@ namespace NHSE.WinForms.Zebra
             this.panel1.Size = new System.Drawing.Size(217, 528);
             this.panel1.TabIndex = 8;
             // 
-            // multiItemSelector
-            // 
-            this.multiItemSelector.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.multiItemSelector.Location = new System.Drawing.Point(0, 0);
-            this.multiItemSelector.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.multiItemSelector.Name = "multiItemSelector";
-            this.multiItemSelector.Size = new System.Drawing.Size(217, 528);
-            this.multiItemSelector.TabIndex = 1;
-            this.multiItemSelector.Visible = false;
-            // 
-            // itemEditor
-            // 
-            this.itemEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemEditor.Location = new System.Drawing.Point(0, 0);
-            this.itemEditor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.itemEditor.Name = "itemEditor";
-            this.itemEditor.Size = new System.Drawing.Size(217, 528);
-            this.itemEditor.TabIndex = 0;
-            // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -362,6 +357,13 @@ namespace NHSE.WinForms.Zebra
             this.itemLabel.Size = new System.Drawing.Size(12, 21);
             this.itemLabel.Text = "-";
             // 
+            // deleteAllItemsToolStripMenuItem
+            // 
+            this.deleteAllItemsToolStripMenuItem.Name = "deleteAllItemsToolStripMenuItem";
+            this.deleteAllItemsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.deleteAllItemsToolStripMenuItem.Text = "Delete All Items";
+            this.deleteAllItemsToolStripMenuItem.Click += new System.EventHandler(this.deleteAllItemsToolStripMenuItem_Click);
+            // 
             // mapView
             // 
             this.mapView.BackColor = System.Drawing.Color.White;
@@ -377,17 +379,24 @@ namespace NHSE.WinForms.Zebra
             this.mapView.Text = "mapView1";
             this.mapView.Click += new System.EventHandler(this.mapView_Click);
             // 
-            // editCollectionsToolStripMenuItem
+            // multiItemSelector
             // 
-            this.editCollectionsToolStripMenuItem.Name = "editCollectionsToolStripMenuItem";
-            this.editCollectionsToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
-            this.editCollectionsToolStripMenuItem.Text = "Edit Collections...";
-            this.editCollectionsToolStripMenuItem.Click += new System.EventHandler(this.editCollectionsToolStripMenuItem_Click);
+            this.multiItemSelector.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.multiItemSelector.Location = new System.Drawing.Point(0, 0);
+            this.multiItemSelector.Margin = new System.Windows.Forms.Padding(2);
+            this.multiItemSelector.Name = "multiItemSelector";
+            this.multiItemSelector.Size = new System.Drawing.Size(217, 528);
+            this.multiItemSelector.TabIndex = 1;
+            this.multiItemSelector.Visible = false;
             // 
-            // toolStripSeparator4
+            // itemEditor
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(207, 6);
+            this.itemEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemEditor.Location = new System.Drawing.Point(0, 0);
+            this.itemEditor.Margin = new System.Windows.Forms.Padding(4);
+            this.itemEditor.Name = "itemEditor";
+            this.itemEditor.Size = new System.Drawing.Size(217, 528);
+            this.itemEditor.TabIndex = 0;
             // 
             // MapEditorForm
             // 
@@ -451,5 +460,6 @@ namespace NHSE.WinForms.Zebra
         private System.Windows.Forms.ToolStripButton btnMultiTemplate;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem editCollectionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteAllItemsToolStripMenuItem;
     }
 }

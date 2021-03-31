@@ -73,7 +73,7 @@ namespace NHSE.WinForms.Zebra.Renderers
                 case BuildingType.Museum:
                     return new Size(14, 8);
                 case BuildingType.NooksCranny:
-                    return new Size(14, 8);
+                    return new Size(14, 12);
                 case BuildingType.AblesSisters:
                     return new Size(10, 10);
                 case BuildingType.Campsite:

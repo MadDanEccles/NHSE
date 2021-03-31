@@ -1,5 +1,4 @@
-﻿using System;
-using NHSE.Core;
+﻿using NHSE.Core;
 
 namespace NHSE.WinForms.Zebra.SegmentLayouts
 {
@@ -21,25 +20,5 @@ namespace NHSE.WinForms.Zebra.SegmentLayouts
         }
 
         public override string Name => "Display Stand Layout";
-    }
-
-    public class DisplaySegmentLayoutOptions
-    {
-        public CreatureDisplayStyle CreatureDisplayStyle { get; set; } = CreatureDisplayStyle.AsModel;
-        public CreatureDropStyle CreatureDropStyle { get; set; } = CreatureDropStyle.Both;
-    }
-
-    public enum CreatureDisplayStyle
-    {
-        InTank,
-        AsModel,
-    }
-
-    [Flags]
-    public enum CreatureDropStyle
-    {
-        Creature = 0x01,
-        Model = 0x02,
-        Both = 0x03
     }
 }

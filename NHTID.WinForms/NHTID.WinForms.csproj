@@ -2,17 +2,18 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFrameworks>net46;net5.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyName>NHSE</AssemblyName>
+    <AssemblyName>Nthid</AssemblyName>
     <PackageId>NHSE</PackageId>
     <Product>NHSE</Product>
     <Description>Animal Crossing - New Horizons Treasure Island Designer</Description>
-    <StartupObject>NHTID.WinForms.Program</StartupObject>
+    <StartupObject>Nhtid.WinForms.Program</StartupObject>
     <ApplicationIcon>Resources\map_roads.ico</ApplicationIcon>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU;x86</Platforms>
+    <RootNamespace>Nhtid.WinForms</RootNamespace>
   </PropertyGroup>
   
 
@@ -21,12 +22,73 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NHSE.Core\NHSE.Core.csproj" />
-    <ProjectReference Include="..\NHSE.WinForms\NHSE.WinForms.csproj" />
+    <ProjectReference Include="..\NHSE.Sprites\NHSE.Sprites.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Controls\BaseItemSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\CheckedListBoxEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\CollectionEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\CollectionEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Controls\ItemDirectionSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ItemEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\ItemVariantSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\MapView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Controls\MultiItemSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\MultiSegmentLayoutEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\SegmentLayoutEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\TemplateSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="MapEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ZebraResources.Designer.cs">
+      <DependentUpon>ZebraResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="ZebraResources.resx">
+      <LastGenOutput>ZebraResources.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="catalog.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
 ﻿
-namespace NHTID.WinForms
+namespace Nhtid.WinForms
 {
     partial class NewProjectForm
     {

@@ -1,71 +1,127 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using Autofac;
 using NHSE.Core;
-using NHSE.WinForms;
-using NHSE.WinForms.Zebra;
-using NHSE.WinForms.Zebra.Renderers.ColorSchemes;
-using NHSE.WinForms.Zebra.Renderers.RenderStyles;
-using NHSE.WinForms.Zebra.Tools;
-using NHSE.WinForms.Zebra.Validation;
-using static NHTID.WinForms.EditorTool;
+using Nhtid.WinForms.Controls;
+using Nhtid.WinForms.Documents;
+using Nhtid.WinForms.Renderers.ColorSchemes;
+using Nhtid.WinForms.Renderers.RenderStyles;
+using Nhtid.WinForms.Tools;
+using Nhtid.WinForms.Validation;
+using static Nhtid.WinForms.EditorTool;
 
-namespace NHTID.WinForms
+namespace Nhtid.WinForms
 {
     public partial class MapEditorForm : Form, IColorSchemeProvider
     {
-        private readonly MapManager mapManager;
-        private readonly MainSave save;
+        private readonly IEnumerable<IMapValidation> mapValidators;
+        private readonly ILifetimeScope scope;
+        private MapManager mapManager;
+        private MainSave save;
         private readonly IHistoryService historyService;
+        private readonly ItemConvertor itemConvertor;
+        private readonly IItemCollectionStore collectionStore;
+        private readonly IEnumerable<IDocumentFactory> documentFactories;
 
-        private readonly Dictionary<Keys, EditorTool> toolKeys = new Dictionary<Keys, EditorTool>()
+        private readonly Dictionary<Keys, EditorTool> toolKeys = new()
         {
-            {Keys.I, Pick},
-            {Keys.B, EditorTool.Brush},
-            {Keys.X, Erase},
-            {Keys.Z, PanAndZoom},
-            {Keys.M, Marquee},
-            {Keys.V, MoveItems},
-            {Keys.R, FillRect},
-            {Keys.T, SingleTemplate}
+            { Keys.I, Pick },
+            { Keys.B, EditorTool.Brush },
+            { Keys.X, Erase },
+            { Keys.Z, PanAndZoom },
+            { Keys.M, Marquee },
+            { Keys.V, MoveItems },
+            { Keys.R, FillRect },
+            { Keys.T, SingleTemplate }
         };
 
         private EditorTool currentTool;
-        private IColorScheme colorScheme = new DefaultColorScheme();
+        private readonly IColorScheme colorScheme = new DefaultColorScheme();
+        private IDocument document;
+        private TrackBar zoomTrackBar;
+        private RecentFilesManager recentFileManager;
 
-        public MapEditorForm(MainSave save)
+        public MapEditorForm(
+            IEnumerable<IMapValidation> mapValidators,
+            ILifetimeScope scope,
+            IHistoryService historyService,
+            ItemConvertor itemConvertor,
+            IItemCollectionStore collectionStore,
+            IEnumerable<IDocumentFactory> documentFactories)
         {
+            this.historyService = historyService;
+            this.itemConvertor = itemConvertor;
+            this.collectionStore = collectionStore;
+            this.documentFactories = documentFactories;
+            this.mapValidators = mapValidators;
+            this.scope = scope;
+            this.recentFileManager = new RecentFilesManager();
+            this.recentFileManager.RecentFilesChanged += (s, e) => RefreshRecentFileMenu();
             InitializeComponent();
-            this.save = save;
-            this.mapManager = new MapManager(save);
-            mapView.Map = this.mapManager;
+            RefreshRecentFileMenu();
             mapView.ItemRenderStyle = new ClairesRenderStyle(this);
 
-            ItemConvertor.Initialise();
+            zoomTrackBar = new TrackBar();
+            zoomTrackBar.Margin = new Padding(0, 0, 0, 3);
+            zoomTrackBar.Padding = new Padding(0, 0, 0, 3);
+            zoomTrackBar.AutoSize = false;
+            zoomTrackBar.Minimum = mapView.MinZoom;
+            zoomTrackBar.Maximum = mapView.MaxZoom;
+            zoomTrackBar.Value = mapView.ZoomLevel;
+            zoomTrackBar.Size = new Size(120, 22);
+            zoomTrackBar.ValueChanged += ZoomTrackBarOnValueChanged;
 
-            // Check the map for common issues and allow the user to fix them before proceeding...
-            ValidateMap();
-
-            // Set up the history service to provide Undo/Redo functionality
-            historyService = new HistoryService();
-            historyService.HistoryChanged += HistoryServiceOnHistoryChanged;
+            ToolStripControlHost zoomControlHost = new ToolStripControlHost(zoomTrackBar);
+            zoomControlHost.AutoSize = true;
+            zoomControlHost.Padding = new Padding(0, 0, 0, 3);
+            statusStrip.Items.Add(zoomControlHost);
             
-            var itemSource = new ItemSource();
-            itemEditor.Initialize(itemSource);
-            ItemCollectionManager.Backup();
-            var catalog = ItemCollectionManager.Load();
-            multiItemSelector.Initialise(itemSource, catalog, null);
+            // Set up the history service to provide Undo/Redo functionality
+            historyService.HistoryChanged += HistoryServiceOnHistoryChanged;
+
+            scope.AutoWire(Controls);
 
             // Select the initial tool
             SelectTool(PanAndZoom);
+
+        }
+
+        private void RefreshRecentFileMenu()
+        {
+            var recentFiles = recentFileManager.RecentFiles.ToArray();
+            openRecentFileToolStripMenuItem.Enabled = recentFiles.Any();
+            openRecentFileToolStripMenuItem.DropDownItems.Clear();
+            
+            foreach (var recentFile in recentFiles)
+            {
+                openRecentFileToolStripMenuItem.DropDownItems.Add(recentFile).Click += (s, e) => 
+                    OpenFile(documentFactories.First(), recentFile);
+            }
+        }
+        
+        private void ZoomTrackBarOnValueChanged(object sender, EventArgs e)
+        {
+            mapView.Zoom( zoomTrackBar.Value);
+        }
+
+        public void Load(MainSave save)
+        {
+            this.save = save;
+            this.mapManager = new MapManager(save);
+            mapView.Map = this.mapManager;
+            // Check the map for common issues and allow the user to fix them before proceeding...
+            ValidateMap();
         }
 
         private void ValidateMap()
         {
-            ItemIntegrityValidation val = new ItemIntegrityValidation(mapManager);
             ValidationResult vr = new ValidationResult();
-            val.Validate(vr);
+            foreach (var validator in mapValidators)
+                validator.Validate(mapManager, vr);
 
             if (vr.HasFixes)
             {
@@ -97,45 +153,15 @@ namespace NHTID.WinForms
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            var choice = MessageBox.Show("Do you wish to save changes?", "Save Changes", MessageBoxButtons.YesNoCancel);
-            switch (choice)
-            {
-                case DialogResult.Cancel:
-                    break;
-                case DialogResult.Yes:
-                    SaveChanges();
-                    break;
-                case DialogResult.No:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
+            if (!CanDiscardChanges())
+                e.Cancel = true;
+           
             base.OnClosing(e);
         }
 
         private void SaveChanges()
         {
-            /*var unsupported = mapManager.Items.GetUnsupportedTiles();
-            if (unsupported.Count != 0)
-            {
-                var err = MessageStrings.MsgFieldItemUnsupportedLayer2Tile;
-                var ask = MessageStrings.MsgAskContinue;
-                var prompt = WinFormsUtil.Prompt(MessageBoxButtons.YesNo, err, ask);
-                if (prompt != DialogResult.Yes)
-                    return;
-            }*/
-
-            mapManager.Items.Save();
-            save.SetTerrainTiles(mapManager.Terrain.Tiles);
-
-            save.SetAcreBytes(mapManager.Terrain.BaseAcres);
-            // save.OutsideFieldTemplateUniqueId = (ushort)NUD_MapAcreTemplateOutside.Value;
-            // save.MainFieldParamUniqueID = (ushort)NUD_MapAcreTemplateField.Value;
-
-            save.Buildings = mapManager.Buildings;
-            save.EventPlazaLeftUpX = mapManager.PlazaX;
-            save.EventPlazaLeftUpZ = mapManager.PlazaY;
+            document?.Save();
         }
 
         private void btnMove_Click(object sender, EventArgs e) => SelectTool(MoveItems);
@@ -215,7 +241,7 @@ namespace NHTID.WinForms
                 EditorTool.Brush => new PaintTool(SelectToolPropertiesControl(this.itemEditor), historyService, itemEditor),
                 Pick => new PickTool(SelectToolPropertiesControl(this.itemEditor)),
                 Erase => new EraserTool(historyService),
-                SingleTemplate => new TemplateTool(historyService, SelectToolPropertiesControl(this.itemEditor)),
+                SingleTemplate => new TemplateTool(historyService, SelectToolPropertiesControl(this.itemEditor), itemConvertor),
                 MultiTemplate => new MultiTemplateTool(historyService, SelectToolPropertiesControl(this.multiItemSelector)),
                 None => null,
                 _ => throw new ArgumentOutOfRangeException()
@@ -297,20 +323,103 @@ namespace NHTID.WinForms
         }
 
         private void btnMultiTemplate_Click(object sender, EventArgs e) => SelectTool(EditorTool.MultiTemplate);
-    }
 
-    internal enum EditorTool
-    {
-        None,
-        PanAndZoom,
-        Marquee,
-        MoveItems,
-        Erase,
-        Brush,
-        FillRect,
-        SingleTemplate,
-        Pick,
-        MultiTemplate
+        private void editCollectionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CollectionEditorForm.EditModal(this, this.collectionStore, new ItemSource(), scope);
+            multiItemSelector.RefreshCollections();
+        }
+
+        private void deleteAllItemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(this, "Are you sure that you wish to clear all items?", "Delete All Items",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            {
+                using (var trans = historyService.BeginTransaction("Delete All Items"))
+                {
+                    mapView.MapEditingService.DeleteAll(trans);
+                    mapView.Invalidate();
+                }
+            }
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dlg = new OpenFileDialog())
+            {
+                var docFactories = documentFactories.ToArray();
+                dlg.Filter = string.Join("|", docFactories.Select(i => i.FilePattern));
+                dlg.Title = "Open";
+                if (dlg.ShowDialog(this) == DialogResult.OK)
+                {
+                    var docFactory = docFactories[dlg.FilterIndex - 1];
+                    OpenFile(docFactory, dlg.FileName);
+                }
+            }
+        }
+
+        private bool CanDiscardChanges()
+        {
+            if (document != null && historyService.CanUndo)
+            {
+                switch (MessageBox.Show(this, "Changes Pending",
+                    "Do you wish to save the changes you have made to the current map?", MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Warning, MessageBoxDefaultButton.Button3))
+                {
+                    case DialogResult.Yes:
+                        SaveChanges();
+                        return true;
+                    case DialogResult.Cancel:
+                        return false;
+                    default:
+                        return true;
+                }
+            }
+
+            return true;
+        }
+
+        private void OpenFile(IDocumentFactory docFactory, string fileName)
+        {
+            if (CanDiscardChanges())
+            {
+                this.document = docFactory.Load(fileName);
+                historyService.Clear();
+                mapView.SelectionService?.ClearSelection();
+                mapView.Map = document.GetMapManager();
+                recentFileManager.AddRecentFile(fileName);
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveChanges();
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void mapView_ZoomChanged(object sender, EventArgs e)
+        {
+            zoomTrackBar.Value = mapView.ZoomLevel;
+        }
     }
 
 }

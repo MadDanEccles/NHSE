@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NHSE.Core;
-using NHSE.WinForms;
 
-namespace NHTID.WinForms
+namespace Nhtid.WinForms
 {
     public partial class Form1 : Form
     {
@@ -34,17 +26,12 @@ namespace NHTID.WinForms
             {
                 string folderPath = Path.GetDirectoryName(selectSaveGameDialog.FileName);
                 HorizonSave save = new HorizonSave(folderPath);
-                var prompt = MessageBox.Show(this, MessageStrings.MsgSaveDataSizeMismatch + "\r\n\r\n" +  MessageStrings.MsgAskContinue, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                /*var prompt = MessageBox.Show(this, MessageStrings.MsgSaveDataSizeMismatch + "\r\n\r\n" +  MessageStrings.MsgAskContinue, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (prompt != DialogResult.Yes)
-                    return;
+                    return;*/
                 this.Close();
 
             }
         }
-    }
-
-    internal class Project
-    {
-
     }
 }

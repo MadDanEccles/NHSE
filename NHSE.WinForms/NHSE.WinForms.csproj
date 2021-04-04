@@ -16,12 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Zebra\Music\**" />
-    <EmbeddedResource Remove="Zebra\Music\**" />
-    <None Remove="Zebra\Music\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\NHSE.Core\NHSE.Core.csproj" />
     <ProjectReference Include="..\NHSE.Injection\NHSE.Injection.csproj" />
     <ProjectReference Include="..\NHSE.Sprites\NHSE.Sprites.csproj" />
@@ -115,23 +109,6 @@
     <Compile Update="Subforms\Villager\VillagerFlagEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Zebra\Controls\ItemVariantSelector.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Zebra\Controls\BaseItemSelector.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Zebra\Controls\ItemDirectionSelector.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Zebra\Controls\MultiSegmentLayoutEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Zebra\ZebraResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ZebraResources.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net4')) AND '$(Configuration)' == 'Release'">
@@ -143,16 +120,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Zebra\ZebraResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ZebraResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="catalog.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -34,7 +34,7 @@ namespace Nhtid.WinForms.Tools.Actions
         protected override void CalculateResult(MapToolContext ctx, Rectangle marqueeBounds,
             out ItemFieldFragment fragment, out string hint)
         {
-            var tileRect = ctx.ToTiles(marqueeBounds);
+            var tileRect = ctx.ToTiles(marqueeBounds).Quantize(2);
             fragment = new ItemFieldFragment();
             hint = $"{segmentLayouts.Length} Item(s)";
             if (layout.GetSegmentRects(tileRect, segmentLayouts, minSegementSizes, rowCount, out var segmentRects,

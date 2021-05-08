@@ -4,7 +4,19 @@ namespace Nhtid.WinForms
 {
     public class ItemEditorInfo
     {
-        public PresentationType PermittedPresentationTypes { get; set; }
+        public ItemEditorInfo(PresentationType permittedPresentationTypes, ushort itemId, bool hasVariants,
+            ItemVariant[]? fabricVariants, ItemVariant[]? bodyVariants, ushort maxStackSize, ItemKind kind)
+        {
+            PermittedPresentationTypes = permittedPresentationTypes;
+            ItemId = itemId;
+            HasVariants = hasVariants;
+            FabricVariants = fabricVariants;
+            BodyVariants = bodyVariants;
+            MaxStackSize = maxStackSize;
+            Kind = kind;
+        }
+
+        public PresentationType PermittedPresentationTypes { get; }
 
         public bool CanBury => PermittedPresentationTypes.HasFlag(PresentationType.Buried);
         public bool CanDrop => PermittedPresentationTypes.HasFlag(PresentationType.Dropped);
@@ -12,16 +24,16 @@ namespace Nhtid.WinForms
         public bool CanHang => PermittedPresentationTypes.HasFlag(PresentationType.Hung);
         public bool CanRecipe => PermittedPresentationTypes.HasFlag(PresentationType.Recipe);
 
-        public ushort ItemId { get; set; }
+        public ushort ItemId { get; }
 
-        public bool HasVariants { get; set; }
+        public bool HasVariants { get; }
 
-        public ItemVariant[] FabricVariants { get; set; }
+        public ItemVariant[]? FabricVariants { get; }
 
-        public ItemVariant[] BodyVariants { get; set; }
+        public ItemVariant[]? BodyVariants { get; }
 
-        public ushort MaxStackSize { get; set; }
+        public ushort MaxStackSize { get; }
         
-        public ItemKind Kind { get; set; }
+        public ItemKind Kind { get; }
     }
 }

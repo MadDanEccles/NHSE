@@ -16,11 +16,7 @@ namespace Nhtid.WinForms.Renderers.RenderStyles
         public void DrawItem(Graphics gfx, MapRenderContext context, Rectangle itemRect, Item item)
         {
             var colorScheme = colorSchemeProvider.GetColorScheme();
-
-            if (context.TileSize > 7)
-                itemRect = itemRect.Shrink(2, 2, 1, 1);
-            else
-                itemRect = itemRect.Shrink(1, 1, 0, 0);
+            itemRect = context.ApplyStandardPaddingForTiles(itemRect);
 
             Brush brush = context.ResourceCache.GetSolidBrush(colorScheme.GetItemColor(item));
             gfx.FillRectangle(brush, itemRect);

@@ -4,8 +4,11 @@
     {
         string FilePattern { get; }
 
-        IDocument Load(string filePath);
+        Document Load(string filePath);
 
         string Name { get; }
+        bool CanHandleFile(string fileName);
+        void Save(Document document, string filePath);
+        bool IsLossy(Document document);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NHSE.Core;
@@ -19,9 +20,21 @@ namespace Nhtid.WinForms
         private readonly Dictionary<ItemKind, PresentationType> presentationTypesByItemKind = new Dictionary<ItemKind, PresentationType>();
         private readonly Dictionary<ushort, ushort> reverseRecipeLookup = new Dictionary<ushort, ushort>();
         private readonly Dictionary<ushort, ushort> creatureModelLookup = new Dictionary<ushort, ushort>(); // Creature => Creature Model
-        private readonly Dictionary<ushort, ushort> placedItemLookup = new Dictionary<ushort, ushort>();
-        private readonly Dictionary<ushort, ushort> reversePlacedItemLookup = new Dictionary<ushort, ushort>();
+        private readonly Dictionary<ushort, ushort> placedItemLookup = new Dictionary<ushort, ushort>(); // DropID => PlacedID
+        private readonly Dictionary<ushort, ushort> reversePlacedItemLookup = new Dictionary<ushort, ushort>(); // PlacedID => DropID
         private readonly ConcurrentDictionary<ushort, ItemEditorInfo> itemEditorInfos = new();
+
+        internal bool CanListInUi(ushort value)
+        {
+            if (value == 5794)
+                return false; // DIY
+            if (value == 65534)
+                return false; // None
+            if (value == 13821)
+                return false; // ? Block
+            return !reversePlacedItemLookup.ContainsKey(value);
+        }
+
 
 
         public ItemConvertor()
@@ -65,6 +78,21 @@ namespace Nhtid.WinForms
             {
                 this.placedItemLookup.Add(mapping.InventoryId, mapping.PlacedId);
                 this.reversePlacedItemLookup.Add(mapping.PlacedId, mapping.InventoryId);
+            }
+
+            using var fs = File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FgMainParam.json"));
+            using var fgStreamReader = new StreamReader(fs);
+            using var jr = new JsonTextReader(fgStreamReader);
+            JsonSerializer fgMainParamSerializer = new JsonSerializer();
+            FgMainParam[] fgMainParams = fgMainParamSerializer.Deserialize<FgMainParam[]>(jr);
+
+            foreach (var fgMainParam in fgMainParams)
+            {
+                if (fgMainParam.Grow == 3 && ItemInfo.GetItemKind(fgMainParam.DigItem) == ItemKind.Kind_FlowerBud)
+                {
+                    this.placedItemLookup.Add(fgMainParam.DigItem, fgMainParam.UniqueID);
+                    this.reversePlacedItemLookup.Add(fgMainParam.UniqueID, fgMainParam.DigItem);
+                }
             }
         }
 
@@ -143,8 +171,8 @@ namespace Nhtid.WinForms
         private ItemEditorInfo CreateItemEditorInfo(ushort itemId)
         {
             var remake = ItemRemakeUtil.GetRemakeIndex(itemId);
-            ItemVariant[] bodyVariants;
-            ItemVariant[] fabricVariants;
+            ItemVariant[]? bodyVariants;
+            ItemVariant[]? fabricVariants;
 
             if (remake >= 0)
             {
@@ -161,16 +189,14 @@ namespace Nhtid.WinForms
             if (!ItemInfo.TryGetMaxStackCount(itemId, out var maxStackSize))
                 maxStackSize = 1;
             var permittedPresentationTypes = GetPermittedPresentationTypes(itemId);
-            return new ItemEditorInfo()
-            {
-                ItemId = itemId,
-                Kind = ItemInfo.GetItemKind(itemId),
-                PermittedPresentationTypes = permittedPresentationTypes,
-                HasVariants = remake > 0,
-                MaxStackSize = maxStackSize,
-                BodyVariants = bodyVariants,
-                FabricVariants = fabricVariants,
-            };
+            return new ItemEditorInfo(
+                permittedPresentationTypes,
+                itemId,
+                remake > 0,
+                fabricVariants,
+                bodyVariants,
+                maxStackSize,
+                ItemInfo.GetItemKind(itemId));
         }
 
 
@@ -223,37 +249,41 @@ namespace Nhtid.WinForms
                     item.SystemParam = 0x00;
                     break;
                 case PresentationType.Dropped:
-                {
-                    if (reversePlacedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
-                        item.ItemId = mappedValue;
-                    item.SystemParam = 0x20;
-                    break;
-                }
+                    {
+                        if (reversePlacedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
+                            item.ItemId = mappedValue;
+                        item.SystemParam = 0x20;
+                        break;
+                    }
                 case PresentationType.Placed:
-                {
-                    // Clear buried or dropped flags...
-                    if (placedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
-                        item.ItemId = mappedValue;
-                    item.SystemParam = (byte) (item.SystemParam & ~0x24);
-                    break;
-                }
+                    {
+                        // Clear buried or dropped flags...
+                        if (placedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
+                            item.ItemId = mappedValue;
+                        item.SystemParam = (byte)(item.SystemParam & ~0x24);
+                        var kind = ItemInfo.GetItemKind(item.ItemId);
+                        // When placing a fence, default it to facing forward.
+                        if (kind == ItemKind.Kind_Fence)
+                            item.SystemParam |= 0x01;
+                        break;
+                    }
                 case PresentationType.Buried:
-                {
-                    // Apply buried flag
-                    if (reversePlacedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
-                        item.ItemId = mappedValue;
-                    item.SystemParam = 0x04;
-                    break;
-                }
+                    {
+                        // Apply buried flag
+                        if (reversePlacedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
+                            item.ItemId = mappedValue;
+                        item.SystemParam = 0x04;
+                        break;
+                    }
                 case PresentationType.Recipe:
-                {
-                    if (reversePlacedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
-                        item.ItemId = mappedValue;
-                    item.Count = reverseRecipeLookup[item.ItemId];
-                    item.ItemId = Item.DIYRecipe;
-                    item.SystemParam = 0x00;
-                    break;
-                }
+                    {
+                        if (reversePlacedItemLookup.TryGetValue(item.ItemId, out var mappedValue))
+                            item.ItemId = mappedValue;
+                        item.Count = reverseRecipeLookup[item.ItemId];
+                        item.ItemId = Item.DIYRecipe;
+                        item.SystemParam = 0x00;
+                        break;
+                    }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(presentationType), presentationType, null);
             }
@@ -289,5 +319,12 @@ namespace Nhtid.WinForms
         {
             return this.creatureModelLookup[itemId];
         }
+    }
+
+    public class FgMainParam
+    {
+        public ushort UniqueID { get; set; }
+        public int Grow { get; set; }
+        public ushort DigItem { get; set; }
     }
 }

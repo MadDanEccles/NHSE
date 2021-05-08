@@ -31,14 +31,16 @@ namespace Nhtid.WinForms
 
             // Register document factories...
             builder.RegisterType<SaveFileDocumentFactory>().As<IDocumentFactory>();
+            builder.RegisterType<NhtidProjectDocumentFactory>().As<IDocumentFactory>();
 
             builder.RegisterType<ItemSource>().SingleInstance().AsSelf();
             builder.RegisterType<ItemConvertor>().SingleInstance().AsSelf();
             builder.RegisterType<JsonFileItemCollectionStore>().SingleInstance().As<IItemCollectionStore>();
 
             builder.RegisterType<HistoryService>().SingleInstance().As<IHistoryService>();
+            builder.RegisterType<RecentFilesManager>().SingleInstance().AsSelf();
 
-            builder.RegisterType<MapEditorForm>().AsSelf();
+            builder.RegisterType<MapEditorForm>().InstancePerLifetimeScope().AsSelf().As<IDocumentContainer>();
 
             using (var root = builder.Build())
             {

@@ -6,13 +6,26 @@ namespace Nhtid.WinForms
 {
     public class ItemSource
     {
-        public List<ComboItem> GetItemDropdownData()
-        {
+        private readonly ItemConvertor itemConvertor;
 
-            var data = GameInfo.Strings.ItemDataSource.Where(i => !i.Text.StartsWith("(Item #")).ToList();
-            var field = FieldItemList.Items.Select(z => z.Value).ToList();
-            data.Add(field, GameInfo.Strings.InternalNameTranslation);
-            return data;
+        private ComboItem[] items;
+
+        public ItemSource(ItemConvertor itemConvertor)
+        {
+            this.itemConvertor = itemConvertor;
+        }
+
+        public ComboItem[] GetItemDropdownData()
+        {
+            if (items == null)
+            {
+                var data = GameInfo.Strings.ItemDataSource.Where(
+                    i => !i.Text.StartsWith("(Item #")).ToList();
+                var field = FieldItemList.Items.Select(z => z.Value).ToList();
+                data.Add(field, GameInfo.Strings.InternalNameTranslation);
+                items = data.Where(i => itemConvertor.CanListInUi((ushort)i.Value)).OrderBy(i => i.Text).ToArray();
+            }
+            return items;
         }
     }
 }

@@ -16,6 +16,24 @@ namespace Nhtid.WinForms
                 value.Height - top - bottom);
         }
 
+        public static int Quantize(this int value, int unit)
+        {
+            return value - (value % unit);
+        }
+
+        public static Rectangle Quantize(this Rectangle value, int unit)
+        {
+            int leftErr = value.Left % unit;
+            int topErr = value.Top % unit;
+            int left = leftErr == 0 ? value.Left : value.Left + unit - leftErr;
+            int top = topErr == 0 ? value.Top : value.Top + unit - topErr;
+            return new Rectangle(
+                left,
+                top,
+                Quantize(value.Right - left, unit),
+                Quantize(value.Bottom - top, unit));
+        }
+
         public static double GetDistance(this Point pt1, Point pt2)
         {
             return Math.Sqrt(Math.Pow(pt1.X - pt2.X, 2) + Math.Pow(pt1.Y - pt2.Y, 2));
@@ -23,4 +41,6 @@ namespace Nhtid.WinForms
 
         public static bool Encompasses(this Size a, Size b) => a.Width >= b.Width && a.Height >= b.Height;
     }
+
+    
 }

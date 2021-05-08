@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Nhtid.WinForms.Documents;
 
 namespace Nhtid.WinForms
 {
     public class RecentFilesManager
     {
-        private List<string> recentFilePaths = new List<string>();
+        public BindingList<RecentFileRecord> RecentFiles { get; } = new BindingList<RecentFileRecord>();
 
         private static string FilePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "recentfiles.json");
 
@@ -16,23 +17,42 @@ namespace Nhtid.WinForms
         {
             if (File.Exists(FilePath))
             {
-                string recentFilesJson = File.ReadAllText(FilePath);
-                recentFilePaths.AddRange(JsonConvert.DeserializeObject<string[]>(recentFilesJson));
+                try
+                {
+                    string recentFilesJson = File.ReadAllText(FilePath);
+                    var recentFileRecords = JsonConvert.DeserializeObject<RecentFileRecord[]>(recentFilesJson);
+                    foreach (var record in recentFileRecords)
+                        RecentFiles.Add(record);
+                }
+                catch
+                {
+                    // Do nothing...
+                }
             }
         }
 
-        public IEnumerable<string> RecentFiles => recentFilePaths.AsEnumerable().Reverse();
-
-        public void AddRecentFile(string value)
+        public void AddRecentFile(Document document)
         {
-            int index = recentFilePaths.FindIndex(i => i.Equals(value, StringComparison.OrdinalIgnoreCase));
+            var fileName = document.OriginalFileName;
+            int index = RecentFiles.IndexOfFirst(i => i.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
             if (index != -1)
             {
-                recentFilePaths.RemoveAt(index);
+                RecentFiles.RemoveAt(index);
             }
-            recentFilePaths.Add(value);
 
-            string json = JsonConvert.SerializeObject(recentFilePaths.ToArray());
+            var record = new RecentFileRecord
+            {
+                FileName = fileName,
+                Title = document.Title,
+                LastAccessed = DateTime.Now
+            };
+
+            if (RecentFiles.Count == 0)
+                RecentFiles.Add(record);
+            else
+                RecentFiles.Insert(0, record);
+
+            string json = JsonConvert.SerializeObject(RecentFiles.ToArray());
             File.WriteAllText(FilePath, json);
             OnRecentFilesChanged();
         }

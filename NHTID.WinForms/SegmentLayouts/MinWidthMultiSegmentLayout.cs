@@ -26,7 +26,7 @@ namespace Nhtid.WinForms.SegmentLayouts
 
             for (int i = 0; i < pathCount; i++)
             {
-                pathX[i] =( tileRect.Width * (i + 1)) / pathCount - pathWidth / 2;
+                pathX[i] =  (tileRect.Width * (i + 1) / (pathCount + 1) - pathWidth / 2).Quantize(2);
             }
 
             List<List<int>> rowSegmentCounts = new List<List<int>>();
@@ -57,7 +57,7 @@ namespace Nhtid.WinForms.SegmentLayouts
                     rowSegmentCounts.Add(currentRow);
                     currentRow = new List<int>();
                     flowDirection = flowDirection.Reverse(options.Flow);
-                    currentX = flowDirection == LeftToRight ? 0 : tileRect.Width;
+                    currentX = flowDirection == LeftToRight ? 0 : tileRect.Width - minSize.Width;
                 }
 
                 currentRow.Add(currentX);
@@ -73,7 +73,7 @@ namespace Nhtid.WinForms.SegmentLayouts
 
             var rowCount = rowSegmentCounts.Count;
             int maxUsableHeight = tileRect.Height - options.HorizontalGutter * (rowCount - 1);
-            int initialRowHeight = maxUsableHeight / rowCount;
+            int initialRowHeight = (maxUsableHeight / rowCount).Quantize(2);
 
             // Adapt row heights...
 
@@ -125,7 +125,7 @@ namespace Nhtid.WinForms.SegmentLayouts
             {
                 for (int i = 0; i < pathX.Length; i++)
                 {
-                    if (x < pathX[i] + pathWidth && x + width >= pathX[i])
+                    if (x < pathX[i] + pathWidth && x + width > pathX[i])
                     {
                         x = pathX[i] + pathWidth;
                     }

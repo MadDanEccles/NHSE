@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net46;net5.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyName>Nthid</AssemblyName>
+    <AssemblyName>Nhtid</AssemblyName>
     <PackageId>NHSE</PackageId>
     <Product>NHSE</Product>
     <Description>Animal Crossing - New Horizons Treasure Island Designer</Description>
@@ -71,6 +71,11 @@
     <Compile Update="MapEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Update="ZebraResources.Designer.cs">
       <DependentUpon>ZebraResources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -79,6 +84,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="ZebraResources.resx">
       <LastGenOutput>ZebraResources.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
@@ -87,6 +96,9 @@
 
   <ItemGroup>
     <None Update="catalog.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="FgMainParam.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

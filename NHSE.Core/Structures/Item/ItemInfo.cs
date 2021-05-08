@@ -18,7 +18,7 @@ namespace NHSE.Core
 
         public static ItemKind GetItemKind(ushort id)
         {
-            if (id > ItemKinds.Length)
+            if (id >= ItemKinds.Length)
                 return FieldItemList.GetFieldItemKind(id);
             return (ItemKind) ItemKinds[id];
         }

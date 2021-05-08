@@ -15,7 +15,7 @@ namespace Nhtid.WinForms.Controls
         private ItemCollection? collection;
         private Dictionary<int, ComboItem> itemLookup;
         private readonly BindingList<IInCollectionView> inCollectionViews = new BindingList<IInCollectionView>();
-        private List<ComboItem> allItems;
+        private ComboItem[] allItems;
         private ItemSource itemSource;
         private BindingSource catalog;
 
@@ -36,7 +36,6 @@ namespace Nhtid.WinForms.Controls
             this.itemSource = ItemSource;
             allItems = itemSource.GetItemDropdownData();
             itemLookup = allItems.ToDictionary(i => i.Value);
-            allItems.Sort((item1, item2) => item1.Text.CompareTo(item2.Text));
             lbAll.DataSource = allItems;
 
             foreach (ItemKind itemKind in Enum.GetValues(typeof(ItemKind)))

@@ -1,6 +1,7 @@
 {
   "DefaultPresentationType": "Placed, Dropped, Buried",
   "PresentationMap": [
+    // Fences
     {
       "P": 60351,
       "I": 3403
@@ -84,7 +85,7 @@
     {
       "P": 60705,
       "I": 14278
-    }
+    }   
   ],
   "CreatureMap": [
     {

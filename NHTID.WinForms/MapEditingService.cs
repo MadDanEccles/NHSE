@@ -7,7 +7,7 @@ namespace Nhtid.WinForms
 {
     public class MapEditingService : IMapEditingService
     {
-        private readonly Rectangle worldTileBounds = new Rectangle(0, 0, 7 * 32, 6 * 32);
+        public Rectangle WorldTileBounds { get; } = new Rectangle(0, 0, 7 * 32, 6 * 32);
         private readonly MapManager mapManager;
 
         public MapEditingService(MapManager mapManager)
@@ -35,10 +35,10 @@ namespace Nhtid.WinForms
         }
 
         private bool IsInWorldBounds(Rectangle tileRect)
-            => Rectangle.Intersect(tileRect, worldTileBounds) == tileRect;
+            => Rectangle.Intersect(tileRect, WorldTileBounds) == tileRect;
 
         private bool IsInWorldBounds(Point tilePt)
-            => worldTileBounds.Contains(tilePt);
+            => WorldTileBounds.Contains(tilePt);
 
         public bool AddItem(Item item, Point location, IHistoryTransaction trans,
             CollisionAction collisionAction = CollisionAction.ThrowException)
@@ -105,7 +105,7 @@ namespace Nhtid.WinForms
 
         public void DeleteAll(IHistoryTransaction trans)
         {
-            DeleteRect(worldTileBounds, trans);
+            DeleteRect(WorldTileBounds, trans);
         }
 
         public Item? GetItem(Point tilePt, bool resolveExtensions)

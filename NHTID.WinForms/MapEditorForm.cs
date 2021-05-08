@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using Autofac;
 using NHSE.Core;
@@ -16,7 +17,7 @@ using static Nhtid.WinForms.EditorTool;
 
 namespace Nhtid.WinForms
 {
-    public partial class MapEditorForm : Form, IColorSchemeProvider
+    public partial class MapEditorForm : Form, IColorSchemeProvider, IDocumentContainer
     {
         private readonly IEnumerable<IMapValidation> mapValidators;
         private readonly ILifetimeScope scope;
@@ -41,9 +42,11 @@ namespace Nhtid.WinForms
 
         private EditorTool currentTool;
         private readonly IColorScheme colorScheme = new DefaultColorScheme();
-        private IDocument document;
-        private TrackBar zoomTrackBar;
-        private RecentFilesManager recentFileManager;
+        private Document document;
+        private bool hasPendingChanges;
+        private ItemSource itemSource;
+        private readonly TrackBar zoomTrackBar;
+        private readonly RecentFilesManager recentFileManager;
 
         public MapEditorForm(
             IEnumerable<IMapValidation> mapValidators,
@@ -51,8 +54,10 @@ namespace Nhtid.WinForms
             IHistoryService historyService,
             ItemConvertor itemConvertor,
             IItemCollectionStore collectionStore,
-            IEnumerable<IDocumentFactory> documentFactories)
+            IEnumerable<IDocumentFactory> documentFactories,
+            ItemSource itemSource)
         {
+            this.itemSource = itemSource;
             this.historyService = historyService;
             this.itemConvertor = itemConvertor;
             this.collectionStore = collectionStore;
@@ -83,11 +88,15 @@ namespace Nhtid.WinForms
             // Set up the history service to provide Undo/Redo functionality
             historyService.HistoryChanged += HistoryServiceOnHistoryChanged;
 
-            scope.AutoWire(Controls);
 
             // Select the initial tool
             SelectTool(PanAndZoom);
+        }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            scope.AutoWire(Controls);
+            base.OnLoad(e);
         }
 
         private void RefreshRecentFileMenu()
@@ -98,23 +107,14 @@ namespace Nhtid.WinForms
             
             foreach (var recentFile in recentFiles)
             {
-                openRecentFileToolStripMenuItem.DropDownItems.Add(recentFile).Click += (s, e) => 
-                    OpenFile(documentFactories.First(), recentFile);
+                openRecentFileToolStripMenuItem.DropDownItems.Add(recentFile.FileName).Click += (s, e) => 
+                    OpenFile(recentFile.FileName);
             }
         }
         
         private void ZoomTrackBarOnValueChanged(object sender, EventArgs e)
         {
             mapView.Zoom( zoomTrackBar.Value);
-        }
-
-        public void Load(MainSave save)
-        {
-            this.save = save;
-            this.mapManager = new MapManager(save);
-            mapView.Map = this.mapManager;
-            // Check the map for common issues and allow the user to fix them before proceeding...
-            ValidateMap();
         }
 
         private void ValidateMap()
@@ -145,10 +145,20 @@ namespace Nhtid.WinForms
 
         private void HistoryServiceOnHistoryChanged(object sender, EventArgs e)
         {
+            if (!this.hasPendingChanges)
+            {
+                this.hasPendingChanges = true;
+                OnHasPendingChangesChanged();
+            }
             undoToolStripMenuItem.Enabled = historyService.CanUndo;
             undoToolStripMenuItem.Text = $"Undo {historyService.UndoDescription}";
             redoToolStripMenuItem.Enabled = historyService.CanRedo;
             redoToolStripMenuItem.Text = $"Redo {historyService.RedoDescription}";
+        }
+
+        private void OnHasPendingChangesChanged()
+        {
+            this.Text = $"NHTID - {document?.OriginalFileName}" + (hasPendingChanges ? " *" : "");
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -159,9 +169,65 @@ namespace Nhtid.WinForms
             base.OnClosing(e);
         }
 
+        private void SaveAs()
+        {
+            try
+            {
+                using (SaveFileDialog dlg = new SaveFileDialog())
+                {
+                    IDocumentFactory[] docFacs = documentFactories.Where(i => !i.IsLossy(document)).ToArray();
+                    dlg.Filter = string.Join("|", docFacs.Select(i => i.FilePattern));
+                    dlg.Title = "Save As";
+                    if (dlg.ShowDialog(this) == DialogResult.OK)
+                    {
+                        IDocumentFactory docFac = docFacs[dlg.FilterIndex - 1];
+                        SaveDocument(dlg.FileName, docFac);
+                    }
+                }
+            }
+            catch (Exception caught)
+            {
+                MessageBox.Show(this, caught.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SaveDocument(string fileName, IDocumentFactory docFac)
+        {
+            docFac.Save(document, fileName);
+            document.OriginalFileName = fileName;
+            recentFileManager.AddRecentFile(document);
+            this.hasPendingChanges = false;
+            OnHasPendingChangesChanged();
+        }
+
         private void SaveChanges()
         {
-            document?.Save();
+            try
+            {
+                IDocumentFactory? docFac =
+                    documentFactories.FirstOrDefault(i => i.CanHandleFile(document.OriginalFileName));
+                if (docFac == null)
+                {
+                    throw new Exception("There are no document factories that can handle this file type.");
+                }
+
+                if (docFac.IsLossy(document))
+                {
+                    MessageBox.Show(this,
+                        "The current file format does not support the features of this map, please choose another file format for this map",
+                        "Warning");
+                    SaveAs();
+                }
+                else
+                {
+                    SaveDocument(document.OriginalFileName, docFac);
+                }
+
+            }
+            catch (Exception caught)
+            {
+                MessageBox.Show(this, caught.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnMove_Click(object sender, EventArgs e) => SelectTool(MoveItems);
@@ -250,7 +316,7 @@ namespace Nhtid.WinForms
 
         private T SelectToolPropertiesControl<T>(T control) where T : Control
         {
-            foreach (Control propControl in panel1.Controls)
+            foreach (Control propControl in panel2.Controls)
             {
                 propControl.Visible = propControl == control;
             }
@@ -326,7 +392,7 @@ namespace Nhtid.WinForms
 
         private void editCollectionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CollectionEditorForm.EditModal(this, this.collectionStore, new ItemSource(), scope);
+            CollectionEditorForm.EditModal(this, this.collectionStore, this.itemSource, scope);
             multiItemSelector.RefreshCollections();
         }
 
@@ -343,38 +409,22 @@ namespace Nhtid.WinForms
             }
         }
 
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            ShowNewDocumentUi();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog dlg = new OpenFileDialog())
-            {
-                var docFactories = documentFactories.ToArray();
-                dlg.Filter = string.Join("|", docFactories.Select(i => i.FilePattern));
-                dlg.Title = "Open";
-                if (dlg.ShowDialog(this) == DialogResult.OK)
-                {
-                    var docFactory = docFactories[dlg.FilterIndex - 1];
-                    OpenFile(docFactory, dlg.FileName);
-                }
-            }
+            ShowOpenDocumentUi();
         }
 
         private bool CanDiscardChanges()
         {
-            if (document != null && historyService.CanUndo)
+            if (document != null && hasPendingChanges)
             {
-                switch (MessageBox.Show(this, "Changes Pending",
-                    "Do you wish to save the changes you have made to the current map?", MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Warning, MessageBoxDefaultButton.Button3))
+                switch (MessageBox.Show(this, "Do you wish to save the changes you have made to the current map?",
+                    "Changes Pending",MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button3))
                 {
                     case DialogResult.Yes:
                         SaveChanges();
@@ -389,15 +439,16 @@ namespace Nhtid.WinForms
             return true;
         }
 
-        private void OpenFile(IDocumentFactory docFactory, string fileName)
+        private void OpenFile(Document document)
         {
             if (CanDiscardChanges())
             {
-                this.document = docFactory.Load(fileName);
+                this.document = document;
                 historyService.Clear();
                 mapView.SelectionService?.ClearSelection();
                 mapView.Map = document.GetMapManager();
-                recentFileManager.AddRecentFile(fileName);
+                recentFileManager.AddRecentFile(document);
+                welcomeScreen1.Hide();
             }
         }
 
@@ -408,7 +459,7 @@ namespace Nhtid.WinForms
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            SaveAs();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -420,6 +471,86 @@ namespace Nhtid.WinForms
         {
             zoomTrackBar.Value = mapView.ZoomLevel;
         }
+
+        private void AttachDocument(Document newDocument)
+        {
+             this.document = newDocument;
+            historyService.Clear();
+            mapView.SelectionService?.ClearSelection();
+            mapManager = document.GetMapManager();
+            mapView.Map = mapManager;
+            welcomeScreen1.Hide();
+            recentFileManager.AddRecentFile(newDocument);
+            // Check the map for common issues and allow the user to fix them before proceeding...
+            ValidateMap();
+            hasPendingChanges = false;
+            OnHasPendingChangesChanged();
+        }
+
+        public void ShowOpenDocumentUi()
+        {
+            if (CanDiscardChanges())
+            {
+                using (OpenFileDialog dlg = new OpenFileDialog())
+                {
+                    var docFactories = documentFactories.ToArray();
+                    dlg.Filter = string.Join("|", docFactories.Select(i => i.FilePattern));
+                    dlg.Title = "Open";
+                    if (dlg.ShowDialog(this) == DialogResult.OK)
+                    {
+                        var docFactory = docFactories[dlg.FilterIndex - 1];
+                        Document openedDocument = docFactory.Load(dlg.FileName);
+                        AttachDocument(openedDocument);
+                    }
+                }
+            }
+        }
+
+        public void OpenFile(string fileName)
+        {
+            foreach (var documentFactory in this.documentFactories)
+            {
+                if (documentFactory.CanHandleFile(fileName))
+                {
+                    Document openedDocument = documentFactory.Load(fileName);
+                    AttachDocument(openedDocument);
+                    return;
+                }
+            }
+
+            MessageBox.Show(this, "NHTID is unable to open this file.", "Error", MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+
+        public void ShowNewDocumentUi()
+        {
+            
+        }
+
+        private void specialToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            /*MapEditingService mse = new MapEditingService(mapManager);
+            for (int x = mse.WorldTileBounds.Left; x < mse.WorldTileBounds.Right; x++)
+            {
+                for (int y = mse.WorldTileBounds.Top; y < mse.WorldTileBounds.Bottom; y++)
+                {
+                    Item item = mapManager.CurrentLayer.GetTile(x, y);
+                    if (item.IsDropped)
+                    {
+                        Item itemAbove = mapManager.CurrentLayer.GetTile(x, y - 2);
+                        mse.GetItem()
+                    }
+                }
+            }*/
+        }
     }
 
+    public interface IDocumentContainer
+    {
+        void ShowOpenDocumentUi();
+
+        void OpenFile(string fileName);
+
+        void ShowNewDocumentUi();
+    }
 }

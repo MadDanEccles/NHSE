@@ -23,7 +23,7 @@ namespace Nhtid.WinForms.Tools.Actions
         protected override void OnDragEnd(MouseEventArgs mouseEventArgs, Keys modifierKeys, MapToolContext ctx)
         {
             bool createCopy = modifierKeys.HasFlag(Keys.Control);
-            Point tileDelta = GetTileDelta(DragStartLocation, ctx);
+            Point tileDelta = GetTileDelta(mouseEventArgs.Location, ctx);
             if (IsValidDropPos(tileDelta, ctx.MapEditingService, createCopy))
             {
                 using (var trans = historyService.BeginTransaction($"Move {selectionService.SelectedItems.Count()} items"))
@@ -56,7 +56,7 @@ namespace Nhtid.WinForms.Tools.Actions
 
         protected override void OnDragMove(MouseEventArgs mouseEventArgs, Keys modifierKeys, MapToolContext ctx)
         {
-            Point tileOffset = GetTileDelta(DragStartLocation, ctx);
+            Point tileOffset = GetTileDelta(mouseEventArgs.Location, ctx);
             selectionRenderer.TileOffset = tileOffset;
         }
 

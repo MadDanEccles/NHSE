@@ -44,14 +44,15 @@ namespace Nhtid.WinForms.SegmentLayouts
             }
             else
             {
-                displayItemId = itemInfo.ItemId;
-                var item = new Item(itemInfo.ItemId);
+                var item = new Item();
+                item.CopyFrom(rawItem);
                 if (!itemInfo.HasVariants)
                     item.Count = (ushort) (itemInfo.MaxStackSize - 1);
                 droppedItems.Add(itemConvertor.ApplyPresentation(item, PresentationType.Dropped));
             }
 
-            placedItem = new Item(displayItemId);
+            placedItem = new Item();
+            placedItem.CopyFrom(rawItem);
             itemConvertor.ApplyPresentation(placedItem, PresentationType.Hung, PresentationType.Placed, PresentationType.Dropped);
             placedItemSize = placedItem.GetSize();
 

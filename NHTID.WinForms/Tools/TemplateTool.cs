@@ -19,6 +19,9 @@ namespace Nhtid.WinForms.Tools
 
         protected override IMouseAction GetMouseAction(MouseEventArgs e, Keys modifierKeys, MapToolContext ctx)
         {
+            if (modifierKeys.HasFlag(Keys.Alt))
+                return new PanZoomMouseAction();
+
             Item rawItem = options.GetItem();
 
             if (!rawItem.IsRoot)

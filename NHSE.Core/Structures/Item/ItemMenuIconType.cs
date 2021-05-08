@@ -158,6 +158,7 @@ namespace NHSE.Core
         FishYellowparch,
         FishZarigani,
         Floor,
+        Flowershower,
         Fossil,
         FossilJ,
         FtrFishRanchu,

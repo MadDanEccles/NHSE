@@ -9,8 +9,9 @@ namespace NHSE.Core
     {
         public const int PlayerCount = 8;
         public const int VillagerCount = 10;
-        public const int PatternCount = 50;
-        public const int PatternCount2 = 100;
+        public virtual int PatternCount => PatternCount1;
+        protected const int PatternCount1 = 50;
+        protected const int PatternCount2 = 100;
         public const int PatternTailorCount = 8;
         public const int BuildingCount = 46;
         public const int RecycleBinCount = 40;
@@ -72,6 +73,7 @@ namespace NHSE.Core
                 16 => new MainSaveOffsets17(),
                 17 => new MainSaveOffsets18(),
                 18 => new MainSaveOffsets19(),
+                19 => new MainSaveOffsets110(),
                 _ => throw new IndexOutOfRangeException("Unknown revision!" + Environment.NewLine + Info),
             };
         }

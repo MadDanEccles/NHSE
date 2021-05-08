@@ -93,13 +93,18 @@ namespace NHSE.WinForms
             }
             Editor.ReloadItems();
             WinFormsUtil.Alert(string.Format(MessageStrings.MsgFieldItemModifyCount, count));
-            Close();
         }
 
         private static int SpawnItems(ItemLayer layer, IReadOnlyList<Item> items, int x, int y, SpawnArrangement arrange, int sizeX, int sizeY, bool noOverwrite)
         {
+            // every {setting} tiles, we jump down to the next available row of tiles.
             int x0 = x;
-            var newline = arrange == SpawnArrangement.Square ? (int)Math.Sqrt(items.Count * sizeX * sizeY) : items.Count * sizeX;
+            var newline = arrange switch
+            {
+                SpawnArrangement.Square => (int)Math.Sqrt(items.Count * sizeX * sizeY),
+                SpawnArrangement.Vertical => 1 * sizeY,
+                _ => items.Count * sizeX // Horizontal
+            };
 
             int ctr = 0;
             for (var i = 0; i < items.Count; i++)
@@ -146,7 +151,7 @@ namespace NHSE.WinForms
             {
                 SpawnType.SequentialDIY => 1,
                 SpawnType.ItemsFromNHI => 1,
-                _ => 100,
+                _ => 8,
             };
 
             if (index == SpawnType.ItemsFromNHI)
@@ -181,6 +186,7 @@ namespace NHSE.WinForms
         {
             Square,
             Horizontal,
+            Vertical,
         }
     }
 }

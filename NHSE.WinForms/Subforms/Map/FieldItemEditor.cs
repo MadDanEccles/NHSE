@@ -24,7 +24,6 @@ namespace NHSE.WinForms
         private int DragX = -1;
         private int DragY = -1;
         private bool Dragging;
-        private Point lastClickCoodindates;
 
         public ItemEditor ItemProvider => ItemEdit;
         public ItemLayer SpawnLayer => Map.CurrentLayer;
@@ -243,18 +242,12 @@ namespace NHSE.WinForms
             y = e.Y / View.AcreScale;
         }
 
-        private void PB_Acre_MouseDown(object sender, MouseEventArgs e)
-        {
-            var l = Map.CurrentLayer;
-            var tile = GetTile(l, e, out var x, out var y);
-            this.lastClickCoodindates = new Point(x, y);
-            ResetDrag();
-        }
+        private void PB_Acre_MouseDown(object sender, MouseEventArgs e) => ResetDrag();
 
         private void PB_Acre_MouseMove(object sender, MouseEventArgs e)
         {
             var l = Map.CurrentLayer;
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left && CHK_MoveOnDrag.Checked)
             {
                 MoveDrag(e);
                 return;
@@ -773,6 +766,7 @@ namespace NHSE.WinForms
         private void B_RemoveShells_Click(object sender, EventArgs e) => Remove(B_RemoveShells, Map.CurrentLayer.RemoveAllShells);
         private void B_RemoveBranches_Click(object sender, EventArgs e) => Remove(B_RemoveBranches, Map.CurrentLayer.RemoveAllBranches);
         private void B_RemoveFlowers_Click(object sender, EventArgs e) => Remove(B_RemoveFlowers, Map.CurrentLayer.RemoveAllFlowers);
+        private void B_RemoveBushes_Click(object sender, EventArgs e) => Remove(B_RemoveBushes, Map.CurrentLayer.RemoveAllBushes);
 
         private void B_WaterFlowers_Click(object sender, EventArgs e) => Modify(B_WaterFlowers, (xmin, ymin, width, height)
             => Map.CurrentLayer.WaterAllFlowers(xmin, ymin, width, height, (ModifierKeys & Keys.Control) != 0));
@@ -994,12 +988,14 @@ namespace NHSE.WinForms
         }
 
         private void Menu_Spawn_Click(object sender, EventArgs e) => new BulkSpawn(this, View.X, View.Y).ShowDialog();
-        
-        private void Menu_SpawnCtx_Click(object sender, EventArgs e)
-        {
-            new BulkSpawn(this, lastClickCoodindates.X, lastClickCoodindates.Y).ShowDialog();
-        }
 
+        private void Menu_Bulk_Click(object sender, EventArgs e)
+        {
+            var editor = new BatchEditor(SpawnLayer.Tiles, ItemEdit.SetItem(new Item()));
+            editor.ShowDialog();
+            SpawnLayer.ClearDanglingExtensions(0, 0, SpawnLayer.MaxWidth, SpawnLayer.MaxHeight);
+            LoadItemGridAcre();
+        }
     }
 
     public interface IItemLayerEditor
